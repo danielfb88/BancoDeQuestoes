@@ -6,13 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 /**
+ * Classe Singleton de Conexão ao Banco e Facade do objeto Connection.
  * 
  * @author Daniel Bonfim
  * @since 03-08-2012
  * @version 1.0
  * 
- * Classe Singleton de Conexão ao Banco e Facade do objeto Connection.
- *
  */
 public class DAOUtil {
 	private static DAOUtil instance = null;
