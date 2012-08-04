@@ -11,5 +11,25 @@
 	<h1>Banco de Questões</h1>
 	<hr />
 
+	<h:form>
+		<h:messages />
+		<h:panelGrid columns="2">
+
+			<h:outputLabel value="Descrição:" for="descricao" />
+			<h:inputText id="descricao" label="Descricão"
+				value="#{grupoFacade.grupoSelecionado.descricao}" required="true" />
+
+			<h:outputLabel value="Tipo" for="tipo" />
+			<h:inputText id="tipo" label="Tipo"
+				value="#{grupoFacade.grupoSelecionado.tipo}" required="true" />
+
+			<h:outputText />
+
+			<h:commandButton action="#{grupoFacade.adicionar}" value="Adicionar" />
+
+		</h:panelGrid>
+
+	</h:form>
+
 </h:body>
 </html>

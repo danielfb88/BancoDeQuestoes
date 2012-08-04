@@ -1,0 +1,7 @@
+Passos para a criação de um módulo
+
+1 - dto
+2 - interface
+3 - dao
+4 - facade
+5 - metodo em factorydao

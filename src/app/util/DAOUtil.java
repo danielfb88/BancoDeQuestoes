@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 /**
  * Classe Singleton de Conexão ao Banco e Facade do objeto Connection.
  * 
@@ -15,98 +16,86 @@ import java.sql.Statement;
  */
 public class DAOUtil {
 	private static DAOUtil instance = null;
-    private Connection con = null;
+	private Connection con = null;
 
-    private DAOUtil() { }
-    
-    public static DAOUtil getInstance() {
-    	if (instance == null) 
-    		instance = new DAOUtil();
-    	return instance;
-    }
+	private DAOUtil() {
+	}
 
-    /**
-     * Retorna objeto Connection para todo tipo de operação de BD.
-     * @return Connection
-     */
-    private Connection getConnection() {
-        try {
-	    	if (this.con == null) {
-	            String url = "jdbc:postgresql://localhost:5432/banco_de_questoes";
-	            String login = "postgres";
-	            String senha = "123456";
-	
-	            Class.forName("org.postgresql.Driver");
-	
-	            this.con = DriverManager.getConnection(url, login, senha);
-	        }
-	    	
-        } catch (ClassNotFoundException e1) {
-        	e1.getMessage();
-        	e1.printStackTrace();
-        	
-        } catch (SQLException e2) {
-        	e2.getMessage();
-        	e2.printStackTrace();
-        }
+	public static DAOUtil getInstance() {
+		if (instance == null)
+			instance = new DAOUtil();
+		return instance;
+	}
 
-        return this.con;
-    }
+	/**
+	 * Retorna objeto Connection para todo tipo de operação de BD.
+	 * 
+	 * @return Connection
+	 */
+	private Connection getConnection() {
+		try {
+			if (this.con == null) {
+				String url = "jdbc:postgresql://localhost:5432/banco_de_questoes";
+				String login = "postgres";
+				String senha = "123456";
 
-    /**
-     * Retorna um Statment. 
-     * Objeto utilizado para a execução de consultas simples (estaticas), sem entrada de dados.
-     * 
-     * @return Statement
-     */
-    public Statement getStatement() {
-    	Statement stmt = null;
-    	
-    	try {
-			stmt = this.getConnection().createStatement();
-			
-		} catch (SQLException e) {
-			e.getMessage();
-			e.printStackTrace();
+				Class.forName("org.postgresql.Driver");
+
+				this.con = DriverManager.getConnection(url, login, senha);
+			}
+
+		} catch (ClassNotFoundException e1) {
+			e1.getMessage();
+			e1.printStackTrace();
+
+		} catch (SQLException e2) {
+			e2.printStackTrace();
 		}
-    	return stmt;
-    }
 
-    /**
-     * Retorna um PreparedStatment. 
-     * Objeto utilizado para a preparação de consultas com entrada de dados.
-     * 
-     * @param String sql
-     * @return PreparedStatement
-     */
-    public PreparedStatement getPreparedStatement(String sql) {
-        PreparedStatement p_stmt = null;
-        
-    	try {
-    		p_stmt = getConnection().prepareStatement(sql);
-    	
-    	} catch (SQLException e) {
-    		e.getMessage();
-    		e.printStackTrace();
-    	}
-    	return p_stmt;
-    }
+		return this.con;
+	}
 
-    /**
-     *  Fecha a conexão.
-     *  
-     * @throws SQLException
-     */
-    public void closeConnection() throws SQLException{        
-    	if(this.con != null) {
-    		try {
-    			this.con.close();
-    			
-    		} catch (SQLException e) {
-    			e.getMessage();
-    			e.printStackTrace();
-    		}
-        }
-    }
+	/**
+	 * Retorna um Statment. Objeto utilizado para a execução de consultas
+	 * simples (estaticas), sem entrada de dados.
+	 * 
+	 * @return Statement
+	 */
+	public Statement getStatement() throws SQLException {
+		return this.getConnection().createStatement();
+	}
+
+	/**
+	 * Retorna um PreparedStatment. Objeto utilizado para a preparação de
+	 * consultas com entrada de dados.
+	 * 
+	 * @param String
+	 *            sql
+	 * @return PreparedStatement
+	 */
+	public PreparedStatement getPreparedStatement(String sql)
+			throws SQLException {
+		return this.getConnection().prepareStatement(sql);
+	}
+
+	/**
+	 * Fecha a conexão.
+	 * 
+	 * @throws SQLException
+	 */
+	public void closeConnection() {
+		if (this.con != null) {
+			try {
+				this.con.close();
+
+			} catch (SQLException e) {
+				e.getMessage();
+				e.printStackTrace();
+
+			} finally {
+				this.con = null;
+			}
+		}
+	}
 
 }

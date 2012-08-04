@@ -7,6 +7,10 @@ public class Usuario  {
 	private String login;
 	private String senha;
 	
+	public Usuario() {
+		
+	}
+	
 	public Usuario(int id_usuario, Grupo grupo, String nome, String login,
 			String senha) {
 		super();
