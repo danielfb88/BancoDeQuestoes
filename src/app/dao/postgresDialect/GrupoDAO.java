@@ -2,6 +2,9 @@ package app.dao.postgresDialect;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+
 import app.dao.iterface.IGrupoDAO;
 import app.dto.Grupo;
 import app.util.DAOUtil;
@@ -88,31 +91,34 @@ public class GrupoDAO implements IGrupoDAO {
 		return linhasAfetadas;
 	}
 
-	// Experimental
 	/**
-	 * Recupera o grupo baseado nas informações contidas nos atributos do objeto
-	 * grupo. 
-	 * Objetivo: Recuperar através de qualquer informação preenchida no objeto Grupo.
-	 * Pensar nisso. Vou dormir.
+	 * Problema. Decidir qual a ordem das interrogações.
 	 * 
-	 * @param Grupo
-	 *            grupo
 	 * @return Grupo
 	 */
-	public void getGrupo(Grupo grupo) {
-		//StringBuilder builder = new StringBuilder();
+	public void getGrupoBy(int id, String descricao, Character tipo) {
+		StringBuilder builder = new StringBuilder();
+		// analize a possibilidade de usar um hashMap par aesta solução
+		Map<Object,String> mp = new HashMap<Object, String>();
 
-		/*
-		builder.append("SELECT * FROM grupo WHERE ");
-		if (grupo.getId_grupo() != null) {
-
+		builder.append("SELECT * FROM grupo WHERE true ");
+		
+		// Verificando se id informado
+		if (id > 0) {
+			builder.append("AND id_grupo = ? ");
 		}
-		*/
-
-		//String sql = "";
-
+		// Verificando descrição informada
+		if (!descricao.equals("")) {
+			builder.append("AND descricao = ? ");
+		}
+		// Verificando tipo informado
+		if (!tipo.toString().equals("")) {
+			builder.append("AND tipo = ? ");
+		}
+		
+		
 		// PreparedStatement preparedStatment =
-		// DAOUtil.getInstance().getPreparedStatement(sql);
+		// DAOUtil.getInstance().getPreparedStatement(builder.toString());
 
 		/*
 		 * 
