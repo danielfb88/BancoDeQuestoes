@@ -17,15 +17,15 @@
 
 			<h:outputLabel value="Descrição:" for="descricao" />
 			<h:inputText id="descricao" label="Descricão"
-				value="#{grupoFacade.grupoSelecionado.descricao}" required="true" />
+				value="#{grupoBean.grupoSelecionado.descricao}" required="true" />
 
 			<h:outputLabel value="Tipo" for="tipo" />
 			<h:inputText id="tipo" label="Tipo"
-				value="#{grupoFacade.grupoSelecionado.tipo}" required="true" />
+				value="#{grupoBean.grupoSelecionado.tipo}" required="true" />
 
 			<h:outputText />
 
-			<h:commandButton action="#{grupoFacade.adicionar}" value="Adicionar" />
+			<h:commandButton action="#{grupoBean.adicionar}" value="Adicionar" />
 
 		</h:panelGrid>
 

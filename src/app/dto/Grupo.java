@@ -3,13 +3,13 @@ package app.dto;
 public class Grupo {
 	private int id_grupo;
 	private String descricao;
-	private String tipo;
+	private Character tipo;
 	
 	public Grupo() {
 		
 	}
-	
-	public Grupo(int id_grupo, String descricao, String tipo) {
+
+	public Grupo(int id_grupo, String descricao, Character tipo) {
 		super();
 		this.id_grupo = id_grupo;
 		this.descricao = descricao;
@@ -32,11 +32,11 @@ public class Grupo {
 		this.descricao = descricao;
 	}
 
-	public String getTipo() {
+	public Character getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(String tipo) {
+	public void setTipo(Character tipo) {
 		this.tipo = tipo;
 	}
 

@@ -6,8 +6,8 @@
 	version="2.1">
 
 	<managed-bean>
-		<managed-bean-name>grupoFacade</managed-bean-name>
-		<managed-bean-class>app.bean.GrupoFacade</managed-bean-class>
+		<managed-bean-name>grupoBean</managed-bean-name>
+		<managed-bean-class>app.bean.GrupoBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 

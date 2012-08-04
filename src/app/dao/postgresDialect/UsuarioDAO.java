@@ -1,9 +1,5 @@
 package app.dao.postgresDialect;
 
-import java.sql.PreparedStatement;
-
-import app.util.DAOUtil;
-import app.util.exception.*;
 import app.dao.iterface.IUsuarioDAO;
 import app.dto.Usuario;
 
