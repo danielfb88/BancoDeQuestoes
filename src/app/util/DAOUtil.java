@@ -77,7 +77,7 @@ public class DAOUtil {
 			throws SQLException {
 		return this.getConnection().prepareStatement(sql);
 	}
-
+	
 	/**
 	 * Fecha a conexão.
 	 * 

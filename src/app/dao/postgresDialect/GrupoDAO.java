@@ -1,14 +1,16 @@
 package app.dao.postgresDialect;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import app.dao.iterface.IGrupoDAO;
 import app.dto.Grupo;
 import app.util.DAOUtil;
 
+// TODO: EFETUAR TESTES.
 /**
  * Grupo DAO
  * 
@@ -91,52 +93,114 @@ public class GrupoDAO implements IGrupoDAO {
 		return linhasAfetadas;
 	}
 
-	/**
-	 * Problema. Decidir qual a ordem das interrogações.
-	 * 
-	 * @return Grupo
-	 */
-	public void getGrupoBy(int id, String descricao, Character tipo) {
+	public Grupo getById(Integer id) {
+		Grupo grupo = new Grupo();
 		StringBuilder builder = new StringBuilder();
-		// analize a possibilidade de usar um hashMap par aesta solução
-		Map<Object,String> mp = new HashMap<Object, String>();
+		
+		builder.append("SELECT * FROM grupo WHERE id_grupo = ? ");
 
+		try {
+			PreparedStatement preparedStatement = DAOUtil.getInstance()
+					.getPreparedStatement(builder.toString());
+
+			preparedStatement.setInt(1, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			if (!resultSet.next()) {
+				resultSet.close();
+				preparedStatement.close();
+				return null;
+			}
+			
+			grupo.setId_grupo(resultSet.getInt("id_grupo"));
+			grupo.setDescricao(resultSet.getString("descricao"));
+			grupo.setTipo(resultSet.getString("tipo").toCharArray()[0]);
+
+			resultSet.close();
+			preparedStatement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return grupo;
+	}
+
+	/**
+	 * Retorna todos em uma lista encadeada dos Grupos que satisfaçam as
+	 * caracteristicas informadas no objeto grupo.
+	 * 
+	 * @param grupo
+	 *            Grupo com as informações relevantes para a pesquisa
+	 *            preenchidas.
+	 * @return Lista encadeada com os grupos encontrados.
+	 */
+	public List<Grupo> getAllBy(Grupo grupo) {
+		List<Grupo> grupos = new LinkedList<Grupo>();
+		StringBuilder builder = new StringBuilder();
+
+		// Organizador dos parâmetros para o preparedStatement
+		int count = 0;
+		int ordemDoId = 0;
+		int ordemDaDescricao = 0;
+		int ordemDoTipo = 0;
+
+		// Query
 		builder.append("SELECT * FROM grupo WHERE true ");
-		
-		// Verificando se id informado
-		if (id > 0) {
-			builder.append("AND id_grupo = ? ");
-		}
-		// Verificando descrição informada
-		if (!descricao.equals("")) {
-			builder.append("AND descricao = ? ");
-		}
-		// Verificando tipo informado
-		if (!tipo.toString().equals("")) {
-			builder.append("AND tipo = ? ");
-		}
-		
-		
-		// PreparedStatement preparedStatment =
-		// DAOUtil.getInstance().getPreparedStatement(builder.toString());
 
-		/*
-		 * 
-		 * 
-		 * 
-		 * preparedStatment.setInt(1, codigo); ResultSet rs =
-		 * preparedStatment.executeQuery(); if (!rs.next()) { rs.close();
-		 * preparedStatment.close(); return null; }
-		 * 
-		 * dtoProduto produto = new dtoProduto();
-		 * produto.setCodigo(rs.getInt("CODIGO"));
-		 * produto.setNome(rs.getString("NOME"));
-		 * produto.setEstoque(rs.getInt("ESTOQUE"));
-		 * produto.setPreco(rs.getFloat("PRECO")); rs.close();
-		 * preparedStatment.close();
-		 * 
-		 * return produto;
-		 */
+		// ID
+		if (grupo.getId_grupo() != null) {
+			builder.append("AND id_grupo = ? ");
+			ordemDoId = ++count;
+		}
+
+		// Descricao
+		if (grupo.getDescricao() != null) {
+			builder.append("AND descricao LIKE %?% ");
+			ordemDaDescricao = ++count;
+		}
+
+		// Tipo
+		if (grupo.getTipo() != null) {
+			builder.append("AND tipo = ? ");
+			ordemDoTipo = ++count;
+		}
+
+		try {
+			PreparedStatement preparedStatement = DAOUtil.getInstance()
+					.getPreparedStatement(builder.toString());
+
+			// Verificando a ordem dos parâmetros
+			if (ordemDoId > 0)
+				preparedStatement.setInt(ordemDoId, grupo.getId_grupo());
+
+			if (ordemDaDescricao > 0)
+				preparedStatement.setString(ordemDaDescricao,
+						grupo.getDescricao());
+
+			if (ordemDoTipo > 0)
+				preparedStatement.setString(ordemDoTipo, grupo.getTipo()
+						.toString());
+
+			// Executando a quary e retornando em um ResultSet
+			ResultSet resultSet = preparedStatement.executeQuery();
+
+			// Iterando entre os objetos retornados e inserindo-os em objetos
+			// Grupo e depois
+			// na lista grupos
+			while (resultSet.next()) {
+				grupos.add(new Grupo(resultSet.getInt("id_grupo"), resultSet
+						.getString("descricao"), resultSet.getString("tipo")
+						.toCharArray()[0]));
+			}
+			resultSet.close();
+			preparedStatement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return grupos;
 	}
 
 }

@@ -1,7 +1,7 @@
 package app.dto;
 
 public class Grupo {
-	private int id_grupo;
+	private Integer id_grupo;
 	private String descricao;
 	private Character tipo;
 	
@@ -9,18 +9,18 @@ public class Grupo {
 		
 	}
 
-	public Grupo(int id_grupo, String descricao, Character tipo) {
+	public Grupo(Integer id_grupo, String descricao, Character tipo) {
 		super();
 		this.id_grupo = id_grupo;
 		this.descricao = descricao;
 		this.tipo = tipo;
 	}
 
-	public int getId_grupo() {
+	public Integer getId_grupo() {
 		return id_grupo;
 	}
 
-	public void setId_grupo(int id_grupo) {
+	public void setId_grupo(Integer id_grupo) {
 		this.id_grupo = id_grupo;
 	}
 
@@ -46,7 +46,8 @@ public class Grupo {
 		int result = 1;
 		result = prime * result
 				+ ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + id_grupo;
+		result = prime * result
+				+ ((id_grupo == null) ? 0 : id_grupo.hashCode());
 		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
 		return result;
 	}
@@ -65,7 +66,10 @@ public class Grupo {
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
-		if (id_grupo != other.id_grupo)
+		if (id_grupo == null) {
+			if (other.id_grupo != null)
+				return false;
+		} else if (!id_grupo.equals(other.id_grupo))
 			return false;
 		if (tipo == null) {
 			if (other.tipo != null)

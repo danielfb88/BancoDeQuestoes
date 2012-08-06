@@ -1,7 +1,7 @@
 package app.dto;
 
 public class Usuario  {
-	private int id_usuario;
+	private Integer id_usuario;
 	private Grupo grupo;
 	private String nome;
 	private String login;
@@ -10,8 +10,8 @@ public class Usuario  {
 	public Usuario() {
 		
 	}
-	
-	public Usuario(int id_usuario, Grupo grupo, String nome, String login,
+
+	public Usuario(Integer id_usuario, Grupo grupo, String nome, String login,
 			String senha) {
 		super();
 		this.id_usuario = id_usuario;
@@ -21,11 +21,11 @@ public class Usuario  {
 		this.senha = senha;
 	}
 
-	public int getId_usuario() {
+	public Integer getId_usuario() {
 		return id_usuario;
 	}
 
-	public void setId_usuario(int id_usuario) {
+	public void setId_usuario(Integer id_usuario) {
 		this.id_usuario = id_usuario;
 	}
 
@@ -66,7 +66,8 @@ public class Usuario  {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((grupo == null) ? 0 : grupo.hashCode());
-		result = prime * result + id_usuario;
+		result = prime * result
+				+ ((id_usuario == null) ? 0 : id_usuario.hashCode());
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
@@ -87,7 +88,10 @@ public class Usuario  {
 				return false;
 		} else if (!grupo.equals(other.grupo))
 			return false;
-		if (id_usuario != other.id_usuario)
+		if (id_usuario == null) {
+			if (other.id_usuario != null)
+				return false;
+		} else if (!id_usuario.equals(other.id_usuario))
 			return false;
 		if (login == null) {
 			if (other.login != null)
@@ -106,5 +110,5 @@ public class Usuario  {
 			return false;
 		return true;
 	}
-
+	
 }
