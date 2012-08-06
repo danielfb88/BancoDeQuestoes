@@ -1,6 +1,9 @@
 package app.dto;
 
-public class Usuario  {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
+	private static final long serialVersionUID = -8156333553194297122L;
 	private Integer id_usuario;
 	private Grupo grupo;
 	private String nome;

@@ -1,10 +1,9 @@
 package app.testes;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-import app.dao.postgresDialect.GrupoDAO;
+import app.dao.postgresdialect.GrupoDAO;
 import app.dto.Grupo;
 
 public class Teste {

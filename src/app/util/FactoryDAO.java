@@ -1,7 +1,7 @@
 package app.util;
 
 import app.dao.iterface.*;
-import app.dao.postgresDialect.*;
+import app.dao.postgresdialect.*;
 
 /**
  * Fábrica que gera Objetos DAO reduzindo o acoplamento do dialeto do banco de dados com a aplicação.

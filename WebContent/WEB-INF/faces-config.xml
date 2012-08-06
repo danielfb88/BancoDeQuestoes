@@ -7,25 +7,52 @@
 
 	<managed-bean>
 		<managed-bean-name>grupoBean</managed-bean-name>
-		<managed-bean-class>app.bean.GrupoBean</managed-bean-class>
+		<managed-bean-class>app.managedbean.GrupoManagedBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 
+	<!-- REGRAS GLOBAIS -->
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>inicio</from-outcome>
 			<to-view-id>/index.xhtml</to-view-id>
 		</navigation-case>
+		<!-- GRUPO -->
+		<navigation-case>
+			<!-- INDEX GRUPO -->
+			<from-outcome>indexGrupo</from-outcome>
+			<to-view-id>/grupo/index.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<!-- LISTAR GRUPOS -->
+			<from-outcome>listarGrupos</from-outcome>
+			<to-view-id>/grupo/listarGrupos.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<!-- VISUALIZAR GRUPO -->
+			<from-outcome>visualizarGrupo</from-outcome>
+			<to-view-id>/grupo/visualizarGrupo.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<!-- ADICIONAR GRUPO -->
+			<from-outcome>adicionarGrupo</from-outcome>
+			<to-view-id>/grupo/adicionarGrupo.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<!-- ALTERAR GRUPO -->
+			<from-outcome>alterarGrupo</from-outcome>
+			<to-view-id>/grupo/alterarGrupo.xhtml</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<!-- EXCLUIR GRUPO -->
+			<from-outcome>excluirGrupo</from-outcome>
+			<to-view-id>/grupo/ExcluirGrupo.xhtml</to-view-id>
+		</navigation-case>
+
 	</navigation-rule>
 
-	<navigation-rule>
-		<from-view-id>/index.xhtml</from-view-id>
-		<navigation-case>
-			<from-outcome>adicionou</from-outcome>
-			<to-view-id>/adicionou.xhtml</to-view-id>
-		</navigation-case>
-	</navigation-rule>
+	<!-- REGRAS ESPECIFICAS -->
 
 	<!-- <navigation-rule> <from-view-id>/usuario.xhtml</from-view-id> <navigation-case> 
 		<from-outcome>sucesso</from-outcome> <to-view-id>mostraUsuario.xhtml</to-view-id> 

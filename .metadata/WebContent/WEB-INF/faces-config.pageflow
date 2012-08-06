@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13440499026550" configfile="/BancoDeQuestoes/WebContent/WEB-INF/faces-config.xml">
-  <nodes xsi:type="pageflow:PFPage" name="*" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463" path="*"/>
-  <nodes xsi:type="pageflow:PFPage" name="index.xhtml" id="pf13440501506464" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13440501506463" path="/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="178" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="338" y="178" id="pf13440501506464" referenceLink="//@navigationRule.1/@fromViewId|" outlinks="pf13442796840180" inlinks="pf13440501506463" path="/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="adicionou.xhtml" x="554" y="178" id="pf13442796840181" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf13442796840180" path="/adicionou.xhtml"/>
   <links id="pf13440501506463" target="pf13440501506464" source="pf13440501506462" outcome="inicio"/>
+  <links id="pf13442796840180" target="pf13442796840181" source="pf13440501506464" outcome="adicionou"/>
 </pageflow:Pageflow>

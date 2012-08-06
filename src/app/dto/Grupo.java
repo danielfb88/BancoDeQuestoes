@@ -1,6 +1,9 @@
 package app.dto;
 
-public class Grupo {
+import java.io.Serializable;
+
+public class Grupo implements Serializable {
+	private static final long serialVersionUID = 8055355584275742647L;
 	private Integer id_grupo;
 	private String descricao;
 	private Character tipo;

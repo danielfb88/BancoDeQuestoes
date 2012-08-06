@@ -1,4 +1,4 @@
-package app.dao.postgresDialect;
+package app.dao.postgresdialect;
 
 import app.dao.iterface.IUsuarioDAO;
 import app.dto.Usuario;

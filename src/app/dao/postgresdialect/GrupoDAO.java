@@ -1,4 +1,4 @@
-package app.dao.postgresDialect;
+package app.dao.postgresdialect;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -94,13 +94,12 @@ public class GrupoDAO implements IGrupoDAO {
 
 	public Grupo getById(int id) {
 		Grupo grupo = new Grupo();
-		StringBuilder builder = new StringBuilder();
-		
-		builder.append("SELECT * FROM grupo WHERE id_grupo = ? ");
+
+		String sql = "SELECT * FROM grupo WHERE id_grupo = ?;";
 
 		try {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+					.getPreparedStatement(sql);
 
 			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -110,7 +109,7 @@ public class GrupoDAO implements IGrupoDAO {
 				preparedStatement.close();
 				return null;
 			}
-			
+
 			grupo.setId_grupo(resultSet.getInt("id_grupo"));
 			grupo.setDescricao(resultSet.getString("descricao"));
 			grupo.setTipo(resultSet.getString("tipo").toCharArray()[0]);
@@ -121,7 +120,7 @@ public class GrupoDAO implements IGrupoDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return grupo;
 	}
 
@@ -165,6 +164,9 @@ public class GrupoDAO implements IGrupoDAO {
 			ordemDoTipo = ++count;
 		}
 
+		// Fechando a instrução
+		builder.append(";");
+
 		try {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
@@ -176,7 +178,7 @@ public class GrupoDAO implements IGrupoDAO {
 			if (ordemDaDescricao > 0)
 				preparedStatement.setString(ordemDaDescricao,
 						"%" + grupo.getDescricao() + "%");
-			
+
 			if (ordemDoTipo > 0)
 				preparedStatement.setString(ordemDoTipo, grupo.getTipo()
 						.toString());
