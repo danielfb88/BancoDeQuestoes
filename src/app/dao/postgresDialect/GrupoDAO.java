@@ -10,7 +10,6 @@ import app.dao.iterface.IGrupoDAO;
 import app.dto.Grupo;
 import app.util.DAOUtil;
 
-// TODO: EFETUAR TESTES.
 /**
  * Grupo DAO
  * 
@@ -53,7 +52,7 @@ public class GrupoDAO implements IGrupoDAO {
 
 		try {
 
-			String sql = "UPDATE TABLE grupo SET descricao = ?, tipo = ? WHERE id_grupo = ?;";
+			String sql = "UPDATE grupo SET descricao = ?, tipo = ? WHERE id_grupo = ?;";
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
@@ -93,7 +92,7 @@ public class GrupoDAO implements IGrupoDAO {
 		return linhasAfetadas;
 	}
 
-	public Grupo getById(Integer id) {
+	public Grupo getById(int id) {
 		Grupo grupo = new Grupo();
 		StringBuilder builder = new StringBuilder();
 		
@@ -156,7 +155,7 @@ public class GrupoDAO implements IGrupoDAO {
 
 		// Descricao
 		if (grupo.getDescricao() != null) {
-			builder.append("AND descricao LIKE %?% ");
+			builder.append("AND descricao LIKE ? ");
 			ordemDaDescricao = ++count;
 		}
 
@@ -176,8 +175,8 @@ public class GrupoDAO implements IGrupoDAO {
 
 			if (ordemDaDescricao > 0)
 				preparedStatement.setString(ordemDaDescricao,
-						grupo.getDescricao());
-
+						"%" + grupo.getDescricao() + "%");
+			
 			if (ordemDoTipo > 0)
 				preparedStatement.setString(ordemDoTipo, grupo.getTipo()
 						.toString());
