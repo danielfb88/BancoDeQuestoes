@@ -11,16 +11,16 @@ public class GrupoController {
 
 	}
 
-	public int adicionar(Grupo grupo) {
-		return this.grupoDAO.adicionar(grupo);
+	public boolean adicionar(Grupo grupo) {
+		return this.grupoDAO.adicionar(grupo) > 0;
 	}
 
-	public int alterar(Grupo grupo) {
-		return this.grupoDAO.alterar(grupo);
+	public boolean alterar(Grupo grupo) {
+		return this.grupoDAO.alterar(grupo) > 0;
 	}
 
-	public int excluir(Grupo grupo) {
-		return this.grupoDAO.excluir(grupo);
+	public boolean excluir(Grupo grupo) {
+		return this.grupoDAO.excluir(grupo) > 0;
 	}
 
 	public Grupo getById(int id) {

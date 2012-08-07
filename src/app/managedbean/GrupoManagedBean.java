@@ -1,5 +1,8 @@
 package app.managedbean;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import app.controller.GrupoController;
 import app.dto.Grupo;
 
@@ -14,9 +17,19 @@ import app.dto.Grupo;
 public class GrupoManagedBean {
 	private GrupoController grupoController = new GrupoController();
 	private Grupo grupo = new Grupo();
+	private List<Grupo> grupos = new LinkedList<Grupo>();
 
 	public GrupoManagedBean() {
 
+	}
+		
+	public List<Grupo> getGrupos() {
+		this.grupos = grupoController.getAllBy(this.grupo);
+        return this.grupos;
+	}
+
+	public void setGrupos(List<Grupo> grupos) {
+		this.grupos = grupos;
 	}
 
 	public Grupo getGrupo() {
@@ -26,10 +39,9 @@ public class GrupoManagedBean {
 	public void setGrupo(Grupo grupo) {
 		this.grupo = grupo;
 	}
-
+	
 	public String adicionar() {
-		int linhasAfetadas = this.grupoController.adicionar(this.grupo);
-		if (linhasAfetadas > 0) 
+		if (this.grupoController.adicionar(this.grupo)) 
 			return "listarGrupos";
 		else
 			return "adicionarGrupo";
@@ -41,8 +53,10 @@ public class GrupoManagedBean {
 	}
 
 	public String alterar() {
-		this.grupoController.alterar(grupo);
-		return "listarGrupos";
+		if (this.grupoController.alterar(this.grupo))
+			return "listarGrupos";
+		else
+			return "adicionarGrupo";
 	}
 
 }

@@ -10,10 +10,11 @@
 		<managed-bean-class>app.managedbean.GrupoManagedBean</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
-
+	 
 	<!-- REGRAS GLOBAIS -->
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
+		<!-- INDEX -->
 		<navigation-case>
 			<from-outcome>inicio</from-outcome>
 			<to-view-id>/index.xhtml</to-view-id>
@@ -22,32 +23,32 @@
 		<navigation-case>
 			<!-- INDEX GRUPO -->
 			<from-outcome>indexGrupo</from-outcome>
-			<to-view-id>/grupo/index.xhtml</to-view-id>
+			<to-view-id>/publico/grupo/index.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<!-- LISTAR GRUPOS -->
 			<from-outcome>listarGrupos</from-outcome>
-			<to-view-id>/grupo/listarGrupos.xhtml</to-view-id>
+			<to-view-id>/publico/grupo/listarGrupos.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<!-- VISUALIZAR GRUPO -->
 			<from-outcome>visualizarGrupo</from-outcome>
-			<to-view-id>/grupo/visualizarGrupo.xhtml</to-view-id>
+			<to-view-id>/publico/grupo/visualizarGrupo.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<!-- ADICIONAR GRUPO -->
 			<from-outcome>adicionarGrupo</from-outcome>
-			<to-view-id>/grupo/adicionarGrupo.xhtml</to-view-id>
+			<to-view-id>/publico/grupo/adicionarGrupo.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<!-- ALTERAR GRUPO -->
 			<from-outcome>alterarGrupo</from-outcome>
-			<to-view-id>/grupo/alterarGrupo.xhtml</to-view-id>
+			<to-view-id>/publico/grupo/alterarGrupo.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<!-- EXCLUIR GRUPO -->
 			<from-outcome>excluirGrupo</from-outcome>
-			<to-view-id>/grupo/ExcluirGrupo.xhtml</to-view-id>
+			<to-view-id>/publico/grupo/excluirGrupo.xhtml</to-view-id>
 		</navigation-case>
 
 	</navigation-rule>

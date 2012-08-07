@@ -1,8 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13440499026550" configfile="/BancoDeQuestoes/WebContent/WEB-INF/faces-config.xml">
-  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="178" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463" path="*"/>
-  <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="338" y="178" id="pf13440501506464" referenceLink="//@navigationRule.1/@fromViewId|" outlinks="pf13442796840180" inlinks="pf13440501506463" path="/index.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="adicionou.xhtml" x="554" y="178" id="pf13442796840181" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf13442796840180" path="/adicionou.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="1330" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463 pf134430582990012 pf134430584987514 pf134430584987515 pf134430584987516 pf134430584987517 pf134430699934824" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="338" y="178" id="pf13440501506464" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13440501506463" path="/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="adicionou.xhtml" x="122" y="2098" id="pf13442796840181" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" path="/adicionou.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/index.xhtml" id="pf134430582990213" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf134430582990012" path="/publico/grupo/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/listarGrupos.xhtml" id="pf134430584987519" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf134430584987514" path="/publico/grupo/listarGrupos.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/visualizarGrupo.xhtml" id="pf134430584987520" referenceLink="//@navigationRule.0/@navigationCase.3/@toViewId|" inlinks="pf134430584987515" path="/publico/grupo/visualizarGrupo.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/adicionarGrupo.xhtml" id="pf134430584987621" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf134430584987516" path="/publico/grupo/adicionarGrupo.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/alterarGrupo.xhtml" id="pf134430584987622" referenceLink="//@navigationRule.0/@navigationCase.5/@toViewId|" inlinks="pf134430584987517" path="/publico/grupo/alterarGrupo.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/excluirGrupo.xhtml" id="pf134430699934925" referenceLink="//@navigationRule.0/@navigationCase.6/@toViewId|" inlinks="pf134430699934824" path="/publico/grupo/excluirGrupo.xhtml"/>
   <links id="pf13440501506463" target="pf13440501506464" source="pf13440501506462" outcome="inicio"/>
-  <links id="pf13442796840180" target="pf13442796840181" source="pf13440501506464" outcome="adicionou"/>
+  <links id="pf134430582990012" target="pf134430582990213" source="pf13440501506462" outcome="indexGrupo"/>
+  <links id="pf134430584987514" target="pf134430584987519" source="pf13440501506462" outcome="listarGrupos"/>
+  <links id="pf134430584987515" target="pf134430584987520" source="pf13440501506462" outcome="visualizarGrupo"/>
+  <links id="pf134430584987516" target="pf134430584987621" source="pf13440501506462" outcome="adicionarGrupo"/>
+  <links id="pf134430584987517" target="pf134430584987622" source="pf13440501506462" outcome="alterarGrupo"/>
+  <links id="pf134430699934824" target="pf134430699934925" source="pf13440501506462" outcome="excluirGrupo"/>
 </pageflow:Pageflow>
