@@ -14,16 +14,7 @@ import app.dao.postgresdialect.*;
 public class FactoryDAO {
 
 	private FactoryDAO() { }
-	
-	/**
-	 * UsuarioDAO
-	 * 
-	 * @return IUsuarioDAO
-	 */
-	public static IUsuarioDAO createUsuarioDAO() {
-		return new UsuarioDAO();
-	}
-	
+		
 	/**
 	 * GrupoDAO
 	 * 

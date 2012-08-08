@@ -3,6 +3,9 @@ package app.managedbean;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
 import app.controller.GrupoController;
 import app.dto.Grupo;
 
@@ -15,17 +18,53 @@ import app.dto.Grupo;
  * 
  */
 public class GrupoManagedBean {
-	private GrupoController grupoController = new GrupoController();
 	private Grupo grupo = new Grupo();
 	private List<Grupo> grupos = new LinkedList<Grupo>();
 
-	public GrupoManagedBean() {
-
+	public String novo() {
+		return "grupo";
 	}
-		
+
+	public String adicionar() {
+		GrupoController grupoController = new GrupoController();
+
+		if (grupoController.adicionar(this.grupo)) {
+			return "listarGrupos";
+		} else {
+			FacesContext context = FacesContext.getCurrentInstance();
+			FacesMessage facesMessage = new FacesMessage(
+					"Não foi possível adicionar o grupo");
+			context.addMessage(null, facesMessage);
+			// Vai permanecer na mesma página
+			return null;
+		}
+	}
+
+	public String deletar() {
+		GrupoController grupoController = new GrupoController();
+		grupoController.excluir(this.grupo);
+		return "listarGrupos";
+	}
+
+	public String alterar() {
+		GrupoController grupoController = new GrupoController();
+
+		if (grupoController.alterar(this.grupo)) {
+			return "listarGrupos";
+		} else {
+			FacesContext context = FacesContext.getCurrentInstance();
+			FacesMessage facesMessage = new FacesMessage(
+					"Não foi possível alterar o grupo");
+			context.addMessage(null, facesMessage);
+			// Vai permanecer na mesma página
+			return null;
+		}
+	}
+
 	public List<Grupo> getGrupos() {
+		GrupoController grupoController = new GrupoController();
 		this.grupos = grupoController.getAllBy(this.grupo);
-        return this.grupos;
+		return this.grupos;
 	}
 
 	public void setGrupos(List<Grupo> grupos) {
@@ -38,25 +77,6 @@ public class GrupoManagedBean {
 
 	public void setGrupo(Grupo grupo) {
 		this.grupo = grupo;
-	}
-	
-	public String adicionar() {
-		if (this.grupoController.adicionar(this.grupo)) 
-			return "listarGrupos";
-		else
-			return "adicionarGrupo";
-	}
-
-	public String deletar() {
-		this.grupoController.excluir(this.grupo);
-		return "listarGrupos";
-	}
-
-	public String alterar() {
-		if (this.grupoController.alterar(this.grupo))
-			return "listarGrupos";
-		else
-			return "adicionarGrupo";
 	}
 
 }

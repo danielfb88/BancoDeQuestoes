@@ -1,14 +1,16 @@
 package app.controller;
 
 import java.util.List;
-import app.dao.postgresdialect.GrupoDAO;
+
+import app.dao.iterface.IGrupoDAO;
 import app.dto.Grupo;
+import app.util.FactoryDAO;
 
 public class GrupoController {
-	private GrupoDAO grupoDAO = new GrupoDAO();
+	private IGrupoDAO grupoDAO;
 
 	public GrupoController() {
-
+		this.grupoDAO = FactoryDAO.createGrupoDAO();
 	}
 
 	public boolean adicionar(Grupo grupo) {

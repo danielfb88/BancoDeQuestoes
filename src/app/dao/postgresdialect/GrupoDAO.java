@@ -147,7 +147,7 @@ public class GrupoDAO implements IGrupoDAO {
 		builder.append("SELECT * FROM grupo WHERE true ");
 
 		// ID
-		if (grupo.getId_grupo() != null) {
+		if (grupo.getId_grupo() != null && grupo.getId_grupo() != 0) {
 			builder.append("AND id_grupo = ? ");
 			ordemDoId = ++count;
 		}
