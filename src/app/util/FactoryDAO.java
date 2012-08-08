@@ -20,7 +20,7 @@ public class FactoryDAO {
 	 * 
 	 * @return GrupoDAO
 	 */
-	public static IGrupoDAO createGrupoDAO() {
+	public static IGrupoDAO criarGrupoDAO() {
 		return new GrupoDAO();
 	}
 

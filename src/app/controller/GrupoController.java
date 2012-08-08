@@ -10,7 +10,7 @@ public class GrupoController {
 	private IGrupoDAO grupoDAO;
 
 	public GrupoController() {
-		this.grupoDAO = FactoryDAO.createGrupoDAO();
+		this.grupoDAO = FactoryDAO.criarGrupoDAO();
 	}
 
 	public boolean adicionar(Grupo grupo) {
