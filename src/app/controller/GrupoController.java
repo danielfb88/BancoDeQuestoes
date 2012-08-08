@@ -17,8 +17,8 @@ public class GrupoController {
 		return this.grupoDAO.adicionar(grupo) > 0;
 	}
 
-	public boolean alterar(Grupo grupo) {
-		return this.grupoDAO.alterar(grupo) > 0;
+	public boolean editar(Grupo grupo) {
+		return this.grupoDAO.editar(grupo) > 0;
 	}
 
 	public boolean excluir(Grupo grupo) {

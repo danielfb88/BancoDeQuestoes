@@ -51,10 +51,10 @@ public class GrupoManagedBean {
 		return "listarGrupos";
 	}
 
-	public String alterar() {
+	public String editar() {
 		GrupoController grupoController = new GrupoController();
 
-		if (grupoController.alterar(this.grupo)) {
+		if (grupoController.editar(this.grupo)) {
 			// removendo o grupo atual para montar a query limpa
 			this.grupo = new Grupo();
 			return "listarGrupos";

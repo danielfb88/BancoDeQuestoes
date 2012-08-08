@@ -17,7 +17,7 @@ public class Teste {
 		Grupo grupo = new Grupo();		
 		grupo.setDescricao("HOOOO");
 		grupo.setTipo(new Character('C'));
-		grupoDAO.alterar(grupo);
+		grupoDAO.editar(grupo);
 		System.out.println("Inserido com suceso!");
 	}
 	
@@ -27,7 +27,7 @@ public class Teste {
 		grupo.setId_grupo(5);
 		grupo.setDescricao("HOOOO_alterado!");
 		grupo.setTipo(new Character('A'));
-		grupoDAO.alterar(grupo);
+		grupoDAO.editar(grupo);
 		System.out.println("Alterado com suceso!");
 	}
 	

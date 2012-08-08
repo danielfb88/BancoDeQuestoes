@@ -47,7 +47,7 @@ public class GrupoDAO implements IGrupoDAO {
 	}
 
 	@Override
-	public int alterar(Grupo grupo) {
+	public int editar(Grupo grupo) {
 		int linhasAfetadas = 0;
 
 		try {

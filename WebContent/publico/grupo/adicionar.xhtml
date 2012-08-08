@@ -8,7 +8,7 @@
 	<title>Cadastro de Grupos</title>
 </h:head>
 <h:body>
-	<h1>Cadastro de Grupos</h1>
+	<h1>Adicionar Grupo</h1>
 	<h:form id="cadastro">
 		<h:messages />
 		<h:inputHidden value="#{grupoBean.grupo.id_grupo}" />
@@ -19,14 +19,19 @@
 				value="#{grupoBean.grupo.descricao}" size="30" maxlength="50"
 				required="true" requiredMessage="A descrição do grupo é requerido." />
 
-			<h:outputText value="Tipo" for="tx_tipo" />
-			<h:inputText id="tx_tipo" label="Tipo"
-				value="#{grupoBean.grupo.tipo}" size="10" maxlength="1"
-				required="true" requiredMessage="O tipo do grupo é requerido." />
-				
+			<h:outputText value="Tipo" for="slct_tipo" />
+			<h:selectOneMenu id="slct_tipo" value="#{grupoBean.grupo.tipo}">
+				<f:selectItem itemValue="A" itemLabel="Administrador"></f:selectItem>
+				<f:selectItem itemValue="C" itemLabel="Coordenador"></f:selectItem>
+			</h:selectOneMenu>
+
 		</h:panelGrid>
-		
-		<h:commandButton action="#{grupoBean.alterar}" value="Alterar"/>
+
+		<h:commandButton action="#{grupoBean.adicionar}" value="Salvar" />
+
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexGrupo" value="Voltar" />
 	</h:form>
 </h:body>
 </html>
