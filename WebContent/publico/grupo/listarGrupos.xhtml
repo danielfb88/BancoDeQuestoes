@@ -39,15 +39,15 @@
 					<h:outputLabel value="AÇÕES" />
 				</f:facet>
 				<h:commandLink value="Apagar" action="#{grupoBean.deletar}">
-					<f:setPropertyActionListener value="#{grupoBean.grupo}"
-						target="#{item}" />
+					<f:setPropertyActionListener value="#{item}"
+						target="#{grupoBean.grupo}" />
 				</h:commandLink>
 
 				<h:outputLabel value=" - " />
 
-				<h:commandLink value="Editar" action="alterar">
-					<f:setPropertyActionListener value="#{grupoBean.grupo}"
-						target="#{item}" />
+				<h:commandLink value="Alterar" action="editarGrupo">
+					<f:setPropertyActionListener value="#{item}"
+						target="#{grupoBean.grupo}" />
 				</h:commandLink>
 			</h:column>
 		</h:dataTable>

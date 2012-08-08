@@ -22,6 +22,7 @@ public class GrupoManagedBean {
 	private List<Grupo> grupos = new LinkedList<Grupo>();
 
 	public String novo() {
+		this.grupo = new Grupo();
 		return "grupo";
 	}
 
@@ -29,6 +30,8 @@ public class GrupoManagedBean {
 		GrupoController grupoController = new GrupoController();
 
 		if (grupoController.adicionar(this.grupo)) {
+			// removendo o grupo atual para montar a query limpa
+			this.grupo = new Grupo();
 			return "listarGrupos";
 		} else {
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -43,6 +46,8 @@ public class GrupoManagedBean {
 	public String deletar() {
 		GrupoController grupoController = new GrupoController();
 		grupoController.excluir(this.grupo);
+		// removendo o grupo atual para montar a query limpa
+		this.grupo = new Grupo();
 		return "listarGrupos";
 	}
 
@@ -50,6 +55,8 @@ public class GrupoManagedBean {
 		GrupoController grupoController = new GrupoController();
 
 		if (grupoController.alterar(this.grupo)) {
+			// removendo o grupo atual para montar a query limpa
+			this.grupo = new Grupo();
 			return "listarGrupos";
 		} else {
 			FacesContext context = FacesContext.getCurrentInstance();

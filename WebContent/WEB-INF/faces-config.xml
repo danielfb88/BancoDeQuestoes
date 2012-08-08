@@ -42,8 +42,8 @@
 		</navigation-case>
 		<navigation-case>
 			<!-- ALTERAR GRUPO -->
-			<from-outcome>alterarGrupo</from-outcome>
-			<to-view-id>/publico/grupo/alterarGrupo.xhtml</to-view-id>
+			<from-outcome>editarGrupo</from-outcome>
+			<to-view-id>/publico/grupo/editarGrupo.xhtml</to-view-id>
 		</navigation-case>
 		<navigation-case>
 			<!-- EXCLUIR GRUPO -->
