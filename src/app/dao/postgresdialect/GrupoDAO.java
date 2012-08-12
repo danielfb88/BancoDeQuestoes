@@ -13,7 +13,7 @@ import app.util.DAOUtil;
 /**
  * Grupo DAO
  * 
- * @author Daniel Bonfim
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 03-08-2012
  * 
  */
@@ -147,7 +147,7 @@ public class GrupoDAO implements IGrupoDAO {
 		builder.append("SELECT * FROM grupo WHERE true ");
 
 		// ID
-		if (grupo.getId_grupo() != null && grupo.getId_grupo() != 0) {
+		if (grupo.getId_grupo() != null && grupo.getId_grupo() > 0) {
 			builder.append("AND id_grupo = ? ");
 			ordemDoId = ++count;
 		}

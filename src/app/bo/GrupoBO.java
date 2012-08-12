@@ -1,4 +1,4 @@
-package app.controller;
+package app.bo;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import app.dao.iterface.IGrupoDAO;
 import app.dto.Grupo;
 import app.util.FactoryDAO;
 
-public class GrupoController {
+public class GrupoBO {
 	private IGrupoDAO grupoDAO;
 
-	public GrupoController() {
+	public GrupoBO() {
 		this.grupoDAO = FactoryDAO.criarGrupoDAO();
 	}
 

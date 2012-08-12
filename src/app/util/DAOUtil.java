@@ -9,7 +9,7 @@ import java.sql.Statement;
 /**
  * Classe Singleton de Conexão ao Banco e Facade do objeto Connection.
  * 
- * @author Daniel Bonfim
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 03-08-2012
  * @version 1.0
  * 

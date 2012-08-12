@@ -6,7 +6,7 @@ import java.util.List;
 import app.dao.postgresdialect.GrupoDAO;
 import app.dto.Grupo;
 
-public class Teste {
+public class TesteModuloGrupo {
 
 	public static void main(String[] args) {
 		getAllBy();
@@ -54,7 +54,7 @@ public class Teste {
 		int count = 0;
 		GrupoDAO grupoDAO = new GrupoDAO();
 		Grupo grupo = new Grupo();
-		grupo.setDescricao("H");
+		grupo.setDescricao("OH YEH!!");
 		List<Grupo> grupos = grupoDAO.getAllBy(grupo);
 		
 		Iterator<Grupo> iterator = grupos.iterator();

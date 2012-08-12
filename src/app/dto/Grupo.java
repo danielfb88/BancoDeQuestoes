@@ -3,6 +3,7 @@ package app.dto;
 import java.io.Serializable;
 
 public class Grupo implements Serializable {
+	// http://blog.caelum.com.br/entendendo-o-serialversionuid/
 	private static final long serialVersionUID = 8055355584275742647L;
 	private Integer id_grupo;
 	private String descricao;

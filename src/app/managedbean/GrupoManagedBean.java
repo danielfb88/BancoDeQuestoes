@@ -6,14 +6,14 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import app.controller.GrupoController;
+import app.bo.GrupoBO;
 import app.dto.Grupo;
 
 /**
  * ManagedBean para Grupo. Bean que será gerenciado pelo JSF atraves do arquivo
  * faces-config.xml.
  * 
- * @author Daniel Bonfim
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 03-08-2012
  * 
  */
@@ -27,7 +27,7 @@ public class GrupoManagedBean {
 	}
 
 	public String adicionar() {
-		GrupoController grupoController = new GrupoController();
+		GrupoBO grupoController = new GrupoBO();
 
 		if (grupoController.adicionar(this.grupo)) {
 			// removendo o grupo atual para montar a query limpa
@@ -44,7 +44,7 @@ public class GrupoManagedBean {
 	}
 
 	public String deletar() {
-		GrupoController grupoController = new GrupoController();
+		GrupoBO grupoController = new GrupoBO();
 		grupoController.excluir(this.grupo);
 		// removendo o grupo atual para montar a query limpa
 		this.grupo = new Grupo();
@@ -52,7 +52,7 @@ public class GrupoManagedBean {
 	}
 
 	public String editar() {
-		GrupoController grupoController = new GrupoController();
+		GrupoBO grupoController = new GrupoBO();
 
 		if (grupoController.editar(this.grupo)) {
 			// removendo o grupo atual para montar a query limpa
@@ -69,7 +69,7 @@ public class GrupoManagedBean {
 	}
 
 	public List<Grupo> getGrupos() {
-		GrupoController grupoController = new GrupoController();
+		GrupoBO grupoController = new GrupoBO();
 		this.grupos = grupoController.getAllBy(this.grupo);
 		return this.grupos;
 	}

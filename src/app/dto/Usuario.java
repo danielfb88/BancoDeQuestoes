@@ -11,7 +11,7 @@ public class Usuario implements Serializable {
 	private String senha;
 	
 	public Usuario() {
-		
+		grupo = new Grupo();
 	}
 
 	public Usuario(Integer id_usuario, Grupo grupo, String nome, String login,
