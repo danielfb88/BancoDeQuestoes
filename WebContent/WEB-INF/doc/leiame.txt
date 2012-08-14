@@ -1,0 +1,10 @@
+Passos para a criação de um módulo
+
+1 - dto
+2 - interface
+3 - dao
+4 - managedBean
+5 - controller
+6 - metodo em factorydao
+7 - views
+

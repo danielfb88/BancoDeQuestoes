@@ -1,0 +1,18 @@
+Requisitos Funcionais:
+
+1 - Gerenciar usuários
+2 - Gerenciar alunos e coordenadores
+3 - Gerenciar períodos
+4 - Montar grade do curso
+5 - Gerenciar disciplinas
+6 - Gerenciar assuntos
+7 - Gerenciar perguntas e respostas
+8 - Montar provas para Semestre, Grade e Período letivo
+9 - Imprimir prova
+
+Requisitos Não-Funcionais:
+
+1 - Banco de dados POSTGRES
+2 - Linguagem Java
+3 - API de persistência JDBC
+4 - Framework: JavaServerFaces

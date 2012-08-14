@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
+	version="2.1">
+
+<!-- 
+	<managed-bean>
+		<managed-bean-name>grupoBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.GrupoManagedBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	-->
+
+	<!-- REGRAS GLOBAIS -->
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>inicio</from-outcome>
+			<to-view-id>/index.xhtml</to-view-id>
+		</navigation-case>
+		<!-- INDEX GRUPO -->
+		<navigation-case>
+			<from-outcome>indexGrupo</from-outcome>
+			<to-view-id>/publico/grupo/index.xhtml</to-view-id>
+		</navigation-case>
+		
+		<!-- INDEX USUARIO -->
+		<navigation-case>
+			<from-outcome>indexUsuario</from-outcome>
+			<to-view-id>/publico/usuario/index.xhtml</to-view-id>
+		</navigation-case>
+
+	</navigation-rule>
+
+	<!-- REGRAS ESPECIFICAS -->
+
+	<!-- MÓDULO GRUPO -->
+	<navigation-rule>
+		<from-view-id>/publico/grupo/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>novo</from-outcome>
+			<to-view-id>/publico/grupo/adicionar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/grupo/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/publico/grupo/editar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/grupo/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listar</from-outcome>
+			<to-view-id>/publico/grupo/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/grupo/adicionar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>adicionadoComSucesso</from-outcome>
+			<to-view-id>/publico/grupo/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/grupo/editar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>editadoComSucesso</from-outcome>
+			<to-view-id>/publico/grupo/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/grupo/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>excluidoComSucesso</from-outcome>
+			<to-view-id>/publico/grupo/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO USUARIO -->
+	<navigation-rule>
+		<from-view-id>/publico/usuario/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>novo</from-outcome>
+			<to-view-id>/publico/usuario/adicionar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/usuario/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/publico/usuario/editar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/usuario/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listar</from-outcome>
+			<to-view-id>/publico/usuario/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/usuario/adicionar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>adicionadoComSucesso</from-outcome>
+			<to-view-id>/publico/usuario/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/usuario/editar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>editadoComSucesso</from-outcome>
+			<to-view-id>/publico/usuario/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/usuario/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>excluidoComSucesso</from-outcome>
+			<to-view-id>/publico/usuario/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+</faces-config>
