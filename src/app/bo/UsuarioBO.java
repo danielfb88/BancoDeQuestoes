@@ -48,16 +48,7 @@ public class UsuarioBO {
 	}
 
 	public boolean editar(Usuario usuario) {
-		if (this.loginDisponivel(usuario.getLogin())) {
-			return this.usuarioDAO.editar(usuario) > 0;
-			
-		} else {
-			FacesMessage facesMessage = new FacesMessage("O login informado já existe na base de dados");
-			FacesContext context = FacesContext.getCurrentInstance();
-			
-			context.addMessage(null, facesMessage);
-			return false;
-		}
+		return this.usuarioDAO.editar(usuario) > 0;
 	}
 
 	public boolean excluir(Usuario usuario) {

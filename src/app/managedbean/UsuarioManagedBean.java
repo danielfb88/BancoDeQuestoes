@@ -8,7 +8,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import app.bo.GrupoBO;
 import app.bo.UsuarioBO;
+import app.dto.Grupo;
 import app.dto.Usuario;
 
 /**
@@ -22,8 +24,11 @@ import app.dto.Usuario;
 @RequestScoped
 public class UsuarioManagedBean {
 	private UsuarioBO usuarioBO = new UsuarioBO();
-	private Usuario usuario = new Usuario();
 	private List<Usuario> usuarios = new LinkedList<Usuario>();
+	private Usuario usuario = new Usuario();
+	
+	private GrupoBO grupoBO = new GrupoBO();
+	private List<Grupo> grupos = new LinkedList<Grupo>();
 
 	public String novo() {
 		this.usuario = new Usuario();
@@ -103,4 +108,12 @@ public class UsuarioManagedBean {
 		this.usuarios = usuarios;
 	}
 
+	public List<Grupo> getGrupos() {
+		this.grupos = this.grupoBO.getAllBy(new Grupo());
+		return grupos;
+	}
+
+	public void setGrupos(List<Grupo> grupos) {
+		this.grupos = grupos;
+	}
 }

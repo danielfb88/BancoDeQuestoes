@@ -5,33 +5,44 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Cadastro de Grupos</title>
+	<title>Cadastro de Usuario</title>
 </h:head>
 <h:body>
-	<h1>Adicionar Grupo</h1>
-	<h:form id="cadastro">
+	<h1>Adicionar Usuario</h1>
+	<h:form id="frm_adicionar">
 		<h:messages />
-		<h:inputHidden value="#{grupoBean.grupo.id_grupo}" />
+		<h:inputHidden value="#{usuarioBean.usuario.id_usuario}" />
 
 		<h:panelGrid columns="2">
-			<h:outputLabel value="Descrição" for="tx_descricao" />
-			<h:inputText id="tx_descricao" label="Descrição"
-				value="#{grupoBean.grupo.descricao}" size="30" maxlength="50"
-				required="true" requiredMessage="A descrição do grupo é requerido." />
-
-			<h:outputText value="Tipo" for="slct_tipo" />
-			<h:selectOneMenu id="slct_tipo" value="#{grupoBean.grupo.tipo}">
-				<f:selectItem itemValue="A" itemLabel="Administrador"></f:selectItem>
-				<f:selectItem itemValue="C" itemLabel="Coordenador"></f:selectItem>
+			<h:outputLabel value="Grupo:" for="slct_grupo" />
+			<h:selectOneMenu id="slct_grupo"
+				value="#{usuarioBean.usuario.grupo.id_grupo}">
+				<f:selectItems value="#{usuarioBean.grupos}" var="item"
+					itemValue="#{item.id_grupo}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>
+
+			<h:outputText value="Nome:" for="tx_nome" />
+			<h:inputText id="tx_nome" label="Nome" value="#{usuarioBean.usuario.nome}"
+				size="50" maxlength="50" required="true"
+				requiredMessage="Informe o nome do usuário." />
+
+			<h:outputText value="Login:" for="tx_login" />
+			<h:inputText id="tx_login" label="Login" value="#{usuarioBean.usuario.login}"
+				size="20" maxlength="10" required="true"
+				requiredMessage="Informe o login." />
+
+			<h:outputText value="Senha:" for="tx_senha" />
+			<h:inputSecret id="tx_senha" label="Senha" value="#{usuarioBean.usuario.senha}"
+				size="20" maxlength="6" required="true"
+				requiredMessage="Informe a senha." />
 
 		</h:panelGrid>
 
-		<h:commandButton action="#{grupoBean.adicionar}" value="Salvar" />
+		<h:commandButton action="#{usuarioBean.adicionar}" value="Salvar" />
 
 	</h:form>
 	<h:form>
-		<h:commandLink action="indexGrupo" value="Voltar" />
+		<h:commandLink action="indexUsuario" value="Voltar" />
 	</h:form>
 </h:body>
 </html>

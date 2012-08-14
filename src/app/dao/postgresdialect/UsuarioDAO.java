@@ -50,10 +50,17 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 	@Override
 	public int editar(Usuario usuario) {
+		StringBuilder builder = new StringBuilder();
 		int linhasAfetadas = 0;
 
 		try {
 
+			/**
+			 * TODO: Utilizar o builder para montar a string de update. 
+			 * Analizar isto. Esta entrando um valor nulo para login quando eu digo
+			 * que o seu tx_login estará somente leitura.
+			 * 
+			 */
 			String sql = "UPDATE usuario SET id_grupo = ?, nome = ?, login = ?, senha = ? WHERE id_usuario = ?;";
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
