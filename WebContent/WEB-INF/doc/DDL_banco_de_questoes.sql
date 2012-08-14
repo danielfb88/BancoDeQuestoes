@@ -85,6 +85,7 @@ CREATE TABLE usuario (
 );
 ALTER TABLE usuario ADD CONSTRAINT fk_usuario_id_grupo__grupo_id_grupo FOREIGN KEY (id_grupo) 
 REFERENCES grupo(id_grupo);
+ALTER TABLE usuario ADD CONSTRAINT unique_login UNIQUE(login);
 
 /* COORDENADOR_CURSO */
 --DROP TABLE coordenador_curso CASCADE;

@@ -38,14 +38,14 @@
 				<f:facet name="header">
 					<h:outputLabel value="AÇÕES" />
 				</f:facet>
-				<h:commandLink value="Apagar" action="#{grupoBean.deletar}">
+				<h:commandLink value="Apagar" action="#{grupoBean.excluir}">
 					<f:setPropertyActionListener value="#{item}"
 						target="#{grupoBean.grupo}" />
 				</h:commandLink>
 
 				<h:outputLabel value=" - " />
 
-				<h:commandLink value="Alterar" action="editarGrupo">
+				<h:commandLink value="Editar" action="#{grupoBean.formularioEditar}">
 					<f:setPropertyActionListener value="#{item}"
 						target="#{grupoBean.grupo}" />
 				</h:commandLink>

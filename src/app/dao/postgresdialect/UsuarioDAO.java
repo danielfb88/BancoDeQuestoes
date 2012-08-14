@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.dao.iterface.IUsuarioDAO;
-import app.dto.Grupo;
 import app.dto.Usuario;
 import app.util.DAOUtil;
 
@@ -19,6 +18,7 @@ import app.util.DAOUtil;
  * 
  */
 public class UsuarioDAO implements IUsuarioDAO {
+	GrupoDAO grupoDAO = new GrupoDAO();
 
 	public UsuarioDAO() {
 
@@ -115,15 +115,11 @@ public class UsuarioDAO implements IUsuarioDAO {
 				return null;
 			}
 
-			// recuperando grupo
-			GrupoDAO grupoDAO = new GrupoDAO();
-			Grupo grupo = grupoDAO.getById(resultSet.getInt("id_grupo"));
-
 			usuario.setId_usuario(resultSet.getInt("id_usuario"));
 			usuario.setLogin(resultSet.getString("login"));
 			usuario.setNome(resultSet.getString("nome"));
 			usuario.setSenha(resultSet.getString("senha"));
-			usuario.setGrupo(grupo);
+			usuario.setGrupo(grupoDAO.getById(resultSet.getInt("id_grupo")));
 
 			resultSet.close();
 			preparedStatement.close();
@@ -184,7 +180,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 		// Fechando a instrução
 		builder.append(";");
 		
-		System.out.println(builder.toString());
+		//System.out.println(builder.toString());
 
 		try {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
@@ -209,14 +205,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 			if (ordemDaSenha > 0)
 				preparedStatement.setString(ordemDaSenha, usuario.getSenha());
 
-			// Executando a quary e retornando em um ResultSet
+			// Executando a query e retornando em um ResultSet
 			ResultSet resultSet = preparedStatement.executeQuery();
-
-			/**
-			 * Instanciando DAOGrupo para recuperar o grupo relacionado ao
-			 * usuário que estiver sendo Iterado
-			 */
-			GrupoDAO grupoDAO = new GrupoDAO();
 
 			// Iterando entre os objetos retornados
 			while (resultSet.next()) {

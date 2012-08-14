@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13440499026550" configfile="/BancoDeQuestoes/WebContent/WEB-INF/faces-config.xml">
-  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="1330" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463 pf134430582990012 pf134430584987514 pf134430584987515 pf134430584987516 pf134430699934824 pf13444449121080" path="*"/>
-  <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="338" y="178" id="pf13440501506464" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13440501506463" path="/index.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="adicionou.xhtml" x="122" y="2098" id="pf13442796840181" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" path="/adicionou.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/index.xhtml" id="pf134430582990213" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf134430582990012" path="/publico/grupo/index.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/listarGrupos.xhtml" id="pf134430584987519" referenceLink="//@navigationRule.0/@navigationCase.2/@toViewId|" inlinks="pf134430584987514" path="/publico/grupo/listarGrupos.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/visualizarGrupo.xhtml" id="pf134430584987520" referenceLink="//@navigationRule.0/@navigationCase.3/@toViewId|" inlinks="pf134430584987515" path="/publico/grupo/visualizarGrupo.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/adicionarGrupo.xhtml" id="pf134430584987621" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" inlinks="pf134430584987516" path="/publico/grupo/adicionarGrupo.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/excluirGrupo.xhtml" id="pf134430699934925" referenceLink="//@navigationRule.0/@navigationCase.6/@toViewId|" inlinks="pf134430699934824" path="/publico/grupo/excluirGrupo.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/editarGrupo.xhtml" id="pf13444449121091" referenceLink="//@navigationRule.0/@navigationCase.5/@toViewId|" inlinks="pf13444449121080" path="/publico/grupo/editarGrupo.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" x="144" y="1248" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463 pf134430582990012" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="360" y="1056" id="pf13440501506464" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13440501506463" path="/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/index.xhtml" x="360" y="1440" id="pf134430582990213" referenceLink="//@navigationRule.0/@navigationCase.1/@toViewId|" inlinks="pf134430582990012" path="/publico/grupo/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/adicionar.xhtml" x="122" y="3058" id="pf13449559961900" referenceLink="//@navigationRule.1/@fromViewId|" outlinks="pf13449559961901" path="/publico/grupo/adicionar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/listar.xhtml" x="444" y="3276" id="pf13449559961902" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" outlinks="pf13449559961903" inlinks="pf13449559961901 pf13449559961904 pf13449559961903" path="/publico/grupo/listar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/grupo/editar.xhtml" x="122" y="3442" id="pf13449559961905" referenceLink="//@navigationRule.2/@fromViewId|" outlinks="pf13449559961904" path="/publico/grupo/editar.xhtml"/>
   <links id="pf13440501506463" target="pf13440501506464" source="pf13440501506462" outcome="inicio"/>
   <links id="pf134430582990012" target="pf134430582990213" source="pf13440501506462" outcome="indexGrupo"/>
-  <links id="pf134430584987514" target="pf134430584987519" source="pf13440501506462" outcome="listarGrupos"/>
-  <links id="pf134430584987515" target="pf134430584987520" source="pf13440501506462" outcome="visualizarGrupo"/>
-  <links id="pf134430584987516" target="pf134430584987621" source="pf13440501506462" outcome="adicionarGrupo"/>
-  <links id="pf134430699934824" target="pf134430699934925" source="pf13440501506462" outcome="excluirGrupo"/>
-  <links id="pf13444449121080" target="pf13444449121091" source="pf13440501506462" outcome="editarGrupo"/>
+  <links id="pf13449559961901" target="pf13449559961902" source="pf13449559961900" outcome="adicionadoComSucesso"/>
+  <links id="pf13449559961904" target="pf13449559961902" source="pf13449559961905" outcome="editadoComSucesso"/>
+  <links id="pf13449559961903" target="pf13449559961902" source="pf13449559961902" outcome="excluidoComSucesso">
+    <bendPoints d1Height="-36" d2Height="-36"/>
+    <bendPoints d1Width="-64" d1Height="-36" d2Width="-64" d2Height="-36"/>
+    <bendPoints d1Width="-64" d2Width="-64"/>
+  </links>
 </pageflow:Pageflow>
