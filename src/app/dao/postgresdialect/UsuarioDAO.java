@@ -130,7 +130,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 		return usuario;
 	}
-	
+
 	public List<Usuario> getAllBy(Usuario usuario) {
 		List<Usuario> usuarios = new LinkedList<Usuario>();
 		StringBuilder builder = new StringBuilder();
@@ -145,7 +145,7 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 		// Query
 		builder.append("SELECT * FROM usuario WHERE true ");
-		
+
 		// ID
 		if (usuario.getId_usuario() != null && usuario.getId_usuario() > 0) {
 			builder.append("AND id_usuario = ? ");
@@ -153,10 +153,12 @@ public class UsuarioDAO implements IUsuarioDAO {
 		}
 
 		// ID Grupo
-		if (usuario.getGrupo().getId_grupo() != null
-				&& usuario.getGrupo().getId_grupo() > 0) {
-			builder.append("AND id_grupo = ? ");
-			ordemDoIdGrupo = ++count;
+		if (usuario.getGrupo() != null) {
+			if (usuario.getGrupo().getId_grupo() != null
+					&& usuario.getGrupo().getId_grupo() > 0) {
+				builder.append("AND id_grupo = ? ");
+				ordemDoIdGrupo = ++count;
+			}
 		}
 
 		// Nome
@@ -179,8 +181,8 @@ public class UsuarioDAO implements IUsuarioDAO {
 
 		// Fechando a instrução
 		builder.append(";");
-		
-		//System.out.println(builder.toString());
+
+		// System.out.println(builder.toString());
 
 		try {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
