@@ -11,7 +11,7 @@ public class Disciplina implements Serializable {
 	private String sigla;
 
 	public Disciplina() {
-
+		this.curso = new Curso();
 	}
 
 	public Disciplina(Integer id_disciplina, Curso curso, String descricao,

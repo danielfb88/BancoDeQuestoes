@@ -5,44 +5,40 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Cadastro de Grupos</title>
+	<title>Editar de Disciplina</title>
 </h:head>
 <h:body>
-	<h1>Editar Usuario</h1>
-	<h:form id="frm_adicionar">
+	<h1>Editar Disciplina</h1>
+	<h:form id="frm_editar">
 		<h:messages />
-		<h:inputHidden value="#{usuarioBean.usuario.id_usuario}" />
+		<h:inputHidden value="#{disciplinaBean.disciplina.id_disciplina}" />
 
 		<h:panelGrid columns="2">
-			<h:outputLabel value="Grupo:" for="slct_grupo" />
-			<h:selectOneMenu id="slct_grupo"
-				value="#{usuarioBean.usuario.grupo.id_grupo}">
-				<f:selectItems value="#{usuarioBean.grupos}" var="item"
-					itemValue="#{item.id_grupo}" itemLabel="#{item.descricao}" />
+			<h:outputLabel value="Curso:" for="slct_curso" />
+			<h:selectOneMenu id="slct_curso"
+				value="#{disciplinaBean.disciplina.curso.id_curso}">
+				<f:selectItems value="#{disciplinaBean.cursos}" var="item"
+					itemValue="#{item.id_curso}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>
 
-			<h:outputText value="Nome:" for="tx_nome" />
-			<h:inputText id="tx_nome" label="Nome" value="#{usuarioBean.usuario.nome}"
-				size="50" maxlength="50" required="true"
-				requiredMessage="Informe o nome do usuário." />
+			<h:outputText value="Descricao:" for="tx_descricao" />
+			<h:inputText id="tx_descricao" label="Descricao"
+				value="#{disciplinaBean.disciplina.descricao}" size="50"
+				maxlength="50" required="true"
+				requiredMessage="Informe a descrição da disciplina." />
 
-			<h:outputText value="Login:" for="tx_login" />
-			<h:inputText id="tx_login" label="Login" value="#{usuarioBean.usuario.login}"
-				size="20" maxlength="10" required="true" disabled="true"
-				requiredMessage="Informe o login." />
-
-			<h:outputText value="Senha:" for="tx_senha" />
-			<h:inputSecret id="tx_senha" label="Senha" value="#{usuarioBean.usuario.senha}"
-				size="20" maxlength="6" required="true"
-				requiredMessage="Informe a senha." />
+			<h:outputText value="Sigla:" for="tx_sigla" />
+			<h:inputText id="tx_sigla" label="Sigla"
+				value="#{disciplinaBean.disciplina.sigla}" size="10" maxlength="5"
+				required="true" requiredMessage="Informe a Sigla." />
 
 		</h:panelGrid>
 
-		<h:commandButton action="#{usuarioBean.editar}" value="Salvar" />
+		<h:commandButton action="#{disciplinaBean.editar}" value="Salvar" />
 
 	</h:form>
 	<h:form>
-		<h:commandLink action="#{usuarioBean.listar}" value="Voltar" />
+		<h:commandLink action="listar" value="Voltar" />
 	</h:form>
 </h:body>
 </html>
