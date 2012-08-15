@@ -29,7 +29,7 @@ public class CursoBO {
 		return this.cursoDAO.getById(id);
 	}
 
-	public List<Curso> getAllBy(Curso grupo) {
-		return this.cursoDAO.getAllBy(grupo);
+	public List<Curso> getAllBy(Curso curso) {
+		return this.cursoDAO.getAllBy(curso);
 	}
 }

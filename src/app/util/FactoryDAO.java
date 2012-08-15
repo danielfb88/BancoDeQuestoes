@@ -46,5 +46,13 @@ public class FactoryDAO {
 	public static IDisciplinaDAO criarDisciplinaDAO() {
 		return new DisciplinaDAO();
 	}
+	
+	/**
+	 * AssuntoDAO
+	 * @return
+	 */
+	public static IAssuntoDAO criarAssuntoDAO() {
+		return new AssuntoDAO();
+	}
 
 }

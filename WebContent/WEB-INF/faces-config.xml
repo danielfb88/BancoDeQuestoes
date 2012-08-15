@@ -38,6 +38,12 @@
 			<from-outcome>indexDisciplina</from-outcome>
 			<to-view-id>/publico/disciplina/index.xhtml</to-view-id>
 		</navigation-case>
+		
+		<!-- INDEX ASSUNTO -->
+		<navigation-case>
+			<from-outcome>indexAssunto</from-outcome>
+			<to-view-id>/publico/assunto/index.xhtml</to-view-id>
+		</navigation-case>
 
 	</navigation-rule>
 
@@ -236,6 +242,55 @@
 		<navigation-case>
 			<from-outcome>excluidoComSucesso</from-outcome>
 			<to-view-id>/publico/disciplina/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO ASSUNTO -->
+	<navigation-rule>
+		<from-view-id>/publico/assunto/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>novo</from-outcome>
+			<to-view-id>/publico/assunto/adicionar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/assunto/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/publico/assunto/editar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/assunto/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listar</from-outcome>
+			<to-view-id>/publico/assunto/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/assunto/adicionar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>adicionadoComSucesso</from-outcome>
+			<to-view-id>/publico/assunto/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/assunto/editar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>editadoComSucesso</from-outcome>
+			<to-view-id>/publico/assunto/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/assunto/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>excluidoComSucesso</from-outcome>
+			<to-view-id>/publico/assunto/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 

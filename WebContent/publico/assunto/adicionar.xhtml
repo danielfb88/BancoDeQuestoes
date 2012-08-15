@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cadastro de Assuntos</title>
+</h:head>
+<h:body>
+	<h1>Adicionar Assunto</h1>
+	<h:form id="frm_adicionar">
+		<h:messages />
+		<h:inputHidden value="#{assuntoBean.assunto.id_assunto}" />
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Descrição" for="tx_descricao" />
+			<h:inputText id="tx_descricao" label="Descrição"
+				value="#{assuntoBean.assunto.descricao}" size="30" maxlength="50"
+				required="true" requiredMessage="Informe a descrição do assunto." />
+
+		</h:panelGrid>
+
+		<h:commandButton action="#{assuntoBean.adicionar}" value="Salvar" />
+
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexAssunto" value="Voltar" />
+	</h:form>
+</h:body>
+</html>

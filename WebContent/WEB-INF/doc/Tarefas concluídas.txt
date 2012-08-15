@@ -1,32 +1,7 @@
-CONCLUÍDOS:
+MODULOS CONCLUÍDOS:
 
 - interface
 	grupo
 	usuario
 	disciplina
-
-- dto
-	grupo
-	usuario
 	curso
-	disciplina
-
-- dao
-	grupo
-	usuario
-
-- controller
-	grupo
-
-- managedBean
-	grupo
-
-
-
-
-
-Criar um resumo básico sobre o projeto. Propósito, o que é e o que já está pronto.
-
-
-eduardoxv@msn.com
-manoelvitorbrito@gmail.com
