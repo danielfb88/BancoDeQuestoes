@@ -31,6 +31,12 @@
 			<from-outcome>indexUsuario</from-outcome>
 			<to-view-id>/publico/usuario/index.xhtml</to-view-id>
 		</navigation-case>
+		
+		<!-- INDEX CURSO -->
+		<navigation-case>
+			<from-outcome>indexCurso</from-outcome>
+			<to-view-id>/publico/curso/index.xhtml</to-view-id>
+		</navigation-case>
 
 	</navigation-rule>
 
@@ -131,6 +137,55 @@
 		<navigation-case>
 			<from-outcome>excluidoComSucesso</from-outcome>
 			<to-view-id>/publico/usuario/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO CURSO -->
+	<navigation-rule>
+		<from-view-id>/publico/curso/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>novo</from-outcome>
+			<to-view-id>/publico/curso/adicionar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/curso/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/publico/curso/editar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/curso/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listar</from-outcome>
+			<to-view-id>/publico/curso/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/publico/curso/adicionar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>adicionadoComSucesso</from-outcome>
+			<to-view-id>/publico/curso/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/curso/editar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>editadoComSucesso</from-outcome>
+			<to-view-id>/publico/curso/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/curso/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>excluidoComSucesso</from-outcome>
+			<to-view-id>/publico/curso/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 
