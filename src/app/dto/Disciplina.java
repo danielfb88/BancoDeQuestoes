@@ -3,8 +3,7 @@ package app.dto;
 import java.io.Serializable;
 
 public class Disciplina implements Serializable {
-
-	private static final long serialVersionUID = -447785908189547227L;
+	private static final long serialVersionUID = -1795030392556346716L;
 	private Integer id_disciplina;
 	private Integer id_curso;
 	private String descricao;
