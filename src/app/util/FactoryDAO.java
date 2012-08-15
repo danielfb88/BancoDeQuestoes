@@ -4,7 +4,8 @@ import app.dao.iterface.*;
 import app.dao.postgresdialect.*;
 
 /**
- * Fábrica que gera Objetos DAO reduzindo o acoplamento do dialeto do banco de dados com a aplicação.
+ * Fábrica que gera Objetos DAO reduzindo o acoplamento do dialeto do banco de dados 
+ * com a aplicação.
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 03-08-2012

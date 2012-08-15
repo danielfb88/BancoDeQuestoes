@@ -3,9 +3,10 @@ package app.dto;
 import java.io.Serializable;
 
 public class Disciplina implements Serializable {
-	private static final long serialVersionUID = -1795030392556346716L;
+
+	private static final long serialVersionUID = -3759902395363071725L;
 	private Integer id_disciplina;
-	private Integer id_curso;
+	private Curso curso;
 	private String descricao;
 	private String sigla;
 
@@ -13,11 +14,11 @@ public class Disciplina implements Serializable {
 
 	}
 
-	public Disciplina(Integer id_disciplina, Integer id_curso,
-			String descricao, String sigla) {
+	public Disciplina(Integer id_disciplina, Curso curso, String descricao,
+			String sigla) {
 		super();
 		this.id_disciplina = id_disciplina;
-		this.id_curso = id_curso;
+		this.curso = curso;
 		this.descricao = descricao;
 		this.sigla = sigla;
 	}
@@ -30,12 +31,12 @@ public class Disciplina implements Serializable {
 		this.id_disciplina = id_disciplina;
 	}
 
-	public Integer getId_curso() {
-		return id_curso;
+	public Curso getCurso() {
+		return curso;
 	}
 
-	public void setId_curso(Integer id_curso) {
-		this.id_curso = id_curso;
+	public void setCurso(Curso curso) {
+		this.curso = curso;
 	}
 
 	public String getDescricao() {
@@ -58,10 +59,9 @@ public class Disciplina implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((curso == null) ? 0 : curso.hashCode());
 		result = prime * result
 				+ ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result
-				+ ((id_curso == null) ? 0 : id_curso.hashCode());
 		result = prime * result
 				+ ((id_disciplina == null) ? 0 : id_disciplina.hashCode());
 		result = prime * result + ((sigla == null) ? 0 : sigla.hashCode());
@@ -77,15 +77,15 @@ public class Disciplina implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Disciplina other = (Disciplina) obj;
+		if (curso == null) {
+			if (other.curso != null)
+				return false;
+		} else if (!curso.equals(other.curso))
+			return false;
 		if (descricao == null) {
 			if (other.descricao != null)
 				return false;
 		} else if (!descricao.equals(other.descricao))
-			return false;
-		if (id_curso == null) {
-			if (other.id_curso != null)
-				return false;
-		} else if (!id_curso.equals(other.id_curso))
 			return false;
 		if (id_disciplina == null) {
 			if (other.id_disciplina != null)
@@ -99,5 +99,4 @@ public class Disciplina implements Serializable {
 			return false;
 		return true;
 	}
-
 }

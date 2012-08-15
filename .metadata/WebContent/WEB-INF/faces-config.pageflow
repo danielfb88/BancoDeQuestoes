@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf13440499026550" configfile="/BancoDeQuestoes/WebContent/WEB-INF/faces-config.xml">
-  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="764" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463 pf134430582990012 pf13450028589250" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" x="122" y="1068" id="pf13440501506462" referenceLink="//@navigationRule.0/@fromViewId|" outlinks="pf13440501506463 pf134430582990012 pf13450028589250 pf13450615629430 pf13450615629431" path="*"/>
   <nodes xsi:type="pageflow:PFPage" name="index.xhtml" x="338" y="380" id="pf13440501506464" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13440501506463" path="/index.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="publico/grupo/index.xhtml" x="338" y="764" id="pf134430582990213" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf13449627973246 pf13449627973247" inlinks="pf134430582990012" path="/publico/grupo/index.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="publico/grupo/adicionar.xhtml" x="554" y="562" id="pf13449559961900" referenceLink="//@navigationRule.4/@fromViewId|" outlinks="pf13449559961901" inlinks="pf13449627973246" path="/publico/grupo/adicionar.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="publico/grupo/listar.xhtml" x="770" y="562" id="pf13449559961902" referenceLink="//@navigationRule.6/@navigationCase.0/@toViewId|" outlinks="pf13449559961903 pf13449627973248" inlinks="pf13449559961901 pf13449559961904 pf13449559961903 pf13449627973247" path="/publico/grupo/listar.xhtml"/>
   <nodes xsi:type="pageflow:PFPage" name="publico/grupo/editar.xhtml" x="554" y="178" id="pf13449559961905" referenceLink="//@navigationRule.5/@fromViewId|" outlinks="pf13449559961904" inlinks="pf13449627973248" path="/publico/grupo/editar.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/index.xhtml" x="338" y="1351" id="pf13449627973249" referenceLink="//@navigationRule.9/@fromViewId|" outlinks="pf134496279732410 pf134496279732411" inlinks="pf13450028589250" path="/publico/usuario/index.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/adicionar.xhtml" x="554" y="1351" id="pf134496279732412" referenceLink="//@navigationRule.10/@fromViewId|" outlinks="pf134496279732513" inlinks="pf134496279732410" path="/publico/usuario/adicionar.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/listar.xhtml" x="770" y="1351" id="pf134496279732514" referenceLink="//@navigationRule.12/@navigationCase.0/@toViewId|" outlinks="pf134496279732515 pf134496279732516" inlinks="pf134496279732411 pf134496279732513 pf134496279732517 pf134496279732516" path="/publico/usuario/listar.xhtml"/>
-  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/editar.xhtml" x="554" y="967" id="pf134496279732518" referenceLink="//@navigationRule.11/@fromViewId|" outlinks="pf134496279732517" inlinks="pf134496279732515" path="/publico/usuario/editar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/index.xhtml" x="338" y="1372" id="pf13449627973249" referenceLink="//@navigationRule.21/@fromViewId|" outlinks="pf134496279732410 pf134496279732411" inlinks="pf13450028589250" path="/publico/usuario/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/adicionar.xhtml" x="554" y="1351" id="pf134496279732412" referenceLink="//@navigationRule.19/@navigationCase.0/@toViewId|" outlinks="pf134496279732513" inlinks="pf134496279732410" path="/publico/usuario/adicionar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/listar.xhtml" x="770" y="1351" id="pf134496279732514" referenceLink="//@navigationRule.24/@navigationCase.0/@toViewId|" outlinks="pf134496279732515 pf134496279732516" inlinks="pf134496279732411 pf134496279732513 pf134496279732517 pf134496279732516" path="/publico/usuario/listar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/usuario/editar.xhtml" x="554" y="967" id="pf134496279732518" referenceLink="//@navigationRule.20/@navigationCase.0/@toViewId|" outlinks="pf134496279732517" inlinks="pf134496279732515" path="/publico/usuario/editar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/curso/index.xhtml" x="338" y="1756" id="pf13450615629452" referenceLink="//@navigationRule.0/@navigationCase.4/@toViewId|" outlinks="pf13450615629453 pf13450615629454" inlinks="pf13450615629430" path="/publico/curso/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/curso/adicionar.xhtml" x="554" y="1756" id="pf13450615629455" referenceLink="//@navigationRule.16/@fromViewId|" outlinks="pf13450615629456" inlinks="pf13450615629453" path="/publico/curso/adicionar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/curso/listar.xhtml" x="770" y="1958" id="pf13450615629457" referenceLink="//@navigationRule.18/@navigationCase.0/@toViewId|" outlinks="pf13450615629458 pf13450615629459" inlinks="pf13450615629454 pf13450615629456 pf134506156294510 pf13450615629459" path="/publico/curso/listar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/curso/editar.xhtml" x="554" y="2161" id="pf134506156294511" referenceLink="//@navigationRule.17/@fromViewId|" outlinks="pf134506156294510" inlinks="pf13450615629458" path="/publico/curso/editar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/disciplina/index.xhtml" id="pf134506156294512" referenceLink="//@navigationRule.21/@fromViewId|" outlinks="pf134506156294513 pf134506156294514" inlinks="pf13450615629431" path="/publico/disciplina/index.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/disciplina/adicionar.xhtml" id="pf134506156294515" referenceLink="//@navigationRule.22/@fromViewId|" outlinks="pf134506156294516" inlinks="pf134506156294513" path="/publico/disciplina/adicionar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/disciplina/listar.xhtml" id="pf134506156294517" referenceLink="//@navigationRule.24/@navigationCase.0/@toViewId|" outlinks="pf134506156294518 pf134506156294519" inlinks="pf134506156294514 pf134506156294516 pf134506156294620 pf134506156294519" path="/publico/disciplina/listar.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="publico/disciplina/editar.xhtml" id="pf134506156294621" referenceLink="//@navigationRule.23/@fromViewId|" outlinks="pf134506156294620" inlinks="pf134506156294518" path="/publico/disciplina/editar.xhtml"/>
   <links id="pf13440501506463" target="pf13440501506464" source="pf13440501506462" outcome="inicio"/>
   <links id="pf134430582990012" target="pf134430582990213" source="pf13440501506462" outcome="indexGrupo"/>
   <links id="pf13449559961901" target="pf13449559961902" source="pf13449559961900" outcome="adicionadoComSucesso"/>
@@ -23,6 +31,12 @@
   <links id="pf134496279732513" target="pf134496279732514" source="pf134496279732412" outcome="adicionadoComSucesso"/>
   <links id="pf134496279732517" target="pf134496279732514" source="pf134496279732518" outcome="editadoComSucesso"/>
   <links id="pf13450028589250" target="pf13449627973249" source="pf13440501506462" outcome="indexUsuario"/>
+  <links id="pf13450615629430" target="pf13450615629452" source="pf13440501506462" outcome="indexCurso"/>
+  <links id="pf13450615629453" target="pf13450615629455" source="pf13450615629452" outcome="novo"/>
+  <links id="pf13450615629458" target="pf134506156294511" source="pf13450615629457" outcome="formularioEditar"/>
+  <links id="pf13450615629454" target="pf13450615629457" source="pf13450615629452" outcome="listar"/>
+  <links id="pf13450615629456" target="pf13450615629457" source="pf13450615629455" outcome="adicionadoComSucesso"/>
+  <links id="pf134506156294510" target="pf13450615629457" source="pf134506156294511" outcome="editadoComSucesso"/>
   <links id="pf13449559961903" target="pf13449559961902" source="pf13449559961902" outcome="excluidoComSucesso">
     <bendPoints d1Height="-36" d2Height="-36"/>
     <bendPoints d1Width="-64" d1Height="-36" d2Width="-64" d2Height="-36"/>
@@ -33,4 +47,16 @@
     <bendPoints d1Width="-64" d1Height="-36" d2Width="-64" d2Height="-36"/>
     <bendPoints d1Width="-64" d2Width="-64"/>
   </links>
+  <links id="pf13450615629459" target="pf13450615629457" source="pf13450615629457" outcome="excluidoComSucesso">
+    <bendPoints d1Height="-36" d2Height="-36"/>
+    <bendPoints d1Width="-64" d1Height="-36" d2Width="-64" d2Height="-36"/>
+    <bendPoints d1Width="-64" d2Width="-64"/>
+  </links>
+  <links id="pf13450615629431" target="pf134506156294512" source="pf13440501506462" outcome="indexDisciplina"/>
+  <links id="pf134506156294513" target="pf134506156294515" source="pf134506156294512" outcome="novo"/>
+  <links id="pf134506156294518" target="pf134506156294621" source="pf134506156294517" outcome="formularioEditar"/>
+  <links id="pf134506156294514" target="pf134506156294517" source="pf134506156294512" outcome="listar"/>
+  <links id="pf134506156294516" target="pf134506156294517" source="pf134506156294515" outcome="adicionadoComSucesso"/>
+  <links id="pf134506156294620" target="pf134506156294517" source="pf134506156294621" outcome="editadoComSucesso"/>
+  <links id="pf134506156294519" target="pf134506156294517" source="pf134506156294517" outcome="excluidoComSucesso"/>
 </pageflow:Pageflow>
