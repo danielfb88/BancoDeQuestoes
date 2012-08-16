@@ -192,7 +192,7 @@ public class GrupoDAO implements IGrupoDAO {
 			while (resultSet.next()) {
 				grupos.add(new Grupo(resultSet.getInt("id_grupo"), resultSet
 						.getString("descricao"), resultSet.getString("tipo")
-						.toCharArray()[0]));
+						.charAt(0)));
 			}
 			resultSet.close();
 			preparedStatement.close();

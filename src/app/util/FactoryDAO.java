@@ -62,5 +62,13 @@ public class FactoryDAO {
 	public static IAnoSemestreDAO criarAnoSemestreDAO() {
 		return new AnoSemestreDAO();
 	}
+	
+	/**
+	 * PerguntaDAO
+	 * @return
+	 */
+	public static IPerguntaDAO criarPerguntaDAO() {
+		return new PerguntaDAO();
+	}
 
 }

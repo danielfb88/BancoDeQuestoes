@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Editar de Grupos</title>
+</h:head>
+<h:body>
+	<h1>Editar Usuario</h1>
+	<h:form id="frm_editar">
+		<h:messages />
+		<h:inputHidden value="#{usuarioBean.usuario.id_usuario}" />
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Grupo:" for="slct_grupo" />
+			<h:selectOneMenu id="slct_grupo"
+				value="#{usuarioBean.usuario.grupo.id_grupo}">
+				<f:selectItems value="#{usuarioBean.grupos}" var="item"
+					itemValue="#{item.id_grupo}" itemLabel="#{item.descricao}" />
+			</h:selectOneMenu>
+
+			<h:outputText value="Nome:" for="tx_nome" />
+			<h:inputText id="tx_nome" label="Nome" value="#{usuarioBean.usuario.nome}"
+				size="50" maxlength="50" required="true"
+				requiredMessage="Informe o nome do usuário." />
+
+			<h:outputText value="Login:" for="tx_login" />
+			<h:inputText id="tx_login" label="Login" value="#{usuarioBean.usuario.login}"
+				size="20" maxlength="10" required="true" disabled="true"
+				requiredMessage="Informe o login." />
+
+			<h:outputText value="Senha:" for="tx_senha" />
+			<h:inputSecret id="tx_senha" label="Senha" value="#{usuarioBean.usuario.senha}"
+				size="20" maxlength="6" required="true"
+				requiredMessage="Informe a senha." />
+
+		</h:panelGrid>
+
+		<h:commandButton action="#{usuarioBean.editar}" value="Salvar" />
+
+	</h:form>
+	<h:form>
+		<h:commandLink action="#{usuarioBean.listar}" value="Voltar" />
+	</h:form>
+</h:body>
+</html>

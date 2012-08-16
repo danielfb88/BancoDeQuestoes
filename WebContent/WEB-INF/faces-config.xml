@@ -51,6 +51,12 @@
 			<to-view-id>/publico/anoSemestre/index.xhtml</to-view-id>
 		</navigation-case>
 
+		<!-- INDEX PERGUNTA -->
+		<navigation-case>
+			<from-outcome>indexPergunta</from-outcome>
+			<to-view-id>/publico/pergunta/index.xhtml</to-view-id>
+		</navigation-case>
+
 	</navigation-rule>
 
 	<!-- REGRAS ESPECIFICAS -->
@@ -346,6 +352,55 @@
 		<navigation-case>
 			<from-outcome>excluidoComSucesso</from-outcome>
 			<to-view-id>/publico/anoSemestre/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- MÓDULO PERGUNTA -->
+	<navigation-rule>
+		<from-view-id>/publico/pergunta/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>novo</from-outcome>
+			<to-view-id>/publico/pergunta/adicionar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/pergunta/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/publico/pergunta/editar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/pergunta/index.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>listar</from-outcome>
+			<to-view-id>/publico/pergunta/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/pergunta/adicionar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>adicionadoComSucesso</from-outcome>
+			<to-view-id>/publico/pergunta/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/pergunta/editar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>editadoComSucesso</from-outcome>
+			<to-view-id>/publico/pergunta/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<navigation-rule>
+		<from-view-id>/publico/pergunta/listar.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>excluidoComSucesso</from-outcome>
+			<to-view-id>/publico/pergunta/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 
