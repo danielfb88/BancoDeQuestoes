@@ -5,16 +5,16 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Modulo de Usuarios</title>
+	<title>Modulo de Perguntas</title>
 </h:head>
 <h:body>
-	<h1>Usuario Menu</h1>
+	<h1>Pergunta Menu</h1>
 	<hr />
 
 	<h:form>
-		<h:commandLink action="#{usuarioBean.novo}" value="Adicionar" />
+		<h:commandLink action="#{perguntaBean.novo}" value="Adicionar" />
 		<h:outputLabel value=" - " />
-		<h:commandLink action="#{usuarioBean.listar}" value="Listar" />
+		<h:commandLink action="#{perguntaBean.listar}" value="Listar" />
 	</h:form>
 	<hr />
 

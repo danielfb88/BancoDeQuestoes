@@ -5,69 +5,81 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>Listar Usuarios</title>
+	<title>Listar Perguntas</title>
 </h:head>
 <h:body>
-	<h1>Listar Usuarios</h1>
+	<h1>Listar Perguntas</h1>
 	<hr />
 
 	<h:form>
-		<h:dataTable var="item" value="#{usuarioBean.usuarios}" border="1">
+		<h:dataTable var="item" value="#{perguntaBean.perguntas}" border="1">
 			<h:column>
 				<f:facet name="header">
 					<h:outputLabel value="CÓDIGO" />
 				</f:facet>
-				<h:outputLabel value="#{item.id_usuario}" />
+				<h:outputLabel value="#{item.id_pergunta}" />
 			</h:column>
 
 			<h:column>
 				<f:facet name="header">
-					<h:outputLabel value="GRUPO" />
+					<h:outputLabel value="USUARIO" />
 				</f:facet>
-				<h:outputLabel value="#{item.grupo.descricao}" />
+				<h:outputLabel value="#{item.usuario.nome}" />
 			</h:column>
 
 			<h:column>
 				<f:facet name="header">
-					<h:outputLabel value="NOME" />
+					<h:outputLabel value="DESCRICAO" />
 				</f:facet>
-				<h:outputLabel value="#{item.nome}" />
+				<h:outputLabel value="#{item.descricao}" />
 			</h:column>
 			
 			<h:column>
 				<f:facet name="header">
-					<h:outputLabel value="LOGIN" />
+					<h:outputLabel value="TIPO" />
 				</f:facet>
-				<h:outputLabel value="#{item.login}" />
+				<h:outputLabel value="#{item.tipo_pergunta}" />
 			</h:column>
-			
+	
 			<h:column>
 				<f:facet name="header">
-					<h:outputLabel value="SENHA" />
+					<h:outputLabel value="NIVEL" />
 				</f:facet>
-				<h:outputLabel value="#{item.senha}" />
+				<h:outputLabel value="#{item.nivel_pergunta}" />
 			</h:column>
-
+			<h:column>
+				<f:facet name="header">
+					<h:outputLabel value="ENUNCIADO" />
+				</f:facet>
+				<h:outputLabel value="#{item.enunciado}" />
+			</h:column>
+		
+			<h:column>
+				<f:facet name="header">
+					<h:outputLabel value="COMENTARIO" />
+				</f:facet>
+				<h:outputLabel value="#{item.comentario}" />
+			</h:column>
 			<h:column>
 				<f:facet name="header">
 					<h:outputLabel value="AÇÕES" />
 				</f:facet>
-				<h:commandLink value="Apagar" action="#{usuarioBean.excluir}">
+				<h:commandLink value="Apagar" action="#{perguntaBean.excluir}">
 					<f:setPropertyActionListener value="#{item}"
-						target="#{usuarioBean.usuario}" />
+						target="#{perguntaBean.pergunta}" />
 				</h:commandLink>
 
 				<h:outputLabel value=" - " />
 
-				<h:commandLink value="Editar" action="#{usuarioBean.formularioEditar}">
+				<h:commandLink value="Editar" action="#{perguntaBean.formularioEditar}">
 					<f:setPropertyActionListener value="#{item}"
-						target="#{usuarioBean.usuario}" />
+						target="#{perguntaBean.pergunta}" />
 				</h:commandLink>
 			</h:column>
 		</h:dataTable>
 	</h:form>
 	<h:form>
-		<h:commandLink action="indexUsuario" value="Voltar" />
+		<h:commandLink action="indexPergunta" value="Voltar" />
 	</h:form>
 
 </h:body>

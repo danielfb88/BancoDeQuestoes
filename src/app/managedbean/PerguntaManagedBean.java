@@ -8,9 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import app.bo.UsuarioBO;
 import app.bo.PerguntaBO;
-import app.dto.Usuario;
 import app.dto.Pergunta;
 
 /**
@@ -27,9 +25,6 @@ public class PerguntaManagedBean {
 	private List<Pergunta> perguntas = new LinkedList<Pergunta>();
 	private Pergunta pergunta = new Pergunta();
 	
-	private UsuarioBO usuarioBO = new UsuarioBO();
-	private List<Usuario> usuarios = new LinkedList<Usuario>();
-
 	public String novo() {
 		this.pergunta = new Pergunta();
 		return "novo";
@@ -108,12 +103,4 @@ public class PerguntaManagedBean {
 		this.perguntas = perguntas;
 	}
 
-	public List<Usuario> getUsuarios() {
-		this.usuarios = this.usuarioBO.getAllBy(new Usuario());
-		return usuarios;
-	}
-
-	public void setUsuarios(List<Usuario> usuarios) {
-		this.usuarios = usuarios;
-	}
 }

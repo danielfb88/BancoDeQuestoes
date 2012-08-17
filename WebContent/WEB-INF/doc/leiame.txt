@@ -4,7 +4,24 @@ Passos para a criação de um módulo
 2 - interface
 3 - dao
 4 - managedBean
-5 - controller
+5 - BO (controller)
 6 - metodo em factorydao
 7 - views
 
+
+
+
+
+
+-------------------------
+
+
+dar prioridade a pergunta e resposta
+
+
+
+dividir tarefas:
+periodo
+coordenador_curso
+disciplina_assunto
+grade

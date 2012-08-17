@@ -14,7 +14,7 @@ public class Pergunta implements Serializable {
 	private String comentario;
 
 	public Pergunta() {
-
+		this.usuario = new Usuario();
 	}
 
 	public Pergunta(Integer id_pergunta, Usuario usuario, String descricao,
