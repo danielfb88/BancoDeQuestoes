@@ -10,8 +10,8 @@ import javax.faces.context.FacesContext;
 
 import app.bo.CursoBO;
 import app.bo.DisciplinaBO;
+import app.controller.Disciplina;
 import app.dto.Curso;
-import app.dto.Disciplina;
 
 /**
  * Disciplina Bean

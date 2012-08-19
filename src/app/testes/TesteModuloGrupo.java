@@ -3,59 +3,52 @@ package app.testes;
 import java.util.Iterator;
 import java.util.List;
 
-import app.dao.postgresdialect.GrupoDAO;
-import app.dto.Grupo;
+import app.controller.Grupo;
 
 public class TesteModuloGrupo {
 
 	public static void main(String[] args) {
-		getAllBy();
+		buscarTodos();
 	}
 	
 	public static void inserir() {
-		GrupoDAO grupoDAO = new GrupoDAO();
 		Grupo grupo = new Grupo();		
-		grupo.setDescricao("HOOOO");
+		grupo.setDescricao("OKKKK");
 		grupo.setTipo(new Character('C'));
-		grupoDAO.editar(grupo);
+		grupo.adicionar();
 		System.out.println("Inserido com suceso!");
 	}
 	
-	public static void alterar() {
-		GrupoDAO grupoDAO = new GrupoDAO();
+	public static void carregar() {
 		Grupo grupo = new Grupo();
-		grupo.setId_grupo(5);
-		grupo.setDescricao("HOOOO_alterado!");
-		grupo.setTipo(new Character('A'));
-		grupoDAO.editar(grupo);
+		grupo.setId_grupo(83);
+		grupo.carregar();
+		System.out.print("A descrição é "+ grupo.getDescricao());
+	}
+	
+	public static void alterar() {
+		Grupo grupo = new Grupo();
+		grupo.setId_grupo(83);
+		grupo.carregar();
+		
+		grupo.setDescricao(grupo.getDescricao()+" Alterado");
+		grupo.editar();
 		System.out.println("Alterado com suceso!");
 	}
 	
 	public static void excluir() {
-		GrupoDAO grupoDAO = new GrupoDAO();
 		Grupo grupo = new Grupo();
-		grupo.setId_grupo(22);
-		grupo.setDescricao("HOOOO_alterado!");
-		grupo.setTipo(new Character('A'));
-		grupoDAO.excluir(grupo);
+		grupo.setId_grupo(83);
+		grupo.excluir();
 		System.out.println("Excluido com suceso!");
 	}
 	
-	public static void getById(int id) {
-		GrupoDAO grupoDAO = new GrupoDAO();
-		Grupo grupo = grupoDAO.getById(id);
-		System.out.println("GRUPO:");
-		System.out.println("ID: " + grupo.getId_grupo());
-		System.out.println("Descricao: " + grupo.getDescricao());
-		System.out.println("Tipo: " + grupo.getTipo());
-	}
-	
-	public static void getAllBy() {
-		int count = 0;
-		GrupoDAO grupoDAO = new GrupoDAO();
+	public static void buscarTodos() {
 		Grupo grupo = new Grupo();
-		grupo.setDescricao("OH YEH!!");
-		List<Grupo> grupos = grupoDAO.getAllBy(grupo);
+		grupo.setTipo('A');
+		List<Grupo> grupos = grupo.listar();
+		
+		int count = 0;
 		
 		Iterator<Grupo> iterator = grupos.iterator();
 		while (iterator.hasNext()) {

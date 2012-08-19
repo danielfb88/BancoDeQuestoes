@@ -8,8 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import app.bo.GrupoBO;
-import app.dto.Grupo;
+import app.controller.Grupo;
 
 /**
  * Grupo Bean. Poderá ser gerenciado pelo JSF atraves do arquivo
@@ -22,7 +21,6 @@ import app.dto.Grupo;
 @ManagedBean(name="grupoBean")
 @RequestScoped
 public class GrupoManagedBean {
-	private GrupoBO grupoBO = new GrupoBO();
 	private Grupo grupo = new Grupo();
 	private List<Grupo> grupos = new LinkedList<Grupo>();
 
@@ -36,10 +34,11 @@ public class GrupoManagedBean {
 	}
 
 	public String adicionar() {
-		if (grupoBO.adicionar(this.grupo)) {
+		if (grupo.adicionar()) {
 			// removendo o grupo atual para montar a query limpa
 			this.grupo = new Grupo();
 			return "adicionadoComSucesso";
+			
 		} else {
 			// Adicionando uma mensagem ao contexto do JSF
 			FacesMessage facesMessage = new FacesMessage(
@@ -52,10 +51,11 @@ public class GrupoManagedBean {
 	}
 
 	public String excluir() {
-		if (grupoBO.excluir(this.grupo)) {
+		if (grupo.excluir()) {
 			// removendo o grupo atual para montar a query limpa
 			this.grupo = new Grupo();
 			return "excluidoComSucesso";
+			
 		} else {
 			this.grupo = new Grupo();
 			FacesMessage facesMessage = new FacesMessage("Não é possível excluir o grupo");
@@ -67,10 +67,11 @@ public class GrupoManagedBean {
 	}
 
 	public String editar() {
-		if (grupoBO.editar(this.grupo)) {
+		if (grupo.editar()) {
 			// removendo o grupo atual para montar a query limpa
 			this.grupo = new Grupo();
 			return "editadoComSucesso";
+			
 		} else {
 			FacesContext context = FacesContext.getCurrentInstance();
 			FacesMessage facesMessage = new FacesMessage(
@@ -86,7 +87,7 @@ public class GrupoManagedBean {
 	}
 
 	public List<Grupo> getGrupos() {
-		this.grupos = grupoBO.getAllBy(this.grupo);
+		this.grupos = grupo.listar();
 		return this.grupos;
 	}
 

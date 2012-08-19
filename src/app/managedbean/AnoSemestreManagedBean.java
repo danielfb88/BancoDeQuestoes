@@ -9,7 +9,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import app.bo.AnoSemestreBO;
-import app.dto.AnoSemestre;
+import app.controller.AnoSemestre;
 
 /**
  * AnoSemestre Bean.

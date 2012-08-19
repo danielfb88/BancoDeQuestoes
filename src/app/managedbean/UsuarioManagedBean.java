@@ -8,10 +8,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import app.bo.GrupoBO;
 import app.bo.UsuarioBO;
+import app.controller.GrupoBO;
+import app.controller.Usuario;
 import app.dto.Grupo;
-import app.dto.Usuario;
 
 /**
  * Usuario Bean

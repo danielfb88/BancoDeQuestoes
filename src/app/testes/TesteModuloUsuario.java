@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import app.bo.UsuarioBO;
-import app.bo.GrupoBO;
-import app.dao.postgresdialect.UsuarioDAO;
-import app.dto.Usuario;
+import app.controller.GrupoBO;
+import app.controller.Usuario;
+import app.dao.UsuarioDAO;
 
 public class TesteModuloUsuario {
 	public static UsuarioDAO usuarioDAO = new UsuarioDAO();

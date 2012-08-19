@@ -9,7 +9,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import app.bo.PerguntaBO;
-import app.dto.Pergunta;
+import app.controller.Pergunta;
 
 /**
  * Pergunta Bean
