@@ -3,8 +3,16 @@ package app.controller;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Curso
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 19-08-2012
+ * 
+ */
 public class Curso {
 	private Integer id_curso;
+	private String descricao;
 	private String sigla;
 	private String tipo_graduacao;
 
@@ -12,9 +20,11 @@ public class Curso {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Curso(Integer id_curso, String sigla, String tipo_graduacao) {
+	public Curso(Integer id_curso, String descricao, String sigla,
+			String tipo_graduacao) {
 		super();
 		this.id_curso = id_curso;
+		this.descricao = descricao;
 		this.sigla = sigla;
 		this.tipo_graduacao = tipo_graduacao;
 	}
@@ -25,6 +35,14 @@ public class Curso {
 
 	public void setId_curso(Integer id_curso) {
 		this.id_curso = id_curso;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	public String getSigla() {
@@ -139,6 +157,8 @@ public class Curso {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
+				+ ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result
 				+ ((id_curso == null) ? 0 : id_curso.hashCode());
 		result = prime * result + ((sigla == null) ? 0 : sigla.hashCode());
 		result = prime * result
@@ -155,6 +175,11 @@ public class Curso {
 		if (getClass() != obj.getClass())
 			return false;
 		Curso other = (Curso) obj;
+		if (descricao == null) {
+			if (other.descricao != null)
+				return false;
+		} else if (!descricao.equals(other.descricao))
+			return false;
 		if (id_curso == null) {
 			if (other.id_curso != null)
 				return false;
@@ -172,5 +197,4 @@ public class Curso {
 			return false;
 		return true;
 	}
-
 }

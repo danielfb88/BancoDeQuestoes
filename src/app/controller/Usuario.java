@@ -2,6 +2,13 @@ package app.controller;
 
 import java.util.List;
 
+/**
+ * Usuario
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 19-08-2012
+ * 
+ */
 public class Usuario {
 	private Integer id_usuario;
 	private Grupo grupo;

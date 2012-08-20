@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Disciplina;
-import app.dao.iterface.IDisciplinaDAO;
 import app.util.DAOUtil;
 
 /**
@@ -17,15 +16,14 @@ import app.util.DAOUtil;
  * @since 08-08-2012
  * 
  */
-public class DisciplinaDAO implements IDisciplinaDAO {
+public class DisciplinaDAO {
 	CursoDAO cursoDAO = new CursoDAO();
 
 	public DisciplinaDAO() {
 
 	}
 
-	@Override
-	public int adicionar(Disciplina disciplina) {
+	public int adicionar(Integer id_curso, String descricao, String sigla) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -33,9 +31,9 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, disciplina.getCurso().getId_curso());
-			preparedStatement.setString(2, disciplina.getDescricao());
-			preparedStatement.setString(3, disciplina.getSigla());
+			preparedStatement.setInt(1, id_curso);
+			preparedStatement.setString(2, descricao);
+			preparedStatement.setString(3, sigla);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -47,8 +45,8 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int editar(Disciplina disciplina) {
+	public int editar(Integer id_disciplina, Integer id_curso,
+			String descricao, String sigla) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -56,10 +54,10 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, disciplina.getCurso().getId_curso());
-			preparedStatement.setString(2, disciplina.getDescricao());
-			preparedStatement.setString(3, disciplina.getSigla());
-			preparedStatement.setInt(4, disciplina.getId_disciplina());
+			preparedStatement.setInt(1, id_curso);
+			preparedStatement.setString(2, descricao);
+			preparedStatement.setString(3, sigla);
+			preparedStatement.setInt(4, id_disciplina);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -71,8 +69,7 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int excluir(Disciplina disciplina) {
+	public int excluir(Integer id) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -81,7 +78,7 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, disciplina.getId_disciplina());
+			preparedStatement.setInt(1, id);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -93,8 +90,7 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public Disciplina getById(int id) {
+	public Disciplina buscarPorId(Integer id) {
 		Disciplina disciplina = new Disciplina();
 
 		String sql = "SELECT * FROM disciplina WHERE id_disciplina = ?;";
@@ -115,7 +111,8 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 			disciplina.setId_disciplina(resultSet.getInt("id_disciplina"));
 			disciplina.setDescricao(resultSet.getString("descricao"));
 			disciplina.setSigla(resultSet.getString("sigla"));
-			disciplina.setCurso(cursoDAO.getById(resultSet.getInt("id_curso")));
+			disciplina.setCurso(cursoDAO.buscarPorId(resultSet
+					.getInt("id_curso")));
 
 			resultSet.close();
 			preparedStatement.close();
@@ -127,7 +124,8 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 		return disciplina;
 	}
 
-	public List<Disciplina> getAllBy(Disciplina disciplina) {
+	public List<Disciplina> listarPor(Integer id_disciplina, Integer id_curso,
+			String descricao, String sigla) {
 		List<Disciplina> disciplinas = new LinkedList<Disciplina>();
 		StringBuilder builder = new StringBuilder();
 
@@ -142,37 +140,30 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 		builder.append("SELECT * FROM disciplina WHERE true ");
 
 		// ID
-		if (disciplina.getId_disciplina() != null
-				&& disciplina.getId_disciplina() > 0) {
+		if (id_disciplina != null && id_disciplina > 0) {
 			builder.append("AND id_disciplina = ? ");
 			ordemDoIdDisciplina = ++count;
 		}
 
 		// ID Curso
-		if (disciplina.getCurso() != null) {
-			if (disciplina.getCurso().getId_curso() != null
-					&& disciplina.getCurso().getId_curso() > 0) {
-				builder.append("AND id_curso = ? ");
-				ordemDoIdCurso = ++count;
-			}
+		if (id_curso != null && id_curso > 0) {
+			builder.append("AND id_curso = ? ");
+			ordemDoIdCurso = ++count;
 		}
 
 		// Descricao
-		if (disciplina.getDescricao() != null) {
+		if (descricao != null) {
 			builder.append("AND descricao LIKE ? ");
 			ordemDaDescricao = ++count;
 		}
 
 		// Sigla
-		if (disciplina.getSigla() != null) {
+		if (sigla != null) {
 			builder.append("AND sigla = ? ");
 			ordemDaSigla = ++count;
 		}
 
-		// Fechando a instrução
 		builder.append(";");
-
-		// System.out.println(builder.toString());
 
 		try {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
@@ -180,20 +171,17 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 
 			// Verificando a ordem dos parâmetros
 			if (ordemDoIdDisciplina > 0)
-				preparedStatement.setInt(ordemDoIdDisciplina,
-						disciplina.getId_disciplina());
+				preparedStatement.setInt(ordemDoIdDisciplina, id_disciplina);
 
 			if (ordemDoIdCurso > 0)
-				preparedStatement.setInt(ordemDoIdCurso, disciplina.getCurso()
-						.getId_curso());
+				preparedStatement.setInt(ordemDoIdCurso, id_curso);
 
 			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao,
-						"%" + disciplina.getDescricao() + "%");
+				preparedStatement.setString(ordemDaDescricao, "%" + descricao
+						+ "%");
 
 			if (ordemDaSigla > 0)
-				preparedStatement
-						.setString(ordemDaSigla, disciplina.getSigla());
+				preparedStatement.setString(ordemDaSigla, sigla);
 
 			// Executando a query e retornando em um ResultSet
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -203,9 +191,10 @@ public class DisciplinaDAO implements IDisciplinaDAO {
 				Disciplina disciplinaRetornado = new Disciplina();
 				disciplinaRetornado.setId_disciplina(resultSet
 						.getInt("id_disciplina"));
-				disciplinaRetornado.setCurso(cursoDAO.getById(resultSet
+				disciplinaRetornado.setCurso(cursoDAO.buscarPorId(resultSet
 						.getInt("id_curso")));
-				disciplinaRetornado.setDescricao(resultSet.getString("descricao"));
+				disciplinaRetornado.setDescricao(resultSet
+						.getString("descricao"));
 				disciplinaRetornado.setSigla(resultSet.getString("sigla"));
 
 				// Adicionando o disciplina à lista

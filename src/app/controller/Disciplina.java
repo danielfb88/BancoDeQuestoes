@@ -2,6 +2,13 @@ package app.controller;
 
 import java.util.List;
 
+/**
+ * Disciplina
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 19-08-2012
+ * 
+ */
 public class Disciplina {
 	private Integer id_disciplina;
 	private Curso curso;

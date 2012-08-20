@@ -2,6 +2,13 @@ package app.controller;
 
 import java.util.List;
 
+/**
+ * Periodo
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 19-08-2012
+ * 
+ */
 public class Periodo {
 	private Integer id_periodo;
 	private String descricao;

@@ -2,6 +2,13 @@ package app.controller;
 
 import java.util.List;
 
+/**
+ * Grade
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 19-08-2012
+ * 
+ */
 public class Grade {
 	private Integer id_grade;
 	private Curso curso;

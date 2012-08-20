@@ -2,6 +2,13 @@ package app.controller;
 
 import java.util.List;
 
+/**
+ * Resposta
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 19-08-2012
+ * 
+ */
 public class Resposta {
 	private Integer id_resposta;
 	private Pergunta pergunta;

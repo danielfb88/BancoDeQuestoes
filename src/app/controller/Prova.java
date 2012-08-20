@@ -3,6 +3,13 @@ package app.controller;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Prova
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 19-08-2012
+ * 
+ */
 public class Prova {
 	private Integer id_prova;
 	private Integer id_gradePeriodo;

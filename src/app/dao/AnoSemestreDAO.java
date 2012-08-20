@@ -7,17 +7,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.AnoSemestre;
-import app.dao.iterface.IAnoSemestreDAO;
 import app.util.DAOUtil;
 
-public class AnoSemestreDAO implements IAnoSemestreDAO {
+public class AnoSemestreDAO {
 
 	public AnoSemestreDAO() {
 
 	}
 
-	@Override
-	public int adicionar(AnoSemestre anoSemestre) {
+	public int adicionar(Integer ano, Integer semestre) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -26,8 +24,8 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, anoSemestre.getAno());
-			preparedStatement.setInt(2, anoSemestre.getSemestre());
+			preparedStatement.setInt(1, ano);
+			preparedStatement.setInt(2, semestre);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -39,8 +37,7 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int editar(AnoSemestre anoSemestre) {
+	public int editar(Integer id_anoSemestre, Integer ano, Integer semestre) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -49,9 +46,9 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, anoSemestre.getAno());
-			preparedStatement.setInt(2, anoSemestre.getSemestre());
-			preparedStatement.setInt(3, anoSemestre.getId_anoSemestre());
+			preparedStatement.setInt(1, ano);
+			preparedStatement.setInt(2, semestre);
+			preparedStatement.setInt(3, id_anoSemestre);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -63,8 +60,7 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int excluir(AnoSemestre anoSemestre) {
+	public int excluir(Integer id) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -73,7 +69,7 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, anoSemestre.getId_anoSemestre());
+			preparedStatement.setInt(1, id);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -85,8 +81,7 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public AnoSemestre getById(int id) {
+	public AnoSemestre getById(Integer id) {
 		AnoSemestre anoSemestre = new AnoSemestre();
 
 		String sql = "SELECT * FROM anosemestre WHERE id_anosemestre = ?;";
@@ -118,8 +113,8 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 		return anoSemestre;
 	}
 
-	@Override
-	public List<AnoSemestre> getAllBy(AnoSemestre anoSemestre) {
+	public List<AnoSemestre> getAllBy(Integer id_anoSemestre, Integer ano,
+			Integer semestre) {
 		List<AnoSemestre> anoSemestres = new LinkedList<AnoSemestre>();
 		StringBuilder builder = new StringBuilder();
 
@@ -133,20 +128,19 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 		builder.append("SELECT * FROM anosemestre WHERE true ");
 
 		// ID
-		if (anoSemestre.getId_anoSemestre() != null
-				&& anoSemestre.getId_anoSemestre() > 0) {
+		if (id_anoSemestre != null && id_anoSemestre > 0) {
 			builder.append("AND id_anosemestre = ? ");
 			ordemDoId_anoSemestre = ++count;
 		}
 
 		// ANO
-		if (anoSemestre.getAno() != null) {
-			builder.append("AND ano LIKE ? ");
+		if (ano != null) {
+			builder.append("AND ano = ? ");
 			ordemDoAno = ++count;
 		}
 
 		// SEMESTRE
-		if (anoSemestre.getSemestre() != null) {
+		if (semestre != null) {
 			builder.append("AND semestre = ? ");
 			ordemDoSemestre = ++count;
 		}
@@ -160,15 +154,13 @@ public class AnoSemestreDAO implements IAnoSemestreDAO {
 
 			// Verificando a ordem dos parâmetros
 			if (ordemDoId_anoSemestre > 0)
-				preparedStatement.setInt(ordemDoId_anoSemestre,
-						anoSemestre.getId_anoSemestre());
+				preparedStatement.setInt(ordemDoId_anoSemestre, id_anoSemestre);
 
 			if (ordemDoAno > 0)
-				preparedStatement.setInt(ordemDoAno, anoSemestre.getAno());
+				preparedStatement.setInt(ordemDoAno, ano);
 
 			if (ordemDoSemestre > 0)
-				preparedStatement.setInt(ordemDoSemestre,
-						anoSemestre.getSemestre());
+				preparedStatement.setInt(ordemDoSemestre, semestre);
 
 			// Executando a quary e retornando em um ResultSet
 			ResultSet resultSet = preparedStatement.executeQuery();

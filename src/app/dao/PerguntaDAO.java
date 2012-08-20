@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Pergunta;
-import app.dao.iterface.IPerguntaDAO;
 import app.util.DAOUtil;
 
 /**
@@ -17,15 +16,16 @@ import app.util.DAOUtil;
  * @since 16-08-2012
  * 
  */
-public class PerguntaDAO implements IPerguntaDAO {
+public class PerguntaDAO {
 	UsuarioDAO usuarioDAO = new UsuarioDAO();
 
 	public PerguntaDAO() {
 
 	}
 
-	@Override
-	public int adicionar(Pergunta pergunta) {
+	public int adicionar(Integer id_usuario, String descricao,
+			Character tipo_pergunta, Character nivel_pergunta,
+			String enunciado, String comentario) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -33,14 +33,12 @@ public class PerguntaDAO implements IPerguntaDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, pergunta.getUsuario().getId_usuario());
-			preparedStatement.setString(2, pergunta.getDescricao());
-			preparedStatement.setString(3, pergunta.getTipo_pergunta()
-					.toString());
-			preparedStatement.setString(4, pergunta.getNivel_pergunta()
-					.toString());
-			preparedStatement.setString(5, pergunta.getEnunciado());
-			preparedStatement.setString(6, pergunta.getComentario());
+			preparedStatement.setInt(1, id_usuario);
+			preparedStatement.setString(2, descricao);
+			preparedStatement.setString(3, tipo_pergunta.toString());
+			preparedStatement.setString(4, nivel_pergunta.toString());
+			preparedStatement.setString(5, enunciado);
+			preparedStatement.setString(6, comentario);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -52,8 +50,9 @@ public class PerguntaDAO implements IPerguntaDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int editar(Pergunta pergunta) {
+	public int editar(Integer id_pergunta, Integer id_usuario,
+			String descricao, Character tipo_pergunta,
+			Character nivel_pergunta, String enunciado, String comentario) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -61,15 +60,13 @@ public class PerguntaDAO implements IPerguntaDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, pergunta.getUsuario().getId_usuario());
-			preparedStatement.setString(2, pergunta.getDescricao());
-			preparedStatement.setString(3, pergunta.getTipo_pergunta()
-					.toString());
-			preparedStatement.setString(4, pergunta.getNivel_pergunta()
-					.toString());
-			preparedStatement.setString(5, pergunta.getEnunciado());
-			preparedStatement.setString(6, pergunta.getComentario());
-			preparedStatement.setInt(7, pergunta.getId_pergunta());
+			preparedStatement.setInt(1, id_usuario);
+			preparedStatement.setString(2, descricao);
+			preparedStatement.setString(3, tipo_pergunta.toString());
+			preparedStatement.setString(4, nivel_pergunta.toString());
+			preparedStatement.setString(5, enunciado);
+			preparedStatement.setString(6, comentario);
+			preparedStatement.setInt(7, id_pergunta);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -81,8 +78,7 @@ public class PerguntaDAO implements IPerguntaDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int excluir(Pergunta pergunta) {
+	public int excluir(Integer id) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -91,7 +87,7 @@ public class PerguntaDAO implements IPerguntaDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, pergunta.getId_pergunta());
+			preparedStatement.setInt(1, id);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -103,8 +99,7 @@ public class PerguntaDAO implements IPerguntaDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public Pergunta getById(int id) {
+	public Pergunta buscarPorId(Integer id) {
 		Pergunta pergunta = new Pergunta();
 
 		String sql = "SELECT * FROM pergunta WHERE id_pergunta = ?;";
@@ -130,7 +125,7 @@ public class PerguntaDAO implements IPerguntaDAO {
 					.charAt(0));
 			pergunta.setEnunciado(resultSet.getString("enunciado"));
 			pergunta.setComentario(resultSet.getString("comentario"));
-			pergunta.setUsuario(usuarioDAO.getById(resultSet
+			pergunta.setUsuario(usuarioDAO.buscarPorId(resultSet
 					.getInt("id_usuario")));
 
 			resultSet.close();
@@ -143,7 +138,10 @@ public class PerguntaDAO implements IPerguntaDAO {
 		return pergunta;
 	}
 
-	public List<Pergunta> getAllBy(Pergunta pergunta) {
+	public List<Pergunta> listarPor(Integer id_pergunta, Integer id_usuario,
+			String descricao, Character tipo_pergunta,
+			Character nivel_pergunta, String enunciado, String comentario) {
+
 		List<Pergunta> perguntas = new LinkedList<Pergunta>();
 		StringBuilder builder = new StringBuilder();
 
@@ -161,54 +159,48 @@ public class PerguntaDAO implements IPerguntaDAO {
 		builder.append("SELECT * FROM pergunta WHERE true ");
 
 		// ID
-		if (pergunta.getId_pergunta() != null && pergunta.getId_pergunta() > 0) {
+		if (id_pergunta != null && id_pergunta > 0) {
 			builder.append("AND id_pergunta = ? ");
 			ordemDoIdPergunta = ++count;
 		}
 
 		// ID Usuario
-		if (pergunta.getUsuario() != null) {
-			if (pergunta.getUsuario().getId_usuario() != null
-					&& pergunta.getUsuario().getId_usuario() > 0) {
-				builder.append("AND id_usuario = ? ");
-				ordemDoIdUsuario = ++count;
-			}
+		if (id_usuario != null && id_usuario > 0) {
+			builder.append("AND id_usuario = ? ");
+			ordemDoIdUsuario = ++count;
 		}
 
 		// Descricao
-		if (pergunta.getDescricao() != null) {
+		if (descricao != null) {
 			builder.append("AND descricao LIKE ? ");
 			ordemDaDescricao = ++count;
 		}
 
 		// Tipo_Pergunta
-		if (pergunta.getTipo_pergunta() != null) {
+		if (tipo_pergunta != null) {
 			builder.append("AND tipo_pergunta = ? ");
 			ordemDoTipoPergunta = ++count;
 		}
 
 		// Nivel_Pergunta
-		if (pergunta.getNivel_pergunta() != null) {
+		if (nivel_pergunta != null) {
 			builder.append("AND nivel_pergunta = ? ");
 			ordemDoNivelPergunta = ++count;
 		}
 
 		// Enunciado
-		if (pergunta.getEnunciado() != null) {
+		if (enunciado != null) {
 			builder.append("AND enunciado = ? ");
 			ordemDoEnunciado = ++count;
 		}
 
 		// Comentario
-		if (pergunta.getComentario() != null) {
+		if (comentario != null) {
 			builder.append("AND comentario = ? ");
 			ordemDoComentario = ++count;
 		}
 
-		// Fechando a instrução
 		builder.append(";");
-
-		// System.out.println(builder.toString());
 
 		try {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
@@ -216,32 +208,30 @@ public class PerguntaDAO implements IPerguntaDAO {
 
 			// Verificando a ordem dos parâmetros
 			if (ordemDoIdPergunta > 0)
-				preparedStatement.setInt(ordemDoIdPergunta,
-						pergunta.getId_pergunta());
+				preparedStatement.setInt(ordemDoIdPergunta, id_pergunta);
 
 			if (ordemDoIdUsuario > 0)
-				preparedStatement.setInt(ordemDoIdUsuario, pergunta
-						.getUsuario().getId_usuario());
+				preparedStatement.setInt(ordemDoIdUsuario, id_usuario);
 
 			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao,
-						"%" + pergunta.getDescricao() + "%");
+				preparedStatement.setString(ordemDaDescricao, "%" + descricao
+						+ "%");
 
 			if (ordemDoTipoPergunta > 0)
-				preparedStatement.setString(ordemDoTipoPergunta, pergunta
-						.getTipo_pergunta().toString());
+				preparedStatement.setString(ordemDoTipoPergunta,
+						tipo_pergunta.toString());
 
 			if (ordemDoNivelPergunta > 0)
-				preparedStatement.setString(ordemDoNivelPergunta, pergunta
-						.getNivel_pergunta().toString());
+				preparedStatement.setString(ordemDoNivelPergunta,
+						perguntas.toString());
 
 			if (ordemDoEnunciado > 0)
-				preparedStatement.setString(ordemDoEnunciado,
-						"%" + pergunta.getEnunciado() + "%");
+				preparedStatement.setString(ordemDoEnunciado, "%" + enunciado
+						+ "%");
 
 			if (ordemDoComentario > 0)
-				preparedStatement.setString(ordemDoComentario,
-						"%" + pergunta.getComentario() + "%");
+				preparedStatement.setString(ordemDoComentario, "%" + comentario
+						+ "%");
 
 			// Executando a query e retornando em um ResultSet
 			ResultSet resultSet = preparedStatement.executeQuery();
@@ -251,7 +241,7 @@ public class PerguntaDAO implements IPerguntaDAO {
 				Pergunta perguntaRetornado = new Pergunta();
 				perguntaRetornado.setId_pergunta(resultSet
 						.getInt("id_pergunta"));
-				perguntaRetornado.setUsuario(usuarioDAO.getById(resultSet
+				perguntaRetornado.setUsuario(usuarioDAO.buscarPorId(resultSet
 						.getInt("id_usuario")));
 				perguntaRetornado
 						.setDescricao(resultSet.getString("descricao"));

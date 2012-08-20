@@ -7,17 +7,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Assunto;
-import app.dao.iterface.IAssuntoDAO;
 import app.util.DAOUtil;
 
-public class AssuntoDAO implements IAssuntoDAO {
+public class AssuntoDAO {
 
 	public AssuntoDAO() {
 
 	}
 
-	@Override
-	public int adicionar(Assunto assunto) {
+	public int adicionar(String descricao) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -26,7 +24,7 @@ public class AssuntoDAO implements IAssuntoDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setString(1, assunto.getDescricao());
+			preparedStatement.setString(1, descricao);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -38,8 +36,7 @@ public class AssuntoDAO implements IAssuntoDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int editar(Assunto assunto) {
+	public int editar(Integer id_assunto, String descricao) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -48,8 +45,8 @@ public class AssuntoDAO implements IAssuntoDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setString(1, assunto.getDescricao());
-			preparedStatement.setInt(2, assunto.getId_assunto());
+			preparedStatement.setString(1, descricao);
+			preparedStatement.setInt(2, id_assunto);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -61,8 +58,7 @@ public class AssuntoDAO implements IAssuntoDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public int excluir(Assunto assunto) {
+	public int excluir(Integer id) {
 		int linhasAfetadas = 0;
 
 		try {
@@ -71,7 +67,7 @@ public class AssuntoDAO implements IAssuntoDAO {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
-			preparedStatement.setInt(1, assunto.getId_assunto());
+			preparedStatement.setInt(1, id);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -83,8 +79,7 @@ public class AssuntoDAO implements IAssuntoDAO {
 		return linhasAfetadas;
 	}
 
-	@Override
-	public Assunto getById(int id) {
+	public Assunto getById(Integer id) {
 		Assunto assunto = new Assunto();
 
 		String sql = "SELECT * FROM assunto WHERE id_assunto = ?;";
@@ -115,8 +110,7 @@ public class AssuntoDAO implements IAssuntoDAO {
 		return assunto;
 	}
 
-	@Override
-	public List<Assunto> getAllBy(Assunto assunto) {
+	public List<Assunto> getAllBy(Integer id_assunto, String descricao) {
 		List<Assunto> assuntos = new LinkedList<Assunto>();
 		StringBuilder builder = new StringBuilder();
 
@@ -129,13 +123,13 @@ public class AssuntoDAO implements IAssuntoDAO {
 		builder.append("SELECT * FROM assunto WHERE true ");
 
 		// ID
-		if (assunto.getId_assunto() != null && assunto.getId_assunto() > 0) {
+		if (id_assunto != null && id_assunto > 0) {
 			builder.append("AND id_assunto = ? ");
 			ordemDoId_assunto = ++count;
 		}
 
 		// Descricao
-		if (assunto.getDescricao() != null) {
+		if (descricao != null) {
 			builder.append("AND descricao LIKE ? ");
 			ordemDaDescricao = ++count;
 		}
@@ -149,12 +143,11 @@ public class AssuntoDAO implements IAssuntoDAO {
 
 			// Verificando a ordem dos parâmetros
 			if (ordemDoId_assunto > 0)
-				preparedStatement.setInt(ordemDoId_assunto,
-						assunto.getId_assunto());
+				preparedStatement.setInt(ordemDoId_assunto, id_assunto);
 
 			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao,
-						"%" + assunto.getDescricao() + "%");
+				preparedStatement.setString(ordemDaDescricao, "%" + descricao
+						+ "%");
 
 			// Executando a quary e retornando em um ResultSet
 			ResultSet resultSet = preparedStatement.executeQuery();
