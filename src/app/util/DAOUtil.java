@@ -77,7 +77,7 @@ public class DAOUtil {
 			throws SQLException {
 		return this.getConnection().prepareStatement(sql);
 	}
-	
+
 	/**
 	 * Fecha a conexão.
 	 * 
@@ -95,6 +95,59 @@ public class DAOUtil {
 			} finally {
 				this.con = null;
 			}
+		}
+	}
+
+	/**
+	 * Inicia transacao
+	 */
+	public void iniciarTransacao() {
+		try {
+			this.getConnection().setAutoCommit(false);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * Commita a transação em andamento
+	 */
+	public void commit() {
+		try {
+			if (this.getConnection().getAutoCommit() == false) {
+				this.getConnection().commit();
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Rollback na tranzacao em andamento
+	 */
+	public void rollback() {
+		try {
+			if (this.getConnection().getAutoCommit() == false) {
+				this.getConnection().rollback();
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Finaliza transacao
+	 */
+	public void finalizarTransacao() {
+		try {
+			this.getConnection().setAutoCommit(true);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
