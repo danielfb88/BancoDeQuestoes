@@ -81,7 +81,7 @@ public class AnoSemestreDAO {
 		return linhasAfetadas;
 	}
 
-	public AnoSemestre getById(Integer id) {
+	public AnoSemestre buscarPorId(Integer id) {
 		AnoSemestre anoSemestre = new AnoSemestre();
 
 		String sql = "SELECT * FROM anosemestre WHERE id_anosemestre = ?;";
@@ -113,7 +113,7 @@ public class AnoSemestreDAO {
 		return anoSemestre;
 	}
 
-	public List<AnoSemestre> getAllBy(Integer id_anoSemestre, Integer ano,
+	public List<AnoSemestre> listarPor(Integer id_anoSemestre, Integer ano,
 			Integer semestre) {
 		List<AnoSemestre> anoSemestres = new LinkedList<AnoSemestre>();
 		StringBuilder builder = new StringBuilder();
