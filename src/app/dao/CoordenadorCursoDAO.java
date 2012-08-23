@@ -95,7 +95,7 @@ public class CoordenadorCursoDAO {
 
 		try {
 
-			String sql = "DELETE FROM coordenadorCurso WHERE id_coordenadorCurso = ?;";
+			String sql = "DELETE FROM coordenadorcurso WHERE id_coordenadorcurso = ?;";
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
@@ -114,7 +114,7 @@ public class CoordenadorCursoDAO {
 	public CoordenadorCurso buscarPorId(Integer id) {
 		CoordenadorCurso coordenadorCurso = new CoordenadorCurso();
 
-		String sql = "SELECT * FROM coordenadorCurso WHERE id_coordenadorCurso = ?;";
+		String sql = "SELECT * FROM coordenadorcurso WHERE id_coordenadorcurso = ?;";
 
 		try {
 			PreparedStatement preparedStatement = DAOUtil.getInstance()

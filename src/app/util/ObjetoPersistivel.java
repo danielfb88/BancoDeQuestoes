@@ -11,7 +11,7 @@ import app.util.exceptions.IDInvalidoException;
  * @author Daniel Bonfim <daniel.fb88@mail.com>
  *
  */
-public abstract class ObjetoPersistente {
+public abstract class ObjetoPersistivel {
 	
 	/**
 	 * Verifica se o ID foi preenchido corretamente
