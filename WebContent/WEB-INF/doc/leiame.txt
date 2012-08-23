@@ -1,27 +1,10 @@
-Passos para a criação de um módulo
-
-1 - dto
-2 - interface
-3 - dao
-4 - managedBean
-5 - BO (controller)
-6 - metodo em factorydao
-7 - views
+remover relação disciplina_pergunta
 
 
+CLASSE RESPOSTA!!!!!
+
+SELECT * FROM PERIODO P
+JOIN GRADE_PERIODO GP ON (P.ID_PERIODO = GP.ID_PERIODO) 
+WHERE GP.ID_GRADE = 1;
 
 
-
-
--------------------------
-
-
-dar prioridade a pergunta e resposta
-
-
-
-dividir tarefas:
-periodo
-coordenador_curso
-disciplina_assunto
-grade

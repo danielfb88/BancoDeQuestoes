@@ -211,18 +211,20 @@ CREATE TABLE disciplina (
 ALTER TABLE disciplina ADD CONSTRAINT fk_disciplina_id_curso__curso_id_curso 
 FOREIGN KEY (id_curso) REFERENCES curso(id_curso);
 
-/* DISCIPLINA_PERGUNTA */
+/* DISCIPLINA_PERGUNTA 
 --DROP TABLE disciplina_pergunta CASCADE;
 CREATE TABLE disciplina_pergunta (
 	id_disciplina_pergunta SERIAL PRIMARY KEY,
 	id_disciplina INT NOT NULL,
 	id_pergunta INT NOT NULL
 );
+
 ALTER TABLE disciplina_pergunta ADD CONSTRAINT fk_disciplina_pergunta_id_disciplina__disciplina_id_disciplina 
 	FOREIGN KEY (id_disciplina) REFERENCES disciplina(id_disciplina);
 
 ALTER TABLE disciplina_pergunta ADD CONSTRAINT fk_disciplina_pergunta_id_pergunta__pergunta_id_pergunta 
 	FOREIGN KEY (id_pergunta) REFERENCES pergunta (id_pergunta);
+*/
 
 /* DISCIPLINA_ASSUNTO */
 --DROP TABLE disciplina_assunto CASCADE;
@@ -236,6 +238,19 @@ FOREIGN KEY (id_disciplina) REFERENCES disciplina(id_disciplina);
 
 ALTER TABLE disciplina_assunto ADD CONSTRAINT fk_disciplina_assunto_id_assunto__assunto_id_assunto 
 FOREIGN KEY (id_assunto) REFERENCES assunto(id_assunto);
+
+/* DISCIPLINA_ASSUNTO__PERGUNTA */
+CREATE TABLE disciplina_assunto__pergunta (
+	id_disciplina_assunto__pergunta SERIAL PRIMARY KEY,
+	id_disciplina_assunto INT NOT NULL,
+	id_pergunta INT NOT NULL
+);
+ALTER TABLE disciplina_assunto__pergunta ADD CONSTRAINT fk_d_a__p_id_disciplina_assunto__d_a_id_disciplina_assunto 
+FOREIGN KEY (id_disciplina_assunto) REFERENCES disciplina_assunto (id_disciplina_Assunto);
+
+ALTER TABLE disciplina_assunto__pergunta ADD CONSTRAINT fk_d_a__p_id_pergunta__p_id_pergunta 
+FOREIGN KEY (id_pergunta) REFERENCES pergunta (id_pergunta);
+
 
 /* GRADE_PERIODO_DISCIPLINA */
 --DROP TABLE grade_periodo_disciplina CASCADE;

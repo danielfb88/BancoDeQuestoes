@@ -190,13 +190,13 @@ public class PerguntaDAO {
 
 		// Enunciado
 		if (enunciado != null) {
-			builder.append("AND enunciado = ? ");
+			builder.append("AND enunciado LIKE ? ");
 			ordemDoEnunciado = ++count;
 		}
 
 		// Comentario
 		if (comentario != null) {
-			builder.append("AND comentario = ? ");
+			builder.append("AND comentario LIKE ? ");
 			ordemDoComentario = ++count;
 		}
 

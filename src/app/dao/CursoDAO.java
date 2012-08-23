@@ -91,7 +91,7 @@ public class CursoDAO {
 		return linhasAfetadas;
 	}
 
-	public Curso buscarPorId(int id) {
+	public Curso buscarPorId(Integer id) {
 		Curso curso = new Curso();
 
 		String sql = "SELECT * FROM curso WHERE id_curso = ?;";

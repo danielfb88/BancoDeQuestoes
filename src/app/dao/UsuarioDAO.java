@@ -52,14 +52,15 @@ public class UsuarioDAO {
 		int linhasAfetadas = 0;
 
 		try {
-			String sql = "UPDATE usuario SET id_grupo = ?, nome = ?, senha = ? WHERE id_usuario = ?;";
+			String sql = "UPDATE usuario SET id_grupo = ?, nome = ?, login = ?, senha = ? WHERE id_usuario = ?;";
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
 
 			preparedStatement.setInt(1, id_grupo);
 			preparedStatement.setString(2, nome);
-			preparedStatement.setString(3, senha);
-			preparedStatement.setInt(4, id_usuario);
+			preparedStatement.setString(3, login);
+			preparedStatement.setString(4, senha);
+			preparedStatement.setInt(5, id_usuario);
 
 			linhasAfetadas = preparedStatement.executeUpdate();
 			preparedStatement.close();
@@ -181,15 +182,13 @@ public class UsuarioDAO {
 
 			// Verificando a ordem dos parâmetros
 			if (ordemDoIdUsuario > 0)
-				preparedStatement.setInt(ordemDoIdUsuario,
-						id_usuario);
+				preparedStatement.setInt(ordemDoIdUsuario, id_usuario);
 
 			if (ordemDoIdGrupo > 0)
 				preparedStatement.setInt(ordemDoIdGrupo, id_grupo);
 
 			if (ordemDoNome > 0)
-				preparedStatement.setString(ordemDoNome,
-						"%" + nome + "%");
+				preparedStatement.setString(ordemDoNome, "%" + nome + "%");
 
 			if (ordemDoLogin > 0)
 				preparedStatement.setString(ordemDoLogin, login);
