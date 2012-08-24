@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Prova;
-import app.util.DAOUtil;
+import app.util.conexao.DAOUtil;
 
 /**
  * Prova DAO
@@ -17,13 +17,12 @@ import app.util.DAOUtil;
  * 
  */
 public class ProvaDAO {
-	private PerguntaDAO perguntaDAO = new PerguntaDAO();
 
 	public ProvaDAO() {
 
 	}
 
-	public int adicionar(Integer id_pergunta, String descricao,
+	public int adicionar(Integer id_prova, Integer id_gradePeriodo, String descricao,
 			Boolean correta, String observacao) {
 
 		StringBuilder builder = new StringBuilder();

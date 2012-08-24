@@ -7,8 +7,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.AnoSemestre;
-import app.util.DAOUtil;
+import app.util.conexao.DAOUtil;
 
+/**
+ * AnoSemestreDAO
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 23-08-2012
+ *
+ */
 public class AnoSemestreDAO {
 
 	public AnoSemestreDAO() {
@@ -19,7 +26,6 @@ public class AnoSemestreDAO {
 		int linhasAfetadas = 0;
 
 		try {
-
 			String sql = "INSERT INTO anosemestre (ano, semestre) VALUES (?, ?);";
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(sql);
@@ -41,10 +47,16 @@ public class AnoSemestreDAO {
 		int linhasAfetadas = 0;
 
 		try {
+			StringBuilder builder = new StringBuilder();
+			builder.append("UPDATE anosemestre SET ");
+			builder.append("ano = ?, ");
+			builder.append("semestre = ? ");
+			builder.append("WHERE ");
+			builder.append("id_anosemestre = ? ");
+			builder.append(";");
 
-			String sql = "UPDATE anosemestre SET ano = ?, semestre = ? WHERE id_anosemestre = ?;";
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+					.getPreparedStatement(builder.toString());
 
 			preparedStatement.setInt(1, ano);
 			preparedStatement.setInt(2, semestre);

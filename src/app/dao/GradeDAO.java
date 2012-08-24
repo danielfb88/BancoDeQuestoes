@@ -9,7 +9,7 @@ import java.util.List;
 
 import app.controller.Grade;
 import app.controller.Periodo;
-import app.util.DAOUtil;
+import app.util.conexao.DAOUtil;
 
 /**
  * Grade DAO Responsável pelas tabelas: - grade - grade_periodo -

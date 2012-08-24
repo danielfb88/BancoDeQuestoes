@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.CoordenadorCurso;
-import app.util.DAOUtil;
+import app.util.conexao.DAOUtil;
 
 /**
  * CoordenadorCurso DAO
@@ -67,7 +67,7 @@ public class CoordenadorCursoDAO {
 			builder.append("id_usuario = ?, ");
 			builder.append("id_curso = ?, ");
 			builder.append("data_entrada = ?, ");
-			builder.append("data_saida = ?, ");
+			builder.append("data_saida = ? ");
 			builder.append("WHERE id_coordenadorcurso = ? ");
 			builder.append(";");
 

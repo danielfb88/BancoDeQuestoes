@@ -7,8 +7,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Disciplina;
-import app.util.DAOUtil;
-
+import app.util.conexao.DAOUtil;
+/**
+ * TODO: CRIAR ESTRUTURA PARA AUTOMATIZAR O PREPARED STATEMENT
+ */
 /**
  * Disciplina DAO
  * 
@@ -24,12 +26,17 @@ public class DisciplinaDAO {
 	}
 
 	public int adicionar(Integer id_curso, String descricao, String sigla) {
+		StringBuilder builder = new StringBuilder();
 		int linhasAfetadas = 0;
 
 		try {
-			String sql = "INSERT INTO disciplina (id_curso, descricao, sigla) VALUES (?, ?, ?);";
+			builder.append("INSERT INTO disciplina ");
+			builder.append("(id_curso, descricao, sigla) ");
+			builder.append("VALUES ");
+			builder.append("(?, ?, ?) ");
+			builder.append(";");
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+					.getPreparedStatement(builder.toString());
 
 			preparedStatement.setInt(1, id_curso);
 			preparedStatement.setString(2, descricao);

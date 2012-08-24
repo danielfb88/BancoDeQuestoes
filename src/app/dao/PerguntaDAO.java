@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Pergunta;
-import app.util.DAOUtil;
+import app.util.conexao.DAOUtil;
 
 /**
  * Pergunta DAO

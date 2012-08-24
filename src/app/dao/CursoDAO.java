@@ -3,11 +3,14 @@ package app.dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import app.controller.Curso;
-import app.util.DAOUtil;
+import app.util.AbstractDAO;
+import app.util.conexao.DAOUtil;
 
 /**
  * Grupo DAO
@@ -16,44 +19,43 @@ import app.util.DAOUtil;
  * @since 15-08-2012
  * 
  */
-public class CursoDAO {
+public class CursoDAO extends AbstractDAO {
 
 	public CursoDAO() {
-
+		// Definindo o nome da tabela
+		super.nomeDaTabela = "curso";
+		// Definindo os seus campos
+		super.campos = new String[]{"id_curso", "descricao", "sigla", "tipo_graduacao"};
 	}
 
 	public int adicionar(String descricao, String sigla, String tipo_graduacao) {
-		int linhasAfetadas = 0;
-
-		try {
-
-			String sql = "INSERT INTO curso (descricao, sigla, tipo_graduacao) VALUES (?, ?, ?);";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setString(1, descricao);
-			preparedStatement.setString(2, sigla);
-			preparedStatement.setString(3, tipo_graduacao);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		// Criando um hashMap com 4 posiçoes
+		Map<String, Object> campoValor = new HashMap<String, Object>(4);
+		// Mapeando as chave aos valores no hashmap
+		campoValor.put(this.campos[1], descricao);
+		campoValor.put(this.campos[2], sigla);
+		campoValor.put(this.campos[3], tipo_graduacao);
+		// executando
+		return super._adicionar(campoValor);
 	}
 
 	public int editar(Integer id_curso, String descricao, String sigla,
 			String tipo_graduacao) {
+
+		StringBuilder builder = new StringBuilder();
 		int linhasAfetadas = 0;
 
 		try {
+			builder.append("UPDATE curso SET ");
+			builder.append("descricao = ?, ");
+			builder.append("sigla = ?, ");
+			builder.append("tipo_graduacao = ? ");
+			builder.append("WHERE ");
+			builder.append("id_curso = ? ");
+			builder.append(";");
 
-			String sql = "UPDATE curso SET descricao = ?, sigla = ?, tipo_graduacao = ? WHERE id_curso = ?;";
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+					.getPreparedStatement(builder.toString());
 
 			preparedStatement.setString(1, descricao);
 			preparedStatement.setString(2, sigla);
@@ -163,7 +165,6 @@ public class CursoDAO {
 			ordemDoTipo_graduacao = ++count;
 		}
 
-		// Fechando a instrução
 		builder.append(";");
 
 		try {

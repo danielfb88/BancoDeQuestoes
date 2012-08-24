@@ -7,8 +7,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Assunto;
-import app.util.DAOUtil;
+import app.util.conexao.DAOUtil;
 
+/**
+ * AssuntoDAO
+ * 
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 23-08-2012
+ * 
+ */
 public class AssuntoDAO {
 
 	public AssuntoDAO() {
@@ -79,7 +86,7 @@ public class AssuntoDAO {
 		return linhasAfetadas;
 	}
 
-	public Assunto getById(Integer id) {
+	public Assunto buscarPorId(Integer id) {
 		Assunto assunto = new Assunto();
 
 		String sql = "SELECT * FROM assunto WHERE id_assunto = ?;";
@@ -110,7 +117,7 @@ public class AssuntoDAO {
 		return assunto;
 	}
 
-	public List<Assunto> getAllBy(Integer id_assunto, String descricao) {
+	public List<Assunto> listarPor(Integer id_assunto, String descricao) {
 		List<Assunto> assuntos = new LinkedList<Assunto>();
 		StringBuilder builder = new StringBuilder();
 
@@ -134,7 +141,6 @@ public class AssuntoDAO {
 			ordemDaDescricao = ++count;
 		}
 
-		// Fechando a instrução
 		builder.append(";");
 
 		try {
@@ -152,7 +158,7 @@ public class AssuntoDAO {
 			// Executando a quary e retornando em um ResultSet
 			ResultSet resultSet = preparedStatement.executeQuery();
 
-			// Iterando entre os objetos retornados e inserindo-os em objetos
+			// Iterando e inserindo-os em objetos
 			while (resultSet.next()) {
 				assuntos.add(new Assunto(resultSet.getInt("id_assunto"),
 						resultSet.getString("descricao")));

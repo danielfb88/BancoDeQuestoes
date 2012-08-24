@@ -1,7 +1,9 @@
-package app.util;
+package app.util.log;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import app.util.conexao.DAOUtil;
 
 /**
  * Registra as excessões lançadas na aplicação.

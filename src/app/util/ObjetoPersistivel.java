@@ -3,6 +3,7 @@ package app.util;
 import app.util.exceptions.CamposObrigatoriosInvalidosException;
 import app.util.exceptions.EstadoInvalidoException;
 import app.util.exceptions.IDInvalidoException;
+import app.util.log.Logger;
 
 /**
  * Classe abstrata que torna os seus objetos 'Persistíveis'. Ou seja, auxilia na 

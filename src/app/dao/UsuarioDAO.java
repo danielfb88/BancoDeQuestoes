@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import app.controller.Usuario;
-import app.util.DAOUtil;
+import app.util.conexao.DAOUtil;
 
 /**
  * Usuario DAO
