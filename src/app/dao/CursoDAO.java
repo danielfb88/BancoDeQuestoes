@@ -22,9 +22,7 @@ import app.util.conexao.DAOUtil;
 public class CursoDAO extends AbstractDAO {
 
 	public CursoDAO() {
-		// Definindo o nome da tabela
 		super.nomeDaTabela = "curso";
-		// Definindo os seus campos
 		super.campos = new String[]{"id_curso", "descricao", "sigla", "tipo_graduacao"};
 	}
 
