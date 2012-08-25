@@ -12,7 +12,7 @@ import app.util.exceptions.AbstractDAOException;
 import app.util.exceptions.TipoParametroNaoEspecificadoException;
 
 /**
- * Classe abstrata que efetua as operações básicas de um DAO: - Adicionar,
+ * Classe abstrata que efetua as operações básicas de uma DAO: - Adicionar,
  * Editar, Excluir, Buscar e Listar.
  * 
  * @author Daniel Bonfim <daniel.fb88@mail.com>
@@ -26,12 +26,12 @@ public abstract class AbstractDAO {
 	protected String nomeDaTabela;
 
 	/**
-	 * O nome do campo primaryKey
+	 * Nome do(s) campo(s) primaryKey
 	 */
 	protected String[] primaryKey;
 
 	/**
-	 * Os nomes dos campos da tabela
+	 * Nome do(s) campo(s) da tabela
 	 */
 	protected String[] campos;
 
@@ -70,7 +70,7 @@ public abstract class AbstractDAO {
 	 * 
 	 * @param campoValor
 	 *            HashMap com o nome do campo e o valor relacionado.
-	 * @return
+	 * @return Retorno do executeUpdate
 	 */
 	protected int _adicionar(Map<String, Object> campoValor) {
 		this.verificaNomeTabela();
@@ -78,7 +78,7 @@ public abstract class AbstractDAO {
 		int linhasAfetadas = 0;
 		int i = 0;
 
-		Object valores[] = new Object[campoValor.size()];
+		Object ordem[] = new Object[campoValor.size()];
 		StringBuilder builder = new StringBuilder();
 
 		try {
@@ -94,8 +94,8 @@ public abstract class AbstractDAO {
 				Map.Entry<String, Object> me = (Map.Entry<String, Object>) it
 						.next();
 
-				// armazenando o valor
-				valores[i] = me.getValue();
+				// inserindo os valores em um array
+				ordem[i] = me.getValue();
 
 				// inserindo a virgula depois do primeiro elemento
 				if (i++ != 0)
@@ -105,30 +105,23 @@ public abstract class AbstractDAO {
 
 			builder.append(") ");
 			builder.append("VALUES ");
-
 			builder.append("(");
 
-			for (; i > 0; i--) {
-				if (i == 1)
-					builder.append("? "); // sera executado por ultimo
-				else
-					builder.append("?, ");
+			i--;
+			for (; i >= 0; i--) {
+				builder.append("?");
+				if (i != 0)
+					builder.append(",");
 			}
-			
-			builder.append(") ");
+
+			builder.append(")");
 			builder.append(";");
-			
-			/* TODO: Analize esta query e otimize este ultimo for. Tou achando
-			 * estranho ter que colocar os dados em um array. Veja isso, vou dormir.
-			 */
-			System.out.println(builder.toString());
-			System.exit(0);
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
 
 			// preparando o statement
-			this.prepareStatement(preparedStatement, valores);
+			this.prepareStatement(preparedStatement, ordem);
 
 			// executando
 			linhasAfetadas = preparedStatement.executeUpdate();
@@ -140,6 +133,12 @@ public abstract class AbstractDAO {
 		return linhasAfetadas;
 	}
 
+	/**
+	 * Editar
+	 * 
+	 * @param campoValor
+	 * @return Retorno do executeUpdate
+	 */
 	protected int _editar(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
@@ -147,19 +146,23 @@ public abstract class AbstractDAO {
 		int linhasAfetadas = 0;
 		int i = 0;
 
-		Object valores[] = new Object[campoValor.size()];
+		/*
+		 * O tamanho do array a ser criado será o tamanho do hashmap -1
+		 * excluindo a primary key
+		 */
+		Object ordem[] = new Object[campoValor.size() - 1];
 		StringBuilder builder = new StringBuilder();
 
 		try {
 			builder.append("UPDATE ");
 			builder.append(this.nomeDaTabela + " ");
 			builder.append("SET ");
-			builder.append("(");
 
 			// Iterando os objetos para pegar a chave
 			Set<Map.Entry<Object, Object>> set = campoValor.entrySet();
 			Iterator<Map.Entry<Object, Object>> it = set.iterator();
 
+			int arrayIndex = 0;
 			while (it.hasNext()) {
 				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
 						.next();
@@ -175,17 +178,18 @@ public abstract class AbstractDAO {
 				if (!igualAlgumaPK) {
 					// inserindo a virgula depois do primeiro elemento
 					if (i++ != 0)
-						builder.append(",");
+						builder.append(", ");
 
 					builder.append((String) me.getKey() + " = ?");
 
+					// inserindo os valores em um array
+					ordem[arrayIndex++] = me.getValue();
 				}
 			}
 
-			builder.append(") ");
-			builder.append("WHERE ");
+			builder.append(" WHERE ");
 
-			// Id
+			// Inserindo os Ids
 			for (i = 0; i < this.primaryKey.length; i++) {
 				builder.append(this.primaryKey[i] + " = "
 						+ campoValor.get(this.primaryKey[i]));
@@ -195,18 +199,11 @@ public abstract class AbstractDAO {
 
 			builder.append(";");
 
-			/* TODO: Query deste metodo concluida
-			 * Insira os objetos dos parametros no preparedStatement
-			 */
-			System.out.println(builder.toString());
-			System.exit(0);
-			// Verificar o prepared Statement com @nome
-
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
 
 			// preparando o statement
-			this.prepareStatement(preparedStatement, valores);
+			this.prepareStatement(preparedStatement, ordem);
 
 			// executando
 			linhasAfetadas = preparedStatement.executeUpdate();

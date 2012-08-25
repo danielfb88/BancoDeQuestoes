@@ -21,9 +21,9 @@ public class Lacaio {
 		
 		CursoDAO cursoDAO = new CursoDAO();
 		
-		//int n = cursoDAO.adicionar("new", "TE", "BAC");		
+		int n = cursoDAO.editar(15, "ETA DIACHO UHU!", "TU", "TEC");		
 		
-		int n = cursoDAO.editar(12, "descricao alterado", "ALT", "BAC");
+		//int n = cursoDAO.editar(12, "descricao alterado", "ALT", "BAC");
 		
 	}
 
