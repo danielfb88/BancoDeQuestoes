@@ -23,16 +23,17 @@ public class CursoDAO extends AbstractDAO {
 
 	public CursoDAO() {
 		super.nomeDaTabela = "curso";
-		super.campos = new String[]{"id_curso", "descricao", "sigla", "tipo_graduacao"};
+		super.primaryKey = new String[] {"id_curso"};
+		super.campos = new String[] { "descricao", "sigla", "tipo_graduacao" };
 	}
 
 	public int adicionar(String descricao, String sigla, String tipo_graduacao) {
 		// Criando um hashMap com 4 posiçoes
-		Map<String, Object> campoValor = new HashMap<String, Object>(4);
+		Map<String, Object> campoValor = new HashMap<String, Object>(3);
 		// Mapeando as chave aos valores no hashmap
-		campoValor.put(this.campos[1], descricao);
-		campoValor.put(this.campos[2], sigla);
-		campoValor.put(this.campos[3], tipo_graduacao);
+		campoValor.put(super.campos[0], descricao);
+		campoValor.put(super.campos[1], sigla);
+		campoValor.put(super.campos[2], tipo_graduacao);
 		// executando
 		return super._adicionar(campoValor);
 	}
@@ -40,34 +41,15 @@ public class CursoDAO extends AbstractDAO {
 	public int editar(Integer id_curso, String descricao, String sigla,
 			String tipo_graduacao) {
 
-		StringBuilder builder = new StringBuilder();
-		int linhasAfetadas = 0;
-
-		try {
-			builder.append("UPDATE curso SET ");
-			builder.append("descricao = ?, ");
-			builder.append("sigla = ?, ");
-			builder.append("tipo_graduacao = ? ");
-			builder.append("WHERE ");
-			builder.append("id_curso = ? ");
-			builder.append(";");
-
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
-
-			preparedStatement.setString(1, descricao);
-			preparedStatement.setString(2, sigla);
-			preparedStatement.setString(3, tipo_graduacao);
-			preparedStatement.setInt(4, id_curso);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		// Criando um hashMap com 4 posiçoes
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(4);
+		// Mapeando as chave aos valores no hashmap
+		campoValor.put(super.primaryKey[0], id_curso);
+		campoValor.put(super.campos[0], descricao);
+		campoValor.put(super.campos[1], sigla);
+		campoValor.put(super.campos[2], tipo_graduacao);
+		// executando
+		return super._editar(campoValor);
 	}
 
 	public int excluir(Integer id) {

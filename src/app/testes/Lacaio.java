@@ -19,11 +19,12 @@ public class Lacaio {
 		Boolean boo = true;
 		System.out.println(boo.getClass().getName());
 		
-		
-		
 		CursoDAO cursoDAO = new CursoDAO();
-		int n = cursoDAO.adicionar("e agora?", "TE", "BAC");
-		System.out.println(n);
+		
+		//int n = cursoDAO.adicionar("new", "TE", "BAC");		
+		
+		int n = cursoDAO.editar(12, "descricao alterado", "ALT", "BAC");
+		
 	}
 
 }

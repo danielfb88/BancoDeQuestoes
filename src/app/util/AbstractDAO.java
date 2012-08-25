@@ -19,19 +19,26 @@ import app.util.exceptions.TipoParametroNaoEspecificadoException;
  * 
  */
 public abstract class AbstractDAO {
+
 	/**
 	 * Nome da tabela
 	 */
 	protected String nomeDaTabela;
+
 	/**
-	 * Os nomes dos campos da tabela devem ser inseridos neste array
+	 * O nome do campo primaryKey
+	 */
+	protected String[] primaryKey;
+
+	/**
+	 * Os nomes dos campos da tabela
 	 */
 	protected String[] campos;
 
 	/**
 	 * Verifica se o nome da tabela foi informado na classe filha
 	 */
-	private void verificaNomeDaTabelaInformado() {
+	private void verificaNomeTabela() {
 		if (this.nomeDaTabela == null || this.nomeDaTabela.isEmpty()) {
 			try {
 				throw new AbstractDAOException(
@@ -44,18 +51,36 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Verifica Primary Keys
+	 */
+	private void verificaPK() {
+		try {
+			if (this.primaryKey == null || this.primaryKey.length == 0) {
+				throw new AbstractDAOException(
+						"Nome da coluna de ID não informado na sub-classe");
+			}
+		} catch (AbstractDAOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+
+	/**
 	 * Adicionar
 	 * 
 	 * @param campoValor
 	 *            HashMap com o nome do campo e o valor relacionado.
 	 * @return
 	 */
-	public int _adicionar(Map<String, Object> campoValor) {
-		this.verificaNomeDaTabelaInformado();
+	protected int _adicionar(Map<String, Object> campoValor) {
+		this.verificaNomeTabela();
 
 		int linhasAfetadas = 0;
+		int i = 0;
+
 		Object valores[] = new Object[campoValor.size()];
 		StringBuilder builder = new StringBuilder();
+
 		try {
 			builder.append("INSERT INTO ");
 			builder.append(this.nomeDaTabela + " ");
@@ -65,7 +90,6 @@ public abstract class AbstractDAO {
 			Set<Map.Entry<String, Object>> set = campoValor.entrySet();
 			Iterator<Map.Entry<String, Object>> it = set.iterator();
 
-			int i = 0;
 			while (it.hasNext()) {
 				Map.Entry<String, Object> me = (Map.Entry<String, Object>) it
 						.next();
@@ -73,11 +97,10 @@ public abstract class AbstractDAO {
 				// armazenando o valor
 				valores[i] = me.getValue();
 
-				// primeira vez nao usa virgula
-				if (i++ == 0)
-					builder.append(" " + me.getKey());
-				else
-					builder.append(", " + me.getKey());
+				// inserindo a virgula depois do primeiro elemento
+				if (i++ != 0)
+					builder.append(",");
+				builder.append(me.getKey());
 			}
 
 			builder.append(") ");
@@ -91,8 +114,15 @@ public abstract class AbstractDAO {
 				else
 					builder.append("?, ");
 			}
+			
 			builder.append(") ");
 			builder.append(";");
+			
+			/* TODO: Analize esta query e otimize este ultimo for. Tou achando
+			 * estranho ter que colocar os dados em um array. Veja isso, vou dormir.
+			 */
+			System.out.println(builder.toString());
+			System.exit(0);
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
@@ -110,12 +140,16 @@ public abstract class AbstractDAO {
 		return linhasAfetadas;
 	}
 
-	public int _editar(Map<String, Object> campoValor) {
-		this.verificaNomeDaTabelaInformado();
+	protected int _editar(Map<Object, Object> campoValor) {
+		this.verificaNomeTabela();
+		this.verificaPK();
 
 		int linhasAfetadas = 0;
+		int i = 0;
+
 		Object valores[] = new Object[campoValor.size()];
 		StringBuilder builder = new StringBuilder();
+
 		try {
 			builder.append("UPDATE ");
 			builder.append(this.nomeDaTabela + " ");
@@ -123,44 +157,50 @@ public abstract class AbstractDAO {
 			builder.append("(");
 
 			// Iterando os objetos para pegar a chave
-			Set<Map.Entry<String, Object>> set = campoValor.entrySet();
-			Iterator<Map.Entry<String, Object>> it = set.iterator();
+			Set<Map.Entry<Object, Object>> set = campoValor.entrySet();
+			Iterator<Map.Entry<Object, Object>> it = set.iterator();
 
-			int i = 0;
 			while (it.hasNext()) {
-				Map.Entry<String, Object> me = (Map.Entry<String, Object>) it
+				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
 						.next();
 
-				// primeira vez nao usa virgula
-				if (i++ == 0) {
-					// Ignorando a chave
-					if (!this.campos[0].equals(me.getKey()))
-						builder.append(" " + me.getKey() + " = "
-								+ me.getValue());
-				} else {
-					// Ignorando a chave
-					if (!this.campos[0].equals(me.getKey()))
-						builder.append(", " + me.getKey() + " = "
-								+ me.getValue());
+				// verificando se é igual a alguma PK
+				boolean igualAlgumaPK = false;
+				for (int npk = 0; npk < this.primaryKey.length; npk++) {
+					if (me.getKey().equals(this.primaryKey[npk]))
+						igualAlgumaPK = true;
+				}
+
+				// ignorando a(s) primary key(s)
+				if (!igualAlgumaPK) {
+					// inserindo a virgula depois do primeiro elemento
+					if (i++ != 0)
+						builder.append(",");
+
+					builder.append((String) me.getKey() + " = ?");
+
 				}
 			}
 
-			// inserir a chave... continue...
-			
-			
 			builder.append(") ");
-			builder.append("VALUES ");
+			builder.append("WHERE ");
 
-			builder.append("(");
-
-			for (; i > 0; i--) {
-				if (i == 1)
-					builder.append("? "); // sera executado por ultimo
-				else
-					builder.append("?, ");
+			// Id
+			for (i = 0; i < this.primaryKey.length; i++) {
+				builder.append(this.primaryKey[i] + " = "
+						+ campoValor.get(this.primaryKey[i]));
+				if (i != this.primaryKey.length - 1)
+					builder.append(", ");
 			}
-			builder.append(") ");
+
 			builder.append(";");
+
+			/* TODO: Query deste metodo concluida
+			 * Insira os objetos dos parametros no preparedStatement
+			 */
+			System.out.println(builder.toString());
+			System.exit(0);
+			// Verificar o prepared Statement com @nome
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
