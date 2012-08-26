@@ -2,6 +2,7 @@ package app.util;
 
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,6 +35,45 @@ public abstract class AbstractDAO {
 	 * Nome do(s) campo(s) da tabela
 	 */
 	protected String[] campos;
+
+	/**
+	 * Prepara os dados contra injection
+	 * 
+	 * @param ps
+	 * @param parametros
+	 * @return
+	 */
+	protected void prepareStatement(PreparedStatement ps, Object[] parametros) {
+		try {
+			for (int i = 0; i < parametros.length; i++) {
+				int index = i + 1;
+				switch (parametros[i].getClass().getName()) {
+				case "java.lang.String":
+					ps.setString(index, (String) parametros[i]);
+					break;
+				case "java.lang.Integer":
+					ps.setInt(index, (Integer) parametros[i]);
+					break;
+				case "java.lang.Double":
+					ps.setDouble(index, (Double) parametros[i]);
+					break;
+				case "java.lang.Boolean":
+					ps.setBoolean(index, (Boolean) parametros[i]);
+					break;
+				case "java.lang.Date":
+					ps.setDate(index, (Date) parametros[i]);
+					break;
+				default:
+					throw new TipoParametroNaoEspecificadoException();
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+		} catch (TipoParametroNaoEspecificadoException e2) {
+			e2.printStackTrace();
+		}
+	}
 
 	/**
 	 * Verifica se o nome da tabela foi informado na classe filha
@@ -272,44 +312,27 @@ public abstract class AbstractDAO {
 		}
 		return linhasAfetadas;
 	}
-
+	
 	/**
-	 * Prepara os dados contra injection
-	 * 
-	 * @param ps
-	 * @param parametros
+	 * TODO: desenvolver buscarPorId
+	 * Buscar por ID
+	 * @param campoValor
 	 * @return
 	 */
-	protected void prepareStatement(PreparedStatement ps, Object[] parametros) {
-		try {
-			for (int i = 0; i < parametros.length; i++) {
-				int index = i + 1;
-				switch (parametros[i].getClass().getName()) {
-				case "java.lang.String":
-					ps.setString(index, (String) parametros[i]);
-					break;
-				case "java.lang.Integer":
-					ps.setInt(index, (Integer) parametros[i]);
-					break;
-				case "java.lang.Double":
-					ps.setDouble(index, (Double) parametros[i]);
-					break;
-				case "java.lang.Boolean":
-					ps.setBoolean(index, (Boolean) parametros[i]);
-					break;
-				case "java.lang.Date":
-					ps.setDate(index, (Date) parametros[i]);
-					break;
-				default:
-					throw new TipoParametroNaoEspecificadoException();
-				}
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		} catch (TipoParametroNaoEspecificadoException e2) {
-			e2.printStackTrace();
-		}
+	protected ResultSet buscarPorId(Map<Object, Object> campoValor) {
+		
+		return null;
+	}
+	
+	/**
+	 * TODO: desenvlver listarPor
+	 * Lista pelos campos informados na coleção MAP
+	 * @param campoValor
+	 * @return
+	 */
+	protected ResultSet[] listarPor(Map<Object, Object> campoValor) {
+		
+		return null;
 	}
 
 }
