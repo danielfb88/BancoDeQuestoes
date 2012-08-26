@@ -141,7 +141,12 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Adicionar
+	 * Efetua um
+	 * 
+	 * "INSERT INTO 'tabela' (campos) VALUES (valores) WHERE (filtros)"
+	 * 
+	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
+	 * parâmetro.
 	 * 
 	 * @param campoValor
 	 *            HashMap com o nome do campo e o valor relacionado.
@@ -209,7 +214,12 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Editar
+	 * Efetua um:
+	 * 
+	 * "UPDATE 'tabela' SET 'campos/valores' WHERE filros"
+	 * 
+	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
+	 * parâmetro.
 	 * 
 	 * @param campoValor
 	 * @return Retorno do executeUpdate
@@ -279,7 +289,12 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Excluir
+	 * Efetua um:
+	 * 
+	 * "DELETE FROM 'tabela' WHERE filtros"
+	 * 
+	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
+	 * parâmetro.
 	 * 
 	 * @param campoValor
 	 * @return Retorno do executeUpdate
@@ -312,26 +327,63 @@ public abstract class AbstractDAO {
 		}
 		return linhasAfetadas;
 	}
-	
+
 	/**
-	 * TODO: desenvolver buscarPorId
-	 * Buscar por ID
+	 * Efetua uma busca
+	 * 
+	 * "SELECT * FROM WHERE filtros"
+	 * 
+	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
+	 * parâmetro.
+	 * 
 	 * @param campoValor
 	 * @return
 	 */
 	protected ResultSet buscarPorId(Map<Object, Object> campoValor) {
-		
-		return null;
+		// TODO: concluir este método no DAO filho. Vou pra arembepe. =)
+		this.verificaNomeTabela();
+		this.verificaPK();
+
+		ResultSet resultSet = null;
+		StringBuilder builder = new StringBuilder();
+
+		try {
+			builder.append("SELECT * FROM ");
+			builder.append(this.nomeDaTabela);
+			builder.append(" WHERE ");
+
+			// Inserindo os Ids
+			builder.append(this.montaParteQueryID(campoValor));
+			builder.append(";");
+
+			PreparedStatement preparedStatement = DAOUtil.getInstance()
+					.getPreparedStatement(builder.toString());
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (!resultSet.next()) {
+				resultSet.close();
+				preparedStatement.close();
+				return null;
+			}
+
+			resultSet.close();
+			preparedStatement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultSet;
 	}
-	
+
 	/**
-	 * TODO: desenvlver listarPor
-	 * Lista pelos campos informados na coleção MAP
+	 * TODO: desenvlver listarPor Lista pelos campos informados na coleção MAP
+	 * 
 	 * @param campoValor
 	 * @return
 	 */
 	protected ResultSet[] listarPor(Map<Object, Object> campoValor) {
-		
+
 		return null;
 	}
 
