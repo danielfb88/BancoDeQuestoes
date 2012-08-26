@@ -20,57 +20,41 @@ import app.util.conexao.DAOUtil;
  * 
  */
 public class CursoDAO extends AbstractDAO {
+	private Map<Object, Object> campoValor;
 
 	public CursoDAO() {
 		super.nomeDaTabela = "curso";
-		super.primaryKey = new String[] {"id_curso"};
+		super.primaryKey = new String[] { "id_curso" };
 		super.campos = new String[] { "descricao", "sigla", "tipo_graduacao" };
 	}
 
 	public int adicionar(String descricao, String sigla, String tipo_graduacao) {
-		// Criando um hashMap com 4 posiçoes
-		Map<String, Object> campoValor = new HashMap<String, Object>(3);
-		// Mapeando as chave aos valores no hashmap
-		campoValor.put(super.campos[0], descricao);
-		campoValor.put(super.campos[1], sigla);
-		campoValor.put(super.campos[2], tipo_graduacao);
-		// executando
+		this.campoValor = new HashMap<Object, Object>(3);
+
+		this.campoValor.put(super.campos[0], descricao);
+		this.campoValor.put(super.campos[1], sigla);
+		this.campoValor.put(super.campos[2], tipo_graduacao);
+
 		return super._adicionar(campoValor);
 	}
 
 	public int editar(Integer id_curso, String descricao, String sigla,
 			String tipo_graduacao) {
 
-		// Criando um hashMap com 4 posiçoes
 		Map<Object, Object> campoValor = new HashMap<Object, Object>(4);
-		// Mapeando as chave aos valores no hashmap
-		campoValor.put(super.primaryKey[0], id_curso);
-		campoValor.put(super.campos[0], descricao);
-		campoValor.put(super.campos[1], sigla);
-		campoValor.put(super.campos[2], tipo_graduacao);
-		// executando
+
+		this.campoValor.put(super.primaryKey[0], id_curso);
+		this.campoValor.put(super.campos[0], descricao);
+		this.campoValor.put(super.campos[1], sigla);
+		this.campoValor.put(super.campos[2], tipo_graduacao);
+
 		return super._editar(campoValor);
 	}
 
 	public int excluir(Integer id) {
-		int linhasAfetadas = 0;
-
-		try {
-
-			String sql = "DELETE FROM curso WHERE id_curso = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(1);
+		this.campoValor.put(super.primaryKey[0], id);
+		return super._excluir(campoValor);
 	}
 
 	public Curso buscarPorId(Integer id) {

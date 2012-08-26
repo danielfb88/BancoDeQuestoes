@@ -20,8 +20,9 @@ public class Lacaio {
 		System.out.println(boo.getClass().getName());
 		
 		CursoDAO cursoDAO = new CursoDAO();
+		cursoDAO.adicionar("Daniel", "DAN", "BAC");
 		
-		int n = cursoDAO.editar(15, "ETA DIACHO UHU!", "TU", "TEC");		
+		//int n = cursoDAO.excluir(13);		
 		
 		//int n = cursoDAO.editar(12, "descricao alterado", "ALT", "BAC");
 		

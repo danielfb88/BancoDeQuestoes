@@ -15,7 +15,7 @@ import app.util.exceptions.TipoParametroNaoEspecificadoException;
  * Classe abstrata que efetua as operações básicas de uma DAO: - Adicionar,
  * Editar, Excluir, Buscar e Listar.
  * 
- * @author Daniel Bonfim <daniel.fb88@mail.com>
+ * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * 
  */
 public abstract class AbstractDAO {
@@ -66,13 +66,48 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Verifica se a string de entrada é igual ao campo de alguma primary key
+	 * 
+	 * @param campo
+	 * @return
+	 */
+	private boolean is_campoIgualPrimaryKey(String campo) {
+		boolean igualAlgumaPK = false;
+		for (int npk = 0; npk < this.primaryKey.length; npk++) {
+			if (campo.equals(this.primaryKey[npk]))
+				igualAlgumaPK = true;
+		}
+		return igualAlgumaPK;
+	}
+
+	/**
+	 * Monta pedaço da query onde é inserido os IDs. Ex:
+	 * 
+	 * UPDATE tabela SET campo1 = 'valor1', campo2 = 'valor2' WHERE id = 5; A
+	 * parte da query "id = 5" é o que será retornado por este método.
+	 * 
+	 * @return String da parte da query relacionada aos IDs
+	 */
+	private String montaParteQueryID(Map<Object, Object> campoValor) {
+		StringBuilder builder = new StringBuilder();
+
+		for (int i = 0; i < this.primaryKey.length; i++) {
+			builder.append(this.primaryKey[i] + " = "
+					+ campoValor.get(this.primaryKey[i]));
+			if (i != this.primaryKey.length - 1)
+				builder.append(", ");
+		}
+		return builder.toString();
+	}
+
+	/**
 	 * Adicionar
 	 * 
 	 * @param campoValor
 	 *            HashMap com o nome do campo e o valor relacionado.
 	 * @return Retorno do executeUpdate
 	 */
-	protected int _adicionar(Map<String, Object> campoValor) {
+	protected int _adicionar(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 
 		int linhasAfetadas = 0;
@@ -87,11 +122,11 @@ public abstract class AbstractDAO {
 			builder.append("(");
 
 			// Iterando os objetos para pegar a chave
-			Set<Map.Entry<String, Object>> set = campoValor.entrySet();
-			Iterator<Map.Entry<String, Object>> it = set.iterator();
+			Set<Map.Entry<Object, Object>> set = campoValor.entrySet();
+			Iterator<Map.Entry<Object, Object>> it = set.iterator();
 
 			while (it.hasNext()) {
-				Map.Entry<String, Object> me = (Map.Entry<String, Object>) it
+				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
 						.next();
 
 				// inserindo os valores em um array
@@ -100,7 +135,7 @@ public abstract class AbstractDAO {
 				// inserindo a virgula depois do primeiro elemento
 				if (i++ != 0)
 					builder.append(",");
-				builder.append(me.getKey());
+				builder.append((String) me.getKey());
 			}
 
 			builder.append(") ");
@@ -168,14 +203,8 @@ public abstract class AbstractDAO {
 						.next();
 
 				// verificando se é igual a alguma PK
-				boolean igualAlgumaPK = false;
-				for (int npk = 0; npk < this.primaryKey.length; npk++) {
-					if (me.getKey().equals(this.primaryKey[npk]))
-						igualAlgumaPK = true;
-				}
-
 				// ignorando a(s) primary key(s)
-				if (!igualAlgumaPK) {
+				if (!this.is_campoIgualPrimaryKey((String) me.getKey())) {
 					// inserindo a virgula depois do primeiro elemento
 					if (i++ != 0)
 						builder.append(", ");
@@ -190,13 +219,7 @@ public abstract class AbstractDAO {
 			builder.append(" WHERE ");
 
 			// Inserindo os Ids
-			for (i = 0; i < this.primaryKey.length; i++) {
-				builder.append(this.primaryKey[i] + " = "
-						+ campoValor.get(this.primaryKey[i]));
-				if (i != this.primaryKey.length - 1)
-					builder.append(", ");
-			}
-
+			builder.append(this.montaParteQueryID(campoValor));
 			builder.append(";");
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
@@ -216,8 +239,41 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * TODO: Completar este método com os tipos restantes.
+	 * Excluir
 	 * 
+	 * @param campoValor
+	 * @return Retorno do executeUpdate
+	 */
+	protected int _excluir(Map<Object, Object> campoValor) {
+		this.verificaNomeTabela();
+		this.verificaPK();
+
+		int linhasAfetadas = 0;
+		StringBuilder builder = new StringBuilder();
+
+		try {
+			builder.append("DELETE FROM ");
+			builder.append(this.nomeDaTabela);
+			builder.append(" WHERE ");
+
+			// Inserindo os Ids
+			builder.append(this.montaParteQueryID(campoValor));
+			builder.append(";");
+
+			PreparedStatement preparedStatement = DAOUtil.getInstance()
+					.getPreparedStatement(builder.toString());
+
+			// executando
+			linhasAfetadas = preparedStatement.executeUpdate();
+			preparedStatement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return linhasAfetadas;
+	}
+
+	/**
 	 * Prepara os dados contra injection
 	 * 
 	 * @param ps
