@@ -41,7 +41,7 @@ public class CursoDAO extends AbstractDAO {
 	public int editar(Integer id_curso, String descricao, String sigla,
 			String tipo_graduacao) {
 
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(4);
+		this.campoValor = new HashMap<Object, Object>(4);
 
 		this.campoValor.put(super.primaryKey[0], id_curso);
 		this.campoValor.put(super.campos[0], descricao);
@@ -52,42 +52,26 @@ public class CursoDAO extends AbstractDAO {
 	}
 
 	public int excluir(Integer id) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(1);
+		this.campoValor = new HashMap<Object, Object>(1);
 		this.campoValor.put(super.primaryKey[0], id);
 		return super._excluir(campoValor);
 	}
 
 	public Curso buscarPorId(Integer id) {
-		Curso curso = new Curso();
+		this.campoValor = new HashMap<Object, Object>(1);
+		this.campoValor.put(super.primaryKey[0], id);
 
-		String sql = "SELECT * FROM curso WHERE id_curso = ?;";
+		Map<String, Object> campoValorRetornado = super
+				._buscarPorId(campoValor);
 
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
-			}
-
-			curso.setId_curso(resultSet.getInt("id_curso"));
-			curso.setDescricao(resultSet.getString("descricao"));
-			curso.setSigla(resultSet.getString("sigla"));
-			curso.setTipo_graduacao(resultSet.getString("tipo_graduacao"));
-
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return curso;
+		if (!campoValorRetornado.isEmpty())
+			return new Curso(
+					(Integer) campoValorRetornado.get(this.primaryKey[0]),
+					(String) campoValorRetornado.get(this.campos[0]),
+					(String) campoValorRetornado.get(this.campos[1]),
+					(String) campoValorRetornado.get(this.campos[2]));
+		else
+			return null;
 	}
 
 	public List<Curso> listarPor(Integer id_curso, String descricao,

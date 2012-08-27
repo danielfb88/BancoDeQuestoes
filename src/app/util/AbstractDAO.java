@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -329,23 +330,25 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Efetua uma busca
+	 * Efetua uma busca por ID
 	 * 
-	 * "SELECT * FROM WHERE filtros"
+	 * "SELECT * FROM WHERE primaryKey(s)"
 	 * 
-	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
+	 * utilizando o(s) Id(s) informados na subclasse e o HashMap enviado como
 	 * parâmetro.
 	 * 
 	 * @param campoValor
-	 * @return
+	 *            HashMap com o nome da primary key e o valor do id
+	 * @return HashMap com os valores vindos do ResultSet
 	 */
-	protected ResultSet buscarPorId(Map<Object, Object> campoValor) {
-		// TODO: concluir este método no DAO filho. Vou pra arembepe. =)
+	protected Map<String, Object> _buscarPorId(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
 
 		ResultSet resultSet = null;
 		StringBuilder builder = new StringBuilder();
+		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
+				this.campos.length);
 
 		try {
 			builder.append("SELECT * FROM ");
@@ -367,13 +370,26 @@ public abstract class AbstractDAO {
 				return null;
 			}
 
+			// inserindo primary keys no hashMap
+			for (int i = 0; i < this.primaryKey.length; i++) {
+				campoValorRetorno.put(this.primaryKey[i],
+						resultSet.getObject(this.primaryKey[i]));
+
+			}
+
+			// inserindo Campos restates no hashMap
+			for (int i = 0; i < this.campos.length; i++) {
+				campoValorRetorno.put(campos[i],
+						resultSet.getObject(this.campos[i]));
+			}
+
 			resultSet.close();
 			preparedStatement.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return resultSet;
+		return campoValorRetorno;
 	}
 
 	/**

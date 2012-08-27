@@ -2,6 +2,7 @@ package app.testes;
 
 import java.util.Date;
 
+import app.controller.Curso;
 import app.dao.CursoDAO;
 
 public class Lacaio {
@@ -20,11 +21,21 @@ public class Lacaio {
 		System.out.println(boo.getClass().getName());
 		
 		CursoDAO cursoDAO = new CursoDAO();
-		cursoDAO.adicionar("Daniel", "DAN", "BAC");
+		//cursoDAO.adicionar("Daniel", "DAN", "BAC");
 		
 		//int n = cursoDAO.excluir(13);		
 		
 		//int n = cursoDAO.editar(12, "descricao alterado", "ALT", "BAC");
+		
+		Curso curso = cursoDAO.buscarPorId(16);		
+		if(curso != null) {
+			System.out.println("id: "+curso.getId_curso());
+			System.out.println("descricao:  "+curso.getDescricao());
+			System.out.println("sigla: "+curso.getSigla());
+			System.out.println("tipo_graduacao: "+curso.getTipo_graduacao());
+		} else {
+			System.out.println("Curso nao encontrado");
+		}
 		
 	}
 
