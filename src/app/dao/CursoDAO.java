@@ -72,7 +72,7 @@ public class CursoDAO extends AbstractDAO {
 	 * @return
 	 */
 	public Curso buscarPorId(Integer id) {
-		Map<String, Object> campoValorRetornado = super.buscarPorId(id);
+		Map<String, Object> campoValorRetornado = super._buscarPorId(id);
 
 		if (!campoValorRetornado.isEmpty())
 			return new Curso(
@@ -94,6 +94,7 @@ public class CursoDAO extends AbstractDAO {
 	 */
 	public List<Curso> listarPor(String descricao, String sigla,
 			String tipo_graduacao) {
+
 		List<Curso> cursos = new ArrayList<Curso>();
 
 		this.campoValor = new HashMap<Object, Object>(3);
@@ -101,11 +102,13 @@ public class CursoDAO extends AbstractDAO {
 		this.campoValor.put(this.campos[1], sigla);
 		this.campoValor.put(this.campos[2], tipo_graduacao);
 
+		// Recebendo os objetos
 		List<Map<String, Object>> listMapCursos = super._listarPor(campoValor);
 
+		// Iterando os objetos e inserindo-os em Objetos Curso
 		if (listMapCursos != null) {
-			// Iterando
 			Iterator<Map<String, Object>> it = listMapCursos.iterator();
+
 			while (it.hasNext()) {
 				Map<String, Object> mapCurso = it.next();
 

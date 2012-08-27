@@ -3,6 +3,8 @@ package app.controller;
 import java.sql.Date;
 import java.util.List;
 
+import app.dao.CursoDAO;
+
 /**
  * Curso
  * 
@@ -15,6 +17,8 @@ public class Curso {
 	private String descricao;
 	private String sigla;
 	private String tipo_graduacao;
+
+	private CursoDAO cursoDAO = new CursoDAO();
 
 	public Curso() {
 		// TODO Auto-generated constructor stub
@@ -62,32 +66,36 @@ public class Curso {
 	}
 
 	public boolean adicionar() {
-
-		return false;
+		return this.cursoDAO.adicionar(descricao, sigla, tipo_graduacao) > 0;
 	}
 
 	public boolean carregar() {
+		Curso curso = this.cursoDAO.buscarPorId(this.id_curso);
+		if (curso != null) {
+			this.id_curso = curso.getId_curso();
+			this.descricao = curso.getDescricao();
+			this.sigla = curso.getSigla();
+			this.tipo_graduacao = curso.getTipo_graduacao();
 
-		return false;
+			return true;
+		} else
+			return false;
 	}
 
 	public boolean editar() {
-
-		return false;
+		return this.cursoDAO.editar(id_curso, descricao, sigla, tipo_graduacao) > 0;
 	}
 
 	public boolean excluir() {
-
-		return false;
+		return this.cursoDAO.excluir(this.id_curso) > 0;
 	}
 
 	public List<Curso> listar() {
-
-		return null;
+		return this.cursoDAO.listarPor(descricao, sigla, tipo_graduacao);
 	}
 
 	public boolean definirCoordenadorAtual(Usuario usuario) {
-
+		
 		return false;
 	}
 

@@ -47,14 +47,17 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	protected void prepareStatement(PreparedStatement ps,
-			List<Object> parametros) {
+			List<Object> parametros, Boolean is_consulta) {
 		try {
 			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
 				switch (parametros.get(i).getClass().getName()) {
 				case "java.lang.String":
-					ps.setString(indexPS, "%" + (String) parametros.get(i)
-							+ "%");
+					if (is_consulta)
+						ps.setString(indexPS, "%" + (String) parametros.get(i)
+								+ "%");
+					else
+						ps.setString(indexPS, (String) parametros.get(i));
 					break;
 				case "java.lang.Integer":
 					ps.setInt(indexPS, (Integer) parametros.get(i));
@@ -206,7 +209,7 @@ public abstract class AbstractDAO {
 					.getPreparedStatement(builder.toString());
 
 			// preparando o statement
-			this.prepareStatement(preparedStatement, ordem);
+			this.prepareStatement(preparedStatement, ordem, false);
 
 			// executando
 			linhasAfetadas = preparedStatement.executeUpdate();
@@ -280,7 +283,7 @@ public abstract class AbstractDAO {
 					.getPreparedStatement(builder.toString());
 
 			// preparando o statement
-			this.prepareStatement(preparedStatement, ordem);
+			this.prepareStatement(preparedStatement, ordem, false);
 
 			// executando
 			linhasAfetadas = preparedStatement.executeUpdate();
@@ -344,7 +347,7 @@ public abstract class AbstractDAO {
 	 *            HashMap com o nome da primary key e o valor do id
 	 * @return HashMap com os valores vindos do ResultSet
 	 */
-	private Map<String, Object> _buscarPorId(Map<Object, Object> campoValor) {
+	private Map<String, Object> __buscarPorId(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
 
@@ -434,14 +437,14 @@ public abstract class AbstractDAO {
 
 			builder.append(";");
 
-			System.out.println(builder.toString());
+			//System.out.println(builder.toString());
 			// System.exit(0);
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
 
 			// preparando o statement
-			this.prepareStatement(preparedStatement, ordem);
+			this.prepareStatement(preparedStatement, ordem, true);
 
 			resultSet = preparedStatement.executeQuery();
 
@@ -479,7 +482,8 @@ public abstract class AbstractDAO {
 
 	/**
 	 * Método de exclusão que recebe um ou vários parâmetros PrimaryKey para
-	 * serem inseridos ao filtro
+	 * serem inseridos ao filtro. A ordem dos parâmetros é a mesma do array
+	 * informado na subclasse.
 	 * 
 	 * @param id
 	 *            Primary Key
@@ -505,7 +509,7 @@ public abstract class AbstractDAO {
 	 *            Primary Key
 	 * @return
 	 */
-	public Map<String, Object> buscarPorId(Integer... primaryKey) {
+	protected Map<String, Object> _buscarPorId(Integer... primaryKey) {
 		Map<Object, Object> campoValor = new HashMap<Object, Object>(
 				primaryKey.length);
 
@@ -514,7 +518,7 @@ public abstract class AbstractDAO {
 			campoValor.put(this.primaryKey[i], primaryKey[i]);
 		}
 
-		return this._buscarPorId(campoValor);
+		return this.__buscarPorId(campoValor);
 	}
 
 }

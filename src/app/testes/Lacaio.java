@@ -14,48 +14,75 @@ public class Lacaio {
 	}
 
 	public static void main(String[] args) {
-		Date x = new Date();
-		System.out.println(x); // resultado em minha máquina: Fri Jun 05
-								// 22:43:25 BRT 2009
-
-		String teste = "teste";
-		Integer numero = 2;
-		Boolean boo = true;
-		System.out.println(boo.getClass().getName());
-
-		CursoDAO cursoDAO = new CursoDAO();
-
-		List<Curso> cursos = cursoDAO.listarPor(null, null, "TEC");
-
-		Iterator<Curso> it = cursos.iterator();
-		while (it.hasNext()) {
-			Curso curso = it.next();
+		excluir(17);
+	}
+	
+	private static void adicionar() {
+		Curso curso = new Curso();
+		curso.setDescricao("Engenharia da Computação");
+		curso.setSigla("ENG");
+		curso.setTipo_graduacao("BAC");
+		if(curso.adicionar()) {
+			System.out.println("Adicionado com sucesso");
+		} else {
+			System.out.println("Não foi possivel adicionar");
+		}
+	}
+	
+	private static void editar() {
+		Curso curso = new Curso();
+		curso.setId_curso(17);
+		curso.setDescricao("Engenharia da Computação_alterado");
+		curso.setSigla("BUG");
+		curso.setTipo_graduacao("TEC");
+		if(curso.editar()) {
+			System.out.println("Editar com sucesso");
+		} else {
+			System.out.println("Não foi possivel editar");
+		}
+	}
+	
+	private static void buscar(Integer id) {
+		Curso curso = new Curso();
+		curso.setId_curso(id);
+		if(curso.carregar()) {
 			System.out.println("******");
 			System.out.println("ID: " + curso.getId_curso());
 			System.out.println("Descricao: " + curso.getDescricao());
 			System.out.println("Sigla: " + curso.getSigla());
 			System.out.println("Tipo_graduacao: " + curso.getTipo_graduacao());
 			System.out.println("*****");
-		}
-
-		System.exit(0);
-		// cursoDAO.adicionar("Daniel", "DAN", "BAC");
-
-		// int n = cursoDAO.excluir(7,8);
-		// System.exit(0);
-
-		// int n = cursoDAO.editar(12, "descricao alterado", "ALT", "BAC");
-
-		Curso curso = cursoDAO.buscarPorId(16);
-		if (curso != null) {
-			System.out.println("id: " + curso.getId_curso());
-			System.out.println("descricao:  " + curso.getDescricao());
-			System.out.println("sigla: " + curso.getSigla());
-			System.out.println("tipo_graduacao: " + curso.getTipo_graduacao());
 		} else {
-			System.out.println("Curso nao encontrado");
+			System.out.println("Nao encontrado");
 		}
-
+	}
+	
+	private static void listar() {
+		Curso curso = new Curso();
+		curso.setTipo_graduacao("BA");
+		//curso.setDescricao("Da");
+		List<Curso> cursos = curso.listar();
+		
+		Iterator<Curso> it = cursos.iterator();
+		while (it.hasNext()) {
+			Curso c = it.next();
+			System.out.println("******");
+			System.out.println("ID: " + c.getId_curso());
+			System.out.println("Descricao: " + c.getDescricao());
+			System.out.println("Sigla: " + c.getSigla());
+			System.out.println("Tipo_graduacao: " + c.getTipo_graduacao());
+			System.out.println("*****");
+		}
+	}
+	
+	private static void excluir(Integer id) {
+		Curso curso = new Curso();
+		curso.setId_curso(id);
+		if(curso.excluir())
+			System.out.println("Excluido com sucesos");
+		else
+			System.out.println("nao foi possivel excluir");
+			
 	}
 
 }
