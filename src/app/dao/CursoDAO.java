@@ -24,7 +24,7 @@ public class CursoDAO extends AbstractDAO {
 
 	public CursoDAO() {
 		super.nomeDaTabela = "curso";
-		super.primaryKey = new String[] { "id_curso" };
+		super.primaryKey = new String[] { "id_curso"};
 		super.campos = new String[] { "descricao", "sigla", "tipo_graduacao" };
 	}
 
@@ -49,20 +49,10 @@ public class CursoDAO extends AbstractDAO {
 		this.campoValor.put(super.campos[2], tipo_graduacao);
 
 		return super._editar(campoValor);
-	}
-
-	public int excluir(Integer id) {
-		this.campoValor = new HashMap<Object, Object>(1);
-		this.campoValor.put(super.primaryKey[0], id);
-		return super._excluir(campoValor);
-	}
+	}	
 
 	public Curso buscarPorId(Integer id) {
-		this.campoValor = new HashMap<Object, Object>(1);
-		this.campoValor.put(super.primaryKey[0], id);
-
-		Map<String, Object> campoValorRetornado = super
-				._buscarPorId(campoValor);
+		Map<String, Object> campoValorRetornado = super.buscarPorId(id);
 
 		if (!campoValorRetornado.isEmpty())
 			return new Curso(
@@ -76,80 +66,18 @@ public class CursoDAO extends AbstractDAO {
 
 	public List<Curso> listarPor(Integer id_curso, String descricao,
 			String sigla, String tipo_graduacao) {
-		List<Curso> cursos = new LinkedList<Curso>();
-		StringBuilder builder = new StringBuilder();
-
-		// Organizador dos parâmetros para o preparedStatement
-		int count = 0;
-		int ordemDoId_curso = 0;
-		int ordemDaDescricao = 0;
-		int ordemDaSigla = 0;
-		int ordemDoTipo_graduacao = 0;
-
-		// Query
-		builder.append("SELECT * FROM curso WHERE true ");
-
-		// ID
-		if (id_curso != null && id_curso > 0) {
-			builder.append("AND id_curso = ? ");
-			ordemDoId_curso = ++count;
-		}
-
-		// Descricao
-		if (descricao != null) {
-			builder.append("AND descricao LIKE ? ");
-			ordemDaDescricao = ++count;
-		}
-
-		// Sigla
-		if (sigla != null) {
-			builder.append("AND sigla = ? ");
-			ordemDaSigla = ++count;
-		}
-
-		// Tipo_Graduacao
-		if (tipo_graduacao != null) {
-			builder.append("AND tipo_graduacao = ? ");
-			ordemDoTipo_graduacao = ++count;
-		}
-
-		builder.append(";");
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
-
-			// Verificando a ordem dos parâmetros
-			if (ordemDoId_curso > 0)
-				preparedStatement.setInt(ordemDoId_curso, id_curso);
-
-			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao, "%" + descricao
-						+ "%");
-
-			if (ordemDaSigla > 0)
-				preparedStatement.setString(ordemDaSigla, sigla);
-
-			if (ordemDoTipo_graduacao > 0)
-				preparedStatement.setString(ordemDoTipo_graduacao,
-						tipo_graduacao);
-
-			// Executando a quary e retornando em um ResultSet
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			// Iterando entre os objetos retornados e inserindo-os em objetos
-			while (resultSet.next()) {
-				cursos.add(new Curso(resultSet.getInt("id_curso"), resultSet
-						.getString("descricao"), resultSet.getString("sigla"),
-						resultSet.getString("tipo_graduacao")));
-			}
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return cursos;
+		
+		this.campoValor = new HashMap<Object, Object>(4);
+		this.campoValor.put(this.primaryKey[0], id_curso);
+		this.campoValor.put(this.campos[0], descricao);
+		this.campoValor.put(this.campos[1], sigla);
+		this.campoValor.put(this.campos[2], tipo_graduacao);
+		
+		super._listarPor(campoValor);
+		
+		
+		
+		return null;
+		
 	}
 }

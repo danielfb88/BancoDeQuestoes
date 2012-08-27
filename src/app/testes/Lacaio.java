@@ -21,9 +21,12 @@ public class Lacaio {
 		System.out.println(boo.getClass().getName());
 		
 		CursoDAO cursoDAO = new CursoDAO();
+		
+		cursoDAO.listarPor(null, null, "sig", "tip");
 		//cursoDAO.adicionar("Daniel", "DAN", "BAC");
 		
-		//int n = cursoDAO.excluir(13);		
+		//int n = cursoDAO.excluir(7,8);
+		//System.exit(0);
 		
 		//int n = cursoDAO.editar(12, "descricao alterado", "ALT", "BAC");
 		

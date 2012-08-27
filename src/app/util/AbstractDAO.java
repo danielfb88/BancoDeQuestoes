@@ -47,22 +47,22 @@ public abstract class AbstractDAO {
 	protected void prepareStatement(PreparedStatement ps, Object[] parametros) {
 		try {
 			for (int i = 0; i < parametros.length; i++) {
-				int index = i + 1;
+				int indexPS = i + 1;
 				switch (parametros[i].getClass().getName()) {
 				case "java.lang.String":
-					ps.setString(index, (String) parametros[i]);
+					ps.setString(indexPS, (String) parametros[i]);
 					break;
 				case "java.lang.Integer":
-					ps.setInt(index, (Integer) parametros[i]);
+					ps.setInt(indexPS, (Integer) parametros[i]);
 					break;
 				case "java.lang.Double":
-					ps.setDouble(index, (Double) parametros[i]);
+					ps.setDouble(indexPS, (Double) parametros[i]);
 					break;
 				case "java.lang.Boolean":
-					ps.setBoolean(index, (Boolean) parametros[i]);
+					ps.setBoolean(indexPS, (Boolean) parametros[i]);
 					break;
 				case "java.lang.Date":
-					ps.setDate(index, (Date) parametros[i]);
+					ps.setDate(indexPS, (Date) parametros[i]);
 					break;
 				default:
 					throw new TipoParametroNaoEspecificadoException();
@@ -77,7 +77,7 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Verifica se o nome da tabela foi informado na classe filha
+	 * Verifica se o nome da tabela foi informado na subclasse
 	 */
 	private void verificaNomeTabela() {
 		if (this.nomeDaTabela == null || this.nomeDaTabela.isEmpty()) {
@@ -142,7 +142,7 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Efetua um
+	 * Efetua um:
 	 * 
 	 * "INSERT INTO 'tabela' (campos) VALUES (valores) WHERE (filtros)"
 	 * 
@@ -300,7 +300,7 @@ public abstract class AbstractDAO {
 	 * @param campoValor
 	 * @return Retorno do executeUpdate
 	 */
-	protected int _excluir(Map<Object, Object> campoValor) {
+	private int _excluir(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
 
@@ -341,7 +341,7 @@ public abstract class AbstractDAO {
 	 *            HashMap com o nome da primary key e o valor do id
 	 * @return HashMap com os valores vindos do ResultSet
 	 */
-	protected Map<String, Object> _buscarPorId(Map<Object, Object> campoValor) {
+	private Map<String, Object> _buscarPorId(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
 
@@ -393,14 +393,123 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * TODO: desenvlver listarPor Lista pelos campos informados na coleção MAP
+	 * TODO: DESENVOLVER ESTE MÉTODO. ESTÁ UM POUCO COMPLICADO. 
+	 * PROBLEMAS NA OCULTAÇÃO DOS PARAMETROS NA QUERY, CASO SEJA 
+	 * PASSADO O VALOR NULL EM UM DELES. VOU DORMIR.
 	 * 
 	 * @param campoValor
 	 * @return
 	 */
-	protected ResultSet[] listarPor(Map<Object, Object> campoValor) {
+	protected Map<String, Object>[] _listarPor(Map<Object, Object> campoValor) {
+		this.verificaNomeTabela();
+		this.verificaPK();
+
+		ResultSet resultSet = null;
+		StringBuilder builder = new StringBuilder();
+		Object ordem[] = new Object[campoValor.size()];
+		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
+				this.campos.length);
+
+		try {
+			builder.append("SELECT * FROM ");
+			builder.append(this.nomeDaTabela);
+			builder.append(" WHERE ");
+
+			// Inserindo os Ids
+			builder.append(this.montaParteQueryID(campoValor));
+
+			int arrayIndex = 0;
+			for (int i = 0; i < this.campos.length; i++) {
+				if (campoValor.containsKey(campos[i])) {
+					builder.append(", ");
+					builder.append(campos[i] + " = ?");
+
+					// inserindo os valores em um array
+					ordem[arrayIndex++] = campoValor.get(campos[i]);
+				}
+			}
+
+			builder.append(";");
+
+			System.out.println(builder.toString());
+			System.exit(0);
+
+			PreparedStatement preparedStatement = DAOUtil.getInstance()
+					.getPreparedStatement(builder.toString());
+
+			// preparando o statement
+			this.prepareStatement(preparedStatement, ordem);
+
+			resultSet = preparedStatement.executeQuery();
+
+			if (!resultSet.next()) {
+				resultSet.close();
+				preparedStatement.close();
+				return null;
+			}
+
+			// inserindo primary keys no hashMap
+			for (int i = 0; i < this.primaryKey.length; i++) {
+				campoValorRetorno.put(this.primaryKey[i],
+						resultSet.getObject(this.primaryKey[i]));
+
+			}
+
+			// inserindo Campos restates no hashMap
+			for (int i = 0; i < this.campos.length; i++) {
+				campoValorRetorno.put(campos[i],
+						resultSet.getObject(this.campos[i]));
+			}
+
+			resultSet.close();
+			preparedStatement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		// return campoValorRetorno;
 
 		return null;
+	}
+
+	/**
+	 * Método de exclusão que recebe um ou vários parâmetros PrimaryKey para
+	 * serem inseridos ao filtro
+	 * 
+	 * @param id
+	 *            Primary Key
+	 * @return
+	 */
+	public int excluir(Integer... primaryKey) {
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(
+				primaryKey.length);
+
+		// mapeando id - valor
+		for (int i = 0; i < primaryKey.length; i++) {
+			campoValor.put(this.primaryKey[i], primaryKey[i]);
+		}
+
+		return this._excluir(campoValor);
+	}
+
+	/**
+	 * Método parcial de busca que recebe um ou vários parâmetros PrimaryKey e
+	 * retornam um HashMap para ser concluído na subclasse.
+	 * 
+	 * @param id
+	 *            Primary Key
+	 * @return
+	 */
+	public Map<String, Object> buscarPorId(Integer... primaryKey) {
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(
+				primaryKey.length);
+
+		// mapeando id - valor
+		for (int i = 0; i < primaryKey.length; i++) {
+			campoValor.put(this.primaryKey[i], primaryKey[i]);
+		}
+
+		return this._buscarPorId(campoValor);
 	}
 
 }
