@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -44,25 +45,26 @@ public abstract class AbstractDAO {
 	 * @param parametros
 	 * @return
 	 */
-	protected void prepareStatement(PreparedStatement ps, Object[] parametros) {
+	protected void prepareStatement(PreparedStatement ps,
+			ArrayList<Object> parametros) {
 		try {
-			for (int i = 0; i < parametros.length; i++) {
+			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
-				switch (parametros[i].getClass().getName()) {
+				switch (parametros.get(i).getClass().getName()) {
 				case "java.lang.String":
-					ps.setString(indexPS, (String) parametros[i]);
+					ps.setString(indexPS, (String) parametros.get(i));
 					break;
 				case "java.lang.Integer":
-					ps.setInt(indexPS, (Integer) parametros[i]);
+					ps.setInt(indexPS, (Integer) parametros.get(i));
 					break;
 				case "java.lang.Double":
-					ps.setDouble(indexPS, (Double) parametros[i]);
+					ps.setDouble(indexPS, (Double) parametros.get(i));
 					break;
 				case "java.lang.Boolean":
-					ps.setBoolean(indexPS, (Boolean) parametros[i]);
+					ps.setBoolean(indexPS, (Boolean) parametros.get(i));
 					break;
 				case "java.lang.Date":
-					ps.setDate(indexPS, (Date) parametros[i]);
+					ps.setDate(indexPS, (Date) parametros.get(i));
 					break;
 				default:
 					throw new TipoParametroNaoEspecificadoException();
@@ -159,7 +161,7 @@ public abstract class AbstractDAO {
 		int linhasAfetadas = 0;
 		int i = 0;
 
-		Object ordem[] = new Object[campoValor.size()];
+		ArrayList<Object> ordem = new ArrayList<Object>();
 		StringBuilder builder = new StringBuilder();
 
 		try {
@@ -175,8 +177,8 @@ public abstract class AbstractDAO {
 				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
 						.next();
 
-				// inserindo os valores em um array
-				ordem[i] = me.getValue();
+				// inserindo os valores em um arraylist
+				ordem.add(me.getValue());
 
 				// inserindo a virgula depois do primeiro elemento
 				if (i++ != 0)
@@ -236,7 +238,7 @@ public abstract class AbstractDAO {
 		 * O tamanho do array a ser criado será o tamanho do hashmap -1
 		 * excluindo a primary key
 		 */
-		Object ordem[] = new Object[campoValor.size() - 1];
+		ArrayList<Object> ordem = new ArrayList<Object>();
 		StringBuilder builder = new StringBuilder();
 
 		try {
@@ -248,7 +250,6 @@ public abstract class AbstractDAO {
 			Set<Map.Entry<Object, Object>> set = campoValor.entrySet();
 			Iterator<Map.Entry<Object, Object>> it = set.iterator();
 
-			int arrayIndex = 0;
 			while (it.hasNext()) {
 				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
 						.next();
@@ -263,7 +264,7 @@ public abstract class AbstractDAO {
 					builder.append((String) me.getKey() + " = ?");
 
 					// inserindo os valores em um array
-					ordem[arrayIndex++] = me.getValue();
+					ordem.add(me.getValue());
 				}
 			}
 
@@ -393,9 +394,7 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * TODO: DESENVOLVER ESTE MÉTODO. ESTÁ UM POUCO COMPLICADO. PROBLEMAS NA
-	 * OCULTAÇÃO DOS PARAMETROS NA QUERY, CASO SEJA PASSADO O VALOR NULL EM UM
-	 * DELES. VOU DORMIR.
+	 * Listar
 	 * 
 	 * @param campoValor
 	 * @return
@@ -406,31 +405,28 @@ public abstract class AbstractDAO {
 
 		ResultSet resultSet = null;
 		StringBuilder builder = new StringBuilder();
-		Object ordem[] = new Object[campoValor.size()];
+		ArrayList<Object> ordem = new ArrayList<Object>();
 		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
 				this.campos.length);
 
 		try {
 			builder.append("SELECT * FROM ");
 			builder.append(this.nomeDaTabela);
-			builder.append(" WHERE ");
+			builder.append(" WHERE true");
 
+			int k = 0;
 			for (int i = 0; i < this.campos.length; i++) {
 				// inserindo os valores em um array
 				/**
-				 * TODO: ESTA INSERINDO OBJETOS NULOS.
-				 * NAO PODE!!
-				 * CONSIDERE USAR UM ARRAYLIST OU LINKEDLIST PARA 'ordem'
+				 * TODO: ANALIZAR COMO MONTAR A QUERY PARA USAR LIKE
+				 * QUANDO NECESSÁRIO
 				 */
-				ordem[i] = campoValor.get(campos[i]);
+				if (campoValor.get(campos[i]) != null) {
+					ordem.add(campoValor.get(campos[i]));
 
-				if (ordem[i] != null) {
-					if (i != 0)
-						builder.append(", ");
-
+					builder.append(" AND ");
 					builder.append(campos[i] + " = ?");
 				}
-
 			}
 
 			builder.append(";");

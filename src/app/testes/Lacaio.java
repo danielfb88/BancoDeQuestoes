@@ -22,7 +22,7 @@ public class Lacaio {
 		
 		CursoDAO cursoDAO = new CursoDAO();
 		
-		cursoDAO.listarPor(null, null, "sig", "tip");
+		cursoDAO.listarPor("ok", "tec", null);
 		//cursoDAO.adicionar("Daniel", "DAN", "BAC");
 		
 		//int n = cursoDAO.excluir(7,8);

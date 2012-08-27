@@ -19,7 +19,7 @@ public class CursoDAO extends AbstractDAO {
 
 	public CursoDAO() {
 		super.nomeDaTabela = "curso";
-		super.primaryKey = new String[] { "id_curso"};
+		super.primaryKey = new String[] { "id_curso" };
 		super.campos = new String[] { "descricao", "sigla", "tipo_graduacao" };
 	}
 
@@ -44,7 +44,7 @@ public class CursoDAO extends AbstractDAO {
 		this.campoValor.put(super.campos[2], tipo_graduacao);
 
 		return super._editar(campoValor);
-	}	
+	}
 
 	public Curso buscarPorId(Integer id) {
 		Map<String, Object> campoValorRetornado = super.buscarPorId(id);
@@ -59,20 +59,17 @@ public class CursoDAO extends AbstractDAO {
 			return null;
 	}
 
-	public List<Curso> listarPor(Integer id_curso, String descricao,
-			String sigla, String tipo_graduacao) {
-		
-		this.campoValor = new HashMap<Object, Object>(4);
-		this.campoValor.put(this.primaryKey[0], id_curso);
+	public List<Curso> listarPor(String descricao, String sigla,
+			String tipo_graduacao) {
+
+		this.campoValor = new HashMap<Object, Object>(3);
 		this.campoValor.put(this.campos[0], descricao);
 		this.campoValor.put(this.campos[1], sigla);
 		this.campoValor.put(this.campos[2], tipo_graduacao);
-		
+
 		super._listarPor(campoValor);
-		
-		
-		
+
 		return null;
-		
+
 	}
 }
