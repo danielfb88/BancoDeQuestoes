@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,13 +47,14 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	protected void prepareStatement(PreparedStatement ps,
-			ArrayList<Object> parametros) {
+			List<Object> parametros) {
 		try {
 			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
 				switch (parametros.get(i).getClass().getName()) {
 				case "java.lang.String":
-					ps.setString(indexPS, (String) parametros.get(i));
+					ps.setString(indexPS, "%" + (String) parametros.get(i)
+							+ "%");
 					break;
 				case "java.lang.Integer":
 					ps.setInt(indexPS, (Integer) parametros.get(i));
@@ -394,45 +396,46 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Listar
+	 * Retorna uma Lista de Map de cada registro
 	 * 
 	 * @param campoValor
 	 * @return
 	 */
-	protected Map<String, Object>[] _listarPor(Map<Object, Object> campoValor) {
+	protected List<Map<String, Object>> _listarPor(
+			Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
 
 		ResultSet resultSet = null;
 		StringBuilder builder = new StringBuilder();
-		ArrayList<Object> ordem = new ArrayList<Object>();
-		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
-				this.campos.length);
+		List<Map<String, Object>> camposValoresRetornados = new ArrayList<Map<String, Object>>();
+		List<Object> ordem = new ArrayList<Object>();
 
 		try {
 			builder.append("SELECT * FROM ");
 			builder.append(this.nomeDaTabela);
 			builder.append(" WHERE true");
 
-			int k = 0;
 			for (int i = 0; i < this.campos.length; i++) {
 				// inserindo os valores em um array
-				/**
-				 * TODO: ANALIZAR COMO MONTAR A QUERY PARA USAR LIKE
-				 * QUANDO NECESSÁRIO
-				 */
 				if (campoValor.get(campos[i]) != null) {
 					ordem.add(campoValor.get(campos[i]));
 
 					builder.append(" AND ");
-					builder.append(campos[i] + " = ?");
+					// se for string use o LIKE
+					if (campoValor.get(campos[i]).getClass().getName()
+							.equals("java.lang.String")) {
+						builder.append(campos[i] + " LIKE ?");
+					} else {
+						builder.append(campos[i] + " = ?");
+					}
 				}
 			}
 
 			builder.append(";");
 
 			System.out.println(builder.toString());
-			System.exit(0);
+			// System.exit(0);
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
@@ -442,23 +445,26 @@ public abstract class AbstractDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
-			}
+			// Iterando os valores retornados no resultSet
+			while (resultSet.next()) {
+				Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
+						this.campos.length);
 
-			// inserindo primary keys no hashMap
-			for (int i = 0; i < this.primaryKey.length; i++) {
-				campoValorRetorno.put(this.primaryKey[i],
-						resultSet.getObject(this.primaryKey[i]));
+				// inserindo primary keys no hashMap
+				for (int i = 0; i < this.primaryKey.length; i++) {
+					campoValorRetorno.put(this.primaryKey[i],
+							resultSet.getObject(this.primaryKey[i]));
 
-			}
+				}
 
-			// inserindo Campos restates no hashMap
-			for (int i = 0; i < this.campos.length; i++) {
-				campoValorRetorno.put(campos[i],
-						resultSet.getObject(this.campos[i]));
+				// inserindo Campos restates no hashMap
+				for (int i = 0; i < this.campos.length; i++) {
+					campoValorRetorno.put(campos[i],
+							resultSet.getObject(this.campos[i]));
+				}
+
+				// inserindo o hashMap no arrayList
+				camposValoresRetornados.add(campoValorRetorno);
 			}
 
 			resultSet.close();
@@ -467,9 +473,8 @@ public abstract class AbstractDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		// return campoValorRetorno;
 
-		return null;
+		return camposValoresRetornados;
 	}
 
 	/**

@@ -1,6 +1,8 @@
 package app.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +25,14 @@ public class CursoDAO extends AbstractDAO {
 		super.campos = new String[] { "descricao", "sigla", "tipo_graduacao" };
 	}
 
+	/**
+	 * Adicionar
+	 * 
+	 * @param descricao
+	 * @param sigla
+	 * @param tipo_graduacao
+	 * @return
+	 */
 	public int adicionar(String descricao, String sigla, String tipo_graduacao) {
 		this.campoValor = new HashMap<Object, Object>(3);
 
@@ -33,6 +43,15 @@ public class CursoDAO extends AbstractDAO {
 		return super._adicionar(campoValor);
 	}
 
+	/**
+	 * Editar
+	 * 
+	 * @param id_curso
+	 * @param descricao
+	 * @param sigla
+	 * @param tipo_graduacao
+	 * @return
+	 */
 	public int editar(Integer id_curso, String descricao, String sigla,
 			String tipo_graduacao) {
 
@@ -46,6 +65,12 @@ public class CursoDAO extends AbstractDAO {
 		return super._editar(campoValor);
 	}
 
+	/**
+	 * Buscar por ID
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Curso buscarPorId(Integer id) {
 		Map<String, Object> campoValorRetornado = super.buscarPorId(id);
 
@@ -59,17 +84,49 @@ public class CursoDAO extends AbstractDAO {
 			return null;
 	}
 
+	/**
+	 * Listar Por
+	 * 
+	 * @param descricao
+	 * @param sigla
+	 * @param tipo_graduacao
+	 * @return
+	 */
 	public List<Curso> listarPor(String descricao, String sigla,
 			String tipo_graduacao) {
+		List<Curso> cursos = new ArrayList<Curso>();
 
 		this.campoValor = new HashMap<Object, Object>(3);
 		this.campoValor.put(this.campos[0], descricao);
 		this.campoValor.put(this.campos[1], sigla);
 		this.campoValor.put(this.campos[2], tipo_graduacao);
 
-		super._listarPor(campoValor);
+		List<Map<String, Object>> listMapCursos = super._listarPor(campoValor);
 
-		return null;
+		if (listMapCursos != null) {
+			// Iterando
+			Iterator<Map<String, Object>> it = listMapCursos.iterator();
+			while (it.hasNext()) {
+				Map<String, Object> mapCurso = it.next();
 
+				Curso curso = new Curso();
+				// id
+				curso.setId_curso((Integer) mapCurso.get(this.primaryKey[0]));
+				// descricao
+				curso.setDescricao((String) mapCurso.get(this.campos[0]));
+				// sigla
+				curso.setSigla((String) mapCurso.get(this.campos[1]));
+				// tipo_graduacao
+				curso.setTipo_graduacao((String) mapCurso.get(this.campos[2]));
+
+				// Adicionando à lista
+				cursos.add(curso);
+			}
+		} else {
+			return null;
+
+		}
+
+		return cursos;
 	}
 }
