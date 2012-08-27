@@ -1,16 +1,11 @@
 package app.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import app.controller.Curso;
 import app.util.AbstractDAO;
-import app.util.conexao.DAOUtil;
 
 /**
  * Grupo DAO

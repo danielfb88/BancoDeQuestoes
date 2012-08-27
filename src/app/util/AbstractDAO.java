@@ -393,9 +393,9 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * TODO: DESENVOLVER ESTE MÉTODO. ESTÁ UM POUCO COMPLICADO. 
-	 * PROBLEMAS NA OCULTAÇÃO DOS PARAMETROS NA QUERY, CASO SEJA 
-	 * PASSADO O VALOR NULL EM UM DELES. VOU DORMIR.
+	 * TODO: DESENVOLVER ESTE MÉTODO. ESTÁ UM POUCO COMPLICADO. PROBLEMAS NA
+	 * OCULTAÇÃO DOS PARAMETROS NA QUERY, CASO SEJA PASSADO O VALOR NULL EM UM
+	 * DELES. VOU DORMIR.
 	 * 
 	 * @param campoValor
 	 * @return
@@ -415,18 +415,22 @@ public abstract class AbstractDAO {
 			builder.append(this.nomeDaTabela);
 			builder.append(" WHERE ");
 
-			// Inserindo os Ids
-			builder.append(this.montaParteQueryID(campoValor));
-
-			int arrayIndex = 0;
 			for (int i = 0; i < this.campos.length; i++) {
-				if (campoValor.containsKey(campos[i])) {
-					builder.append(", ");
-					builder.append(campos[i] + " = ?");
+				// inserindo os valores em um array
+				/**
+				 * TODO: ESTA INSERINDO OBJETOS NULOS.
+				 * NAO PODE!!
+				 * CONSIDERE USAR UM ARRAYLIST OU LINKEDLIST PARA 'ordem'
+				 */
+				ordem[i] = campoValor.get(campos[i]);
 
-					// inserindo os valores em um array
-					ordem[arrayIndex++] = campoValor.get(campos[i]);
+				if (ordem[i] != null) {
+					if (i != 0)
+						builder.append(", ");
+
+					builder.append(campos[i] + " = ?");
 				}
+
 			}
 
 			builder.append(";");
