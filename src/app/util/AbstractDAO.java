@@ -47,13 +47,13 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	protected void prepareStatement(PreparedStatement ps,
-			List<Object> parametros, Boolean is_consulta) {
+			List<Object> parametros, Boolean useLike) {
 		try {
 			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
 				switch (parametros.get(i).getClass().getName()) {
 				case "java.lang.String":
-					if (is_consulta)
+					if (useLike)
 						ps.setString(indexPS, "%" + (String) parametros.get(i)
 								+ "%");
 					else
