@@ -1,192 +1,96 @@
 package app.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-
-import app.controller.Grupo;
-import app.util.conexao.DAOUtil;
+import java.util.Map;
+import app.util.AbstractDAO;
 
 /**
- * Grupo DAO
- * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 03-08-2012
+ * @since 15-08-2012
  * 
  */
-public class GrupoDAO {
+public class GrupoDAO extends AbstractDAO {
+	private Map<Object, Object> campoValor;
 
 	public GrupoDAO() {
-
+		nomeDaTabela = "grupo";
+		primaryKey = new String[] { "id_grupo" };
+		campos = new String[] { "descricao", "tipo" };
 	}
 
-	public int adicionar(String descricao, Character tipo) {
-		int linhasAfetadas = 0;
+	/**
+	 * 
+	 * @param descricao
+	 * @param tipo
+	 * @return
+	 */
+	public int adicionar(String descricao, String tipo) {
+		campoValor = new HashMap<Object, Object>();
 
-		try {
+		campoValor.put(campos[0], descricao);
+		campoValor.put(campos[1], tipo);
 
-			String sql = "INSERT INTO grupo (descricao, tipo) VALUES (?, ?);";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setString(1, descricao);
-			preparedStatement.setString(2, tipo.toString());
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._adicionar(campoValor);
 	}
 
-	public int editar(Integer id_grupo, String descricao, Character tipo) {
-		int linhasAfetadas = 0;
+	/**
+	 * 
+	 * @param id_grupo
+	 * @param descricao
+	 * @param tipo
+	 * @return
+	 */
+	public int editar(Integer id_grupo, String descricao, String tipo) {
 
-		try {
+		campoValor = new HashMap<Object, Object>();
 
-			String sql = "UPDATE grupo SET descricao = ?, tipo = ? WHERE id_grupo = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+		campoValor.put(primaryKey[0], id_grupo);
+		campoValor.put(campos[0], descricao);
+		campoValor.put(campos[1], tipo);
 
-			preparedStatement.setString(1, descricao);
-			preparedStatement.setString(2, tipo.toString());
-			preparedStatement.setInt(3, id_grupo);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._editar(campoValor);
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public int excluir(Integer id) {
-		int linhasAfetadas = 0;
-
-		try {
-
-			String sql = "DELETE FROM grupo WHERE id_grupo = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._excluir(id);
 	}
 
-	public Grupo buscarPorId(Integer id) {
-		Grupo grupo = new Grupo();
-
-		String sql = "SELECT * FROM grupo WHERE id_grupo = ?;";
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
-			}
-
-			grupo.setId_grupo(resultSet.getInt("id_grupo"));
-			grupo.setDescricao(resultSet.getString("descricao"));
-			grupo.setTipo(resultSet.getString("tipo").charAt(0));
-
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return grupo;
+	/**
+	 * Buscar por ID
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> buscarPorId(Integer id) {
+		return super._buscarPorId(id);
 	}
 
-	public List<Grupo> listarPor(Integer id_grupo, String descricao, Character tipo) {
-		List<Grupo> grupos = new LinkedList<Grupo>();
-		StringBuilder builder = new StringBuilder();
+	/**
+	 * 
+	 * @param id_grupo
+	 * @param id_curso
+	 * @param descricao
+	 * @param sigla
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPor(Integer id_curso,
+			Integer id_anoSemestre_inicial, Integer id_anoSemestre_final,
+			String descricao) {
 
-		// Organizador dos parâmetros para o preparedStatement
-		int count = 0;
-		int ordemDoId = 0;
-		int ordemDaDescricao = 0;
-		int ordemDoTipo = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		// Query
-		builder.append("SELECT * FROM grupo WHERE true ");
+		campoValor.put(campos[0], id_curso);
+		campoValor.put(campos[1], id_anoSemestre_inicial);
+		campoValor.put(campos[2], id_anoSemestre_final);
+		campoValor.put(campos[3], descricao);
 
-		// ID
-		if (id_grupo != null && id_grupo > 0) {
-			builder.append("AND id_grupo = ? ");
-			ordemDoId = ++count;
-		}
-
-		// Descricao
-		if (descricao != null && !descricao.isEmpty()) {
-			builder.append("AND descricao LIKE ? ");
-			ordemDaDescricao = ++count;
-		}
-
-		// Tipo
-		if (tipo != null) {
-			builder.append("AND tipo = ? ");
-			ordemDoTipo = ++count;
-		}
-
-		// Fechando a instrução
-		builder.append(";");
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
-
-			// Verificando a ordem dos parâmetros
-			if (ordemDoId > 0)
-				preparedStatement.setInt(ordemDoId, id_grupo);
-
-			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao,
-						"%" + descricao + "%");
-
-			if (ordemDoTipo > 0)
-				preparedStatement.setString(ordemDoTipo, tipo.toString());
-
-			// Executando a quary e retornando em um ResultSet
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			// Iterando entre os objetos retornados e inserindo-os em objetos
-			// Grupo e depois
-			// na lista grupos
-			while (resultSet.next()) {
-				grupos.add(new Grupo(resultSet.getInt("id_grupo"), resultSet
-						.getString("descricao"), resultSet.getString("tipo")
-						.charAt(0)));
-			}
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return grupos;
+		return super._listarPor(campoValor);
 	}
 }

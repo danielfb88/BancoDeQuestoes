@@ -1,9 +1,0 @@
-MODULOS CONCLUÍDOS:
-
-1 - grupo
-2 - usuario
-3 - disciplina
-4 - curso
-5 - assunto
-6 - anoSemestre
-7 - Pergunta

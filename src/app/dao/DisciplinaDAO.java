@@ -1,220 +1,99 @@
 package app.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import app.util.AbstractDAO;
 
-import app.controller.Disciplina;
-import app.util.conexao.DAOUtil;
 /**
- * TODO: CRIAR ESTRUTURA PARA AUTOMATIZAR O PREPARED STATEMENT
- */
-/**
- * Disciplina DAO
- * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 08-08-2012
+ * @since 15-08-2012
  * 
  */
-public class DisciplinaDAO {
-	CursoDAO cursoDAO = new CursoDAO();
+public class DisciplinaDAO extends AbstractDAO {
+	private Map<Object, Object> campoValor;
 
 	public DisciplinaDAO() {
-
+		nomeDaTabela = "disciplina";
+		primaryKey = new String[] { "id_disciplina" };
+		campos = new String[] { "id_curso", "descricao", "sigla" };
 	}
 
+	/**
+	 * 
+	 * @param id_curso
+	 * @param descricao
+	 * @param sigla
+	 * @return
+	 */
 	public int adicionar(Integer id_curso, String descricao, String sigla) {
-		StringBuilder builder = new StringBuilder();
-		int linhasAfetadas = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		try {
-			builder.append("INSERT INTO disciplina ");
-			builder.append("(id_curso, descricao, sigla) ");
-			builder.append("VALUES ");
-			builder.append("(?, ?, ?) ");
-			builder.append(";");
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+		campoValor.put(campos[0], id_curso);
+		campoValor.put(campos[1], descricao);
+		campoValor.put(campos[2], sigla);
 
-			preparedStatement.setInt(1, id_curso);
-			preparedStatement.setString(2, descricao);
-			preparedStatement.setString(3, sigla);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._adicionar(campoValor);
 	}
 
+	/**
+	 * 
+	 * @param id_disciplina
+	 * @param id_curso
+	 * @param descricao
+	 * @param sigla
+	 * @return
+	 */
 	public int editar(Integer id_disciplina, Integer id_curso,
 			String descricao, String sigla) {
-		int linhasAfetadas = 0;
 
-		try {
-			String sql = "UPDATE disciplina SET id_curso = ?, descricao = ?, sigla = ? WHERE id_disciplina = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+		campoValor = new HashMap<Object, Object>();
 
-			preparedStatement.setInt(1, id_curso);
-			preparedStatement.setString(2, descricao);
-			preparedStatement.setString(3, sigla);
-			preparedStatement.setInt(4, id_disciplina);
+		campoValor.put(primaryKey[0], id_disciplina);
+		campoValor.put(campos[0], id_curso);
+		campoValor.put(campos[1], descricao);
+		campoValor.put(campos[2], sigla);
 
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._editar(campoValor);
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public int excluir(Integer id) {
-		int linhasAfetadas = 0;
-
-		try {
-
-			String sql = "DELETE FROM disciplina WHERE id_disciplina = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._excluir(id);
 	}
 
-	public Disciplina buscarPorId(Integer id) {
-		Disciplina disciplina = new Disciplina();
-
-		String sql = "SELECT * FROM disciplina WHERE id_disciplina = ?;";
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
-			}
-
-			disciplina.setId_disciplina(resultSet.getInt("id_disciplina"));
-			disciplina.setDescricao(resultSet.getString("descricao"));
-			disciplina.setSigla(resultSet.getString("sigla"));
-			disciplina.setCurso(cursoDAO.buscarPorId(resultSet
-					.getInt("id_curso")));
-
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return disciplina;
+	/**
+	 * Buscar por ID
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> buscarPorId(Integer id) {
+		return super._buscarPorId(id);
 	}
 
-	public List<Disciplina> listarPor(Integer id_disciplina, Integer id_curso,
+	/**
+	 * 
+	 * @param id_disciplina
+	 * @param id_curso
+	 * @param descricao
+	 * @param sigla
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPor(Integer id_curso,
 			String descricao, String sigla) {
-		List<Disciplina> disciplinas = new LinkedList<Disciplina>();
-		StringBuilder builder = new StringBuilder();
 
-		// Organizador dos parâmetros para o preparedStatement
-		int count = 0;
-		int ordemDoIdDisciplina = 0;
-		int ordemDoIdCurso = 0;
-		int ordemDaDescricao = 0;
-		int ordemDaSigla = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		// Query
-		builder.append("SELECT * FROM disciplina WHERE true ");
+		campoValor.put(campos[0], id_curso);
+		campoValor.put(campos[1], descricao);
+		campoValor.put(campos[2], sigla);
 
-		// ID
-		if (id_disciplina != null && id_disciplina > 0) {
-			builder.append("AND id_disciplina = ? ");
-			ordemDoIdDisciplina = ++count;
-		}
-
-		// ID Curso
-		if (id_curso != null && id_curso > 0) {
-			builder.append("AND id_curso = ? ");
-			ordemDoIdCurso = ++count;
-		}
-
-		// Descricao
-		if (descricao != null) {
-			builder.append("AND descricao LIKE ? ");
-			ordemDaDescricao = ++count;
-		}
-
-		// Sigla
-		if (sigla != null) {
-			builder.append("AND sigla = ? ");
-			ordemDaSigla = ++count;
-		}
-
-		builder.append(";");
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
-
-			// Verificando a ordem dos parâmetros
-			if (ordemDoIdDisciplina > 0)
-				preparedStatement.setInt(ordemDoIdDisciplina, id_disciplina);
-
-			if (ordemDoIdCurso > 0)
-				preparedStatement.setInt(ordemDoIdCurso, id_curso);
-
-			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao, "%" + descricao
-						+ "%");
-
-			if (ordemDaSigla > 0)
-				preparedStatement.setString(ordemDaSigla, sigla);
-
-			// Executando a query e retornando em um ResultSet
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			// Iterando entre os objetos retornados
-			while (resultSet.next()) {
-				Disciplina disciplinaRetornado = new Disciplina();
-				disciplinaRetornado.setId_disciplina(resultSet
-						.getInt("id_disciplina"));
-				disciplinaRetornado.setCurso(cursoDAO.buscarPorId(resultSet
-						.getInt("id_curso")));
-				disciplinaRetornado.setDescricao(resultSet
-						.getString("descricao"));
-				disciplinaRetornado.setSigla(resultSet.getString("sigla"));
-
-				// Adicionando o disciplina à lista
-				disciplinas.add(disciplinaRetornado);
-			}
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return disciplinas;
+		return super._listarPor(campoValor);
 	}
-
 }

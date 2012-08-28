@@ -2,6 +2,9 @@ package app.controller;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
+
+import app.dao.CoordenadorCursoDAO;
 
 /**
  * CoordenadorCurso
@@ -17,8 +20,11 @@ public class CoordenadorCurso {
 	private Date dataEntrada;
 	private Date dataSaida;
 
+	private CoordenadorCursoDAO coordenadorCursoDAO = new CoordenadorCursoDAO();
+
 	public CoordenadorCurso() {
-		// TODO Auto-generated constructor stub
+		this.coordenador = new Usuario();
+		this.curso = new Curso();
 	}
 
 	public CoordenadorCurso(Integer id_coordenadorCurso, Usuario coordenador,
@@ -72,12 +78,25 @@ public class CoordenadorCurso {
 	}
 
 	public boolean adicionar() {
-
-		return false;
+		return this.coordenadorCursoDAO.adicionar(coordenador.getId_usuario(),
+				curso.getId_curso(), dataEntrada, dataSaida) > 0;
 	}
 
 	public boolean carregar() {
+		Map<String, Object> mapCC = this.coordenadorCursoDAO.buscarPorId(this.id_coordenadorCurso);
 
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.coordenadorCursoDAO.getPrimaryKey();
+		String[] campos = this.coordenadorCursoDAO.getCampos();
+
+		if (mapCC != null) {
+			this.id_coordenadorCurso = (Integer) mapCC.get(primaryKey[0]);
+			this.coordenador = (String) mapCC.get(campos[0]);
+			this.sigla = (String) mapCC.get(campos[1]);
+			this.tipo_graduacao = (String) mapCC.get(campos[2]);
+
+			return true;
+		}
 		return false;
 	}
 

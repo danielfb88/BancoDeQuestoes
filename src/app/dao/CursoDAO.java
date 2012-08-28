@@ -6,9 +6,6 @@ import java.util.Map;
 import app.util.AbstractDAO;
 
 /**
- * TODO: Diminuindo o acoplamento. Estas classes DAO deverão apenas retornar
- * HashMap
- * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 15-08-2012
  * 
@@ -31,7 +28,7 @@ public class CursoDAO extends AbstractDAO {
 	 * @return
 	 */
 	public int adicionar(String descricao, String sigla, String tipo_graduacao) {
-		campoValor = new HashMap<Object, Object>(3);
+		campoValor = new HashMap<Object, Object>();
 
 		campoValor.put(campos[0], descricao);
 		campoValor.put(campos[1], sigla);
@@ -52,7 +49,7 @@ public class CursoDAO extends AbstractDAO {
 	public int editar(Integer id_curso, String descricao, String sigla,
 			String tipo_graduacao) {
 
-		campoValor = new HashMap<Object, Object>(4);
+		campoValor = new HashMap<Object, Object>();
 
 		campoValor.put(primaryKey[0], id_curso);
 		campoValor.put(campos[0], descricao);
@@ -60,6 +57,16 @@ public class CursoDAO extends AbstractDAO {
 		campoValor.put(campos[2], tipo_graduacao);
 
 		return super._editar(campoValor);
+	}
+
+	/**
+	 * Excluir
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public int excluir(Integer id) {
+		return super._excluir(id);
 	}
 
 	/**
@@ -74,6 +81,7 @@ public class CursoDAO extends AbstractDAO {
 
 	/**
 	 * Listar Por
+	 * 
 	 * @param descricao
 	 * @param sigla
 	 * @param tipo_graduacao
@@ -82,7 +90,8 @@ public class CursoDAO extends AbstractDAO {
 	public List<Map<String, Object>> listarPor(String descricao, String sigla,
 			String tipo_graduacao) {
 
-		campoValor = new HashMap<Object, Object>(3);
+		campoValor = new HashMap<Object, Object>();
+
 		campoValor.put(campos[0], descricao);
 		campoValor.put(campos[1], sigla);
 		campoValor.put(campos[2], tipo_graduacao);
@@ -90,8 +99,4 @@ public class CursoDAO extends AbstractDAO {
 		// Recebendo os objetos
 		return super._listarPor(campoValor);
 	}
-
-	/*
-	 * TODO: Desenvolver outros motodos específicos de relacionamentos
-	 */
 }

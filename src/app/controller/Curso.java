@@ -1,7 +1,10 @@
 package app.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import app.dao.CursoDAO;
 
@@ -21,7 +24,7 @@ public class Curso {
 	private CursoDAO cursoDAO = new CursoDAO();
 
 	public Curso() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Curso(Integer id_curso, String descricao, String sigla,
@@ -70,16 +73,21 @@ public class Curso {
 	}
 
 	public boolean carregar() {
-		Curso curso = this.cursoDAO.buscarPorId(this.id_curso);
-		if (curso != null) {
-			this.id_curso = curso.getId_curso();
-			this.descricao = curso.getDescricao();
-			this.sigla = curso.getSigla();
-			this.tipo_graduacao = curso.getTipo_graduacao();
+		Map<String, Object> mapCurso = this.cursoDAO.buscarPorId(this.id_curso);
+
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.cursoDAO.getPrimaryKey();
+		String[] campos = this.cursoDAO.getCampos();
+
+		if (mapCurso != null) {
+			this.id_curso = (Integer) mapCurso.get(primaryKey[0]);
+			this.descricao = (String) mapCurso.get(campos[0]);
+			this.sigla = (String) mapCurso.get(campos[1]);
+			this.tipo_graduacao = (String) mapCurso.get(campos[2]);
 
 			return true;
-		} else
-			return false;
+		}
+		return false;
 	}
 
 	public boolean editar() {
@@ -87,15 +95,42 @@ public class Curso {
 	}
 
 	public boolean excluir() {
-		return this.cursoDAO.excluir(this.id_curso) > 0;
+		return this.cursoDAO.excluir(id_curso) > 0;
+
 	}
 
 	public List<Curso> listar() {
-		return this.cursoDAO.listarPor(descricao, sigla, tipo_graduacao);
+		// buscando a lista de Mapa recuperando pelos parametros
+		List<Map<String, Object>> listMapCursos = this.cursoDAO.listarPor(
+				descricao, sigla, tipo_graduacao);
+
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.cursoDAO.getPrimaryKey();
+		String[] campos = this.cursoDAO.getCampos();
+
+		// lista de cursos
+		List<Curso> cursos = new ArrayList<Curso>();
+
+		// Iterando
+		Iterator<Map<String, Object>> it = listMapCursos.iterator();
+		while (it.hasNext()) {
+			Map<String, Object> mapCurso = it.next();
+
+			// preenchendo o objeto curso
+			Curso curso = new Curso();
+			curso.setId_curso((Integer) mapCurso.get(primaryKey[0]));
+			curso.setDescricao((String) mapCurso.get(campos[0]));
+			curso.setSigla((String) mapCurso.get(campos[1]));
+			curso.setTipo_graduacao((String) mapCurso.get(campos[2]));
+			// inserindo à lista
+			cursos.add(curso);
+		}
+		// retornando a lista
+		return cursos;
 	}
 
 	public boolean definirCoordenadorAtual(Usuario usuario) {
-		
+
 		return false;
 	}
 

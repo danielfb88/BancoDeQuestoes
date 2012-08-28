@@ -14,13 +14,13 @@ public class Lacaio {
 	}
 
 	public static void main(String[] args) {
-		excluir(17);
+		excluir(19);
 	}
 	
 	private static void adicionar() {
 		Curso curso = new Curso();
-		curso.setDescricao("Engenharia da Computação");
-		curso.setSigla("ENG");
+		curso.setDescricao("Psicologia");
+		curso.setSigla("PSI");
 		curso.setTipo_graduacao("BAC");
 		if(curso.adicionar()) {
 			System.out.println("Adicionado com sucesso");
@@ -31,8 +31,8 @@ public class Lacaio {
 	
 	private static void editar() {
 		Curso curso = new Curso();
-		curso.setId_curso(17);
-		curso.setDescricao("Engenharia da Computação_alterado");
+		curso.setId_curso(19);
+		curso.setDescricao("Psicologia Alterado");
 		curso.setSigla("BUG");
 		curso.setTipo_graduacao("TEC");
 		if(curso.editar()) {
@@ -59,8 +59,9 @@ public class Lacaio {
 	
 	private static void listar() {
 		Curso curso = new Curso();
-		curso.setTipo_graduacao("BA");
-		//curso.setDescricao("Da");
+		//curso.setSigla("B");
+		curso.setDescricao("Da");
+		curso.setTipo_graduacao("BAC");
 		List<Curso> cursos = curso.listar();
 		
 		Iterator<Curso> it = cursos.iterator();

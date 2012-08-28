@@ -8,7 +8,7 @@ import java.util.List;
 
 import app.controller.Usuario;
 import app.util.conexao.DAOUtil;
-
+sasas
 /**
  * Usuario DAO
  * 

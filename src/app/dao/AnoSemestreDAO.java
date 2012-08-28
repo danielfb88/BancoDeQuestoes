@@ -1,196 +1,91 @@
 package app.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-
-import app.controller.AnoSemestre;
-import app.util.conexao.DAOUtil;
+import java.util.Map;
+import app.util.AbstractDAO;
 
 /**
- * AnoSemestreDAO
- * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 23-08-2012
- *
+ * @since 15-08-2012
+ * 
  */
-public class AnoSemestreDAO {
+public class AnoSemestreDAO extends AbstractDAO {
+	private Map<Object, Object> campoValor;
 
 	public AnoSemestreDAO() {
-
+		nomeDaTabela = "anosemestre";
+		primaryKey = new String[] { "id_anosemestre" };
+		campos = new String[] { "ano", "semestre" };
 	}
 
+	/**
+	 * 
+	 * @param ano
+	 * @param semestre
+	 * @return
+	 */
 	public int adicionar(Integer ano, Integer semestre) {
-		int linhasAfetadas = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		try {
-			String sql = "INSERT INTO anosemestre (ano, semestre) VALUES (?, ?);";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+		campoValor.put(campos[0], ano);
+		campoValor.put(campos[1], semestre);
 
-			preparedStatement.setInt(1, ano);
-			preparedStatement.setInt(2, semestre);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._adicionar(campoValor);
 	}
 
+	/**
+	 * 
+	 * @param id_anoSemestre
+	 * @param ano
+	 * @param semestre
+	 * @return
+	 */
 	public int editar(Integer id_anoSemestre, Integer ano, Integer semestre) {
-		int linhasAfetadas = 0;
 
-		try {
-			StringBuilder builder = new StringBuilder();
-			builder.append("UPDATE anosemestre SET ");
-			builder.append("ano = ?, ");
-			builder.append("semestre = ? ");
-			builder.append("WHERE ");
-			builder.append("id_anosemestre = ? ");
-			builder.append(";");
+		campoValor = new HashMap<Object, Object>();
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+		campoValor.put(primaryKey[0], id_anoSemestre);
+		campoValor.put(campos[0], ano);
+		campoValor.put(campos[1], semestre);
 
-			preparedStatement.setInt(1, ano);
-			preparedStatement.setInt(2, semestre);
-			preparedStatement.setInt(3, id_anoSemestre);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._editar(campoValor);
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public int excluir(Integer id) {
-		int linhasAfetadas = 0;
-
-		try {
-
-			String sql = "DELETE FROM anosemestre WHERE id_anosemestre = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._excluir(id);
 	}
 
-	public AnoSemestre buscarPorId(Integer id) {
-		AnoSemestre anoSemestre = new AnoSemestre();
-
-		String sql = "SELECT * FROM anosemestre WHERE id_anosemestre = ?;";
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
-			}
-
-			anoSemestre.setId_anoSemestre(resultSet.getInt("id_anosemestre"));
-			anoSemestre.setAno(resultSet.getInt("ano"));
-			anoSemestre.setSemestre(resultSet.getInt("semestre"));
-
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return anoSemestre;
+	/**
+	 * Buscar por ID
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> buscarPorId(Integer id) {
+		return super._buscarPorId(id);
 	}
 
-	public List<AnoSemestre> listarPor(Integer id_anoSemestre, Integer ano,
-			Integer semestre) {
-		List<AnoSemestre> anoSemestres = new LinkedList<AnoSemestre>();
-		StringBuilder builder = new StringBuilder();
+	/**
+	 * 
+	 * @param ano
+	 * @param semestre
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPor(Integer ano, Integer semestre) {
 
-		// Organizador dos parâmetros para o preparedStatement
-		int count = 0;
-		int ordemDoId_anoSemestre = 0;
-		int ordemDoAno = 0;
-		int ordemDoSemestre = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		// Query
-		builder.append("SELECT * FROM anosemestre WHERE true ");
+		campoValor.put(campos[0], ano);
+		campoValor.put(campos[1], semestre);
 
-		// ID
-		if (id_anoSemestre != null && id_anoSemestre > 0) {
-			builder.append("AND id_anosemestre = ? ");
-			ordemDoId_anoSemestre = ++count;
-		}
-
-		// ANO
-		if (ano != null) {
-			builder.append("AND ano = ? ");
-			ordemDoAno = ++count;
-		}
-
-		// SEMESTRE
-		if (semestre != null) {
-			builder.append("AND semestre = ? ");
-			ordemDoSemestre = ++count;
-		}
-
-		// Fechando a instrução
-		builder.append(";");
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
-
-			// Verificando a ordem dos parâmetros
-			if (ordemDoId_anoSemestre > 0)
-				preparedStatement.setInt(ordemDoId_anoSemestre, id_anoSemestre);
-
-			if (ordemDoAno > 0)
-				preparedStatement.setInt(ordemDoAno, ano);
-
-			if (ordemDoSemestre > 0)
-				preparedStatement.setInt(ordemDoSemestre, semestre);
-
-			// Executando a quary e retornando em um ResultSet
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			// Iterando entre os objetos retornados e inserindo-os em objetos
-			while (resultSet.next()) {
-				anoSemestres.add(new AnoSemestre(resultSet
-						.getInt("id_anosemestre"), resultSet.getInt("ano"),
-						resultSet.getInt("semestre")));
-			}
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return anoSemestres;
+		// Recebendo os objetos
+		return super._listarPor(campoValor);
 	}
-
 }

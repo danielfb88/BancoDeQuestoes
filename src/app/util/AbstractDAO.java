@@ -437,7 +437,7 @@ public abstract class AbstractDAO {
 
 			builder.append(";");
 
-			//System.out.println(builder.toString());
+			// System.out.println(builder.toString());
 			// System.exit(0);
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
@@ -489,7 +489,7 @@ public abstract class AbstractDAO {
 	 *            Primary Key
 	 * @return
 	 */
-	public int excluir(Integer... primaryKey) {
+	protected int _excluir(Integer... primaryKey) {
 		Map<Object, Object> campoValor = new HashMap<Object, Object>(
 				primaryKey.length);
 
@@ -519,6 +519,33 @@ public abstract class AbstractDAO {
 		}
 
 		return this.__buscarPorId(campoValor);
+	}
+
+	/**
+	 * Retorna o nome dos campos da Tabela
+	 * 
+	 * @return
+	 */
+	public String[] getCampos() {
+		return campos;
+	}
+
+	/**
+	 * Retorna o nome da Tabela
+	 * 
+	 * @return
+	 */
+	public String getNomeDaTabela() {
+		return nomeDaTabela;
+	}
+
+	/**
+	 * Retorna o nome das primary keys
+	 * 
+	 * @return
+	 */
+	public String[] getPrimaryKey() {
+		return primaryKey;
 	}
 
 }

@@ -1,176 +1,84 @@
 package app.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-
-import app.controller.Assunto;
-import app.util.conexao.DAOUtil;
+import java.util.Map;
+import app.util.AbstractDAO;
 
 /**
- * AssuntoDAO
- * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 23-08-2012
+ * @since 15-08-2012
  * 
  */
-public class AssuntoDAO {
+public class AssuntoDAO extends AbstractDAO {
+	private Map<Object, Object> campoValor;
 
 	public AssuntoDAO() {
-
+		nomeDaTabela = "assunto";
+		primaryKey = new String[] { "id_assunto" };
+		campos = new String[] { "descricao" };
 	}
 
+	/**
+	 * 
+	 * @param descricao
+	 * @return
+	 */
 	public int adicionar(String descricao) {
-		int linhasAfetadas = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		try {
+		campoValor.put(campos[0], descricao);
 
-			String sql = "INSERT INTO assunto (descricao) VALUES (?);";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setString(1, descricao);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._adicionar(campoValor);
 	}
-
+	
+	/**
+	 * 
+	 * @param id_assunto
+	 * @param descricao
+	 * @return
+	 */
 	public int editar(Integer id_assunto, String descricao) {
-		int linhasAfetadas = 0;
 
-		try {
+		campoValor = new HashMap<Object, Object>();
 
-			String sql = "UPDATE assunto SET descricao = ? WHERE id_assunto = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+		campoValor.put(primaryKey[0], id_assunto);
+		campoValor.put(campos[0], descricao);
 
-			preparedStatement.setString(1, descricao);
-			preparedStatement.setInt(2, id_assunto);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._editar(campoValor);
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public int excluir(Integer id) {
-		int linhasAfetadas = 0;
-
-		try {
-
-			String sql = "DELETE FROM assunto WHERE id_assunto = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._excluir(id);
 	}
 
-	public Assunto buscarPorId(Integer id) {
-		Assunto assunto = new Assunto();
-
-		String sql = "SELECT * FROM assunto WHERE id_assunto = ?;";
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
-			}
-
-			assunto.setId_assunto(resultSet.getInt("id_assunto"));
-			assunto.setDescricao(resultSet.getString("descricao"));
-
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return assunto;
+	/**
+	 * Buscar por ID
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> buscarPorId(Integer id) {
+		return super._buscarPorId(id);
 	}
 
-	public List<Assunto> listarPor(Integer id_assunto, String descricao) {
-		List<Assunto> assuntos = new LinkedList<Assunto>();
-		StringBuilder builder = new StringBuilder();
+	/**
+	 * 
+	 * @param descricao
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPor(String descricao) {
 
-		// Organizador dos parâmetros para o preparedStatement
-		int count = 0;
-		int ordemDoId_assunto = 0;
-		int ordemDaDescricao = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		// Query
-		builder.append("SELECT * FROM assunto WHERE true ");
+		campoValor.put(campos[0], descricao);
 
-		// ID
-		if (id_assunto != null && id_assunto > 0) {
-			builder.append("AND id_assunto = ? ");
-			ordemDoId_assunto = ++count;
-		}
-
-		// Descricao
-		if (descricao != null) {
-			builder.append("AND descricao LIKE ? ");
-			ordemDaDescricao = ++count;
-		}
-
-		builder.append(";");
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
-
-			// Verificando a ordem dos parâmetros
-			if (ordemDoId_assunto > 0)
-				preparedStatement.setInt(ordemDoId_assunto, id_assunto);
-
-			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao, "%" + descricao
-						+ "%");
-
-			// Executando a quary e retornando em um ResultSet
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			// Iterando e inserindo-os em objetos
-			while (resultSet.next()) {
-				assuntos.add(new Assunto(resultSet.getInt("id_assunto"),
-						resultSet.getString("descricao")));
-			}
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return assuntos;
+		return super._listarPor(campoValor);
 	}
-
 }
