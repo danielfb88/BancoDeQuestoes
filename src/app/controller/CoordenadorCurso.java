@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import app.dao.CoordenadorCursoDAO;
-
+// TODO: ACredito que esta classe não seja necessária. Apenas a DAO.
 /**
  * CoordenadorCurso
  * 
@@ -19,8 +19,8 @@ public class CoordenadorCurso {
 	private Curso curso;
 	private Date dataEntrada;
 	private Date dataSaida;
-
-	private CoordenadorCursoDAO coordenadorCursoDAO = new CoordenadorCursoDAO();
+	
+	private CoordenadorCursoDAO coordCursoDAO = new CoordenadorCursoDAO();
 
 	public CoordenadorCurso() {
 		this.coordenador = new Usuario();
@@ -78,7 +78,7 @@ public class CoordenadorCurso {
 	}
 
 	public boolean adicionar() {
-		return this.coordenadorCursoDAO.adicionar(coordenador.getId_usuario(),
+		return this.coordCursoDAO.adicionar(coordenador.getId_usuario(),
 				curso.getId_curso(), dataEntrada, dataSaida) > 0;
 	}
 

@@ -1,6 +1,10 @@
 package app.controller;
-a
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import app.dao.DisciplinaDAO;
 
 /**
  * Disciplina
@@ -15,12 +19,13 @@ public class Disciplina {
 	private String descricao;
 	private String sigla;
 
+	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
+
 	public Disciplina() {
-		// TODO Auto-generated constructor stub
+		this.curso = new Curso();
 	}
 
-	public Disciplina(Integer id_disciplina, Curso curso, String descricao,
-			String sigla) {
+	public Disciplina(Integer id_disciplina, Curso curso, String descricao, String sigla) {
 		super();
 		this.id_disciplina = id_disciplina;
 		this.curso = curso;
@@ -29,47 +34,102 @@ public class Disciplina {
 	}
 
 	public boolean adicionar() {
-
-		return false;
+		return this.disciplinaDAO.adicionar(curso.getId_curso(), descricao, sigla) > 0;
 	}
 
-	public boolean carregar() {
+	/**
+	 * 
+	 * @param carregarRelacionamentos
+	 *            Define se os objetos que fazem relação com este devem ser
+	 *            carregados
+	 * @return
+	 */
+	public boolean carregar(boolean carregarRelacionamentos) {
+		Map<String, Object> mapDisciplina = this.disciplinaDAO.buscarPorId(this.id_disciplina);
 
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.disciplinaDAO.getPrimaryKey();
+		String[] campos = this.disciplinaDAO.getCampos();
+
+		if (mapDisciplina != null) {
+			this.id_disciplina = (Integer) mapDisciplina.get(primaryKey[0]);
+			this.curso.setId_curso((Integer) mapDisciplina.get(campos[0]));
+			this.descricao = (String) mapDisciplina.get(campos[1]);
+			this.sigla = (String) mapDisciplina.get(campos[2]);
+
+			// carregando relacionamento
+			if (carregarRelacionamentos)
+				this.curso.carregar();
+
+			return true;
+		}
 		return false;
 	}
 
 	public boolean editar() {
-
-		return false;
+		return this.disciplinaDAO.editar(id_disciplina, curso.getId_curso(), descricao, sigla) > 0;
 	}
 
 	public boolean excluir() {
-
-		return false;
+		return this.disciplinaDAO.excluir(id_disciplina) > 0;
 	}
 
-	public List<Disciplina> listar() {
+	/**
+	 * 
+	 * @param carregarRelacionamentos
+	 *            Define se os objetos que fazem relação com este devem ser
+	 *            carregados
+	 * @return
+	 */
+	public List<Disciplina> listar(boolean carregarRelacionamentos) {
+		// buscando a lista de Mapa recuperando pelos parametros
+		List<Map<String, Object>> listMapDisciplinas = this.disciplinaDAO.listarPor(curso.getId_curso(), descricao, sigla);
 
-		return null;
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.disciplinaDAO.getPrimaryKey();
+		String[] campos = this.disciplinaDAO.getCampos();
+
+		// lista de disciplinas
+		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+
+		// Iterando
+		for (Map<String, Object> mapDisciplina : listMapDisciplinas) {
+			Disciplina disciplina = new Disciplina();
+			
+			// preenchendo o objeto disciplina
+			disciplina.setId_disciplina((Integer) mapDisciplina.get(primaryKey[0]));
+			disciplina.getCurso().setId_curso(
+					(Integer) mapDisciplina.get(campos[0]));
+			disciplina.setDescricao((String) mapDisciplina.get(campos[1]));
+			disciplina.setSigla((String) mapDisciplina.get(campos[2]));
+
+			// carregando relacionamento
+			if (carregarRelacionamentos)
+				disciplina.getCurso().carregar();
+
+			disciplinas.add(disciplina);
+		}
+		// retornando a lista
+		return disciplinas;
 	}
-	
+
 	public boolean inserirAssunto(Assunto assunto) {
-		
+
 		return false;
 	}
-	
+
 	public boolean removerAssunto(Assunto assunto) {
-		
+
 		return false;
 	}
-	
+
 	public List<Assunto> listarAssuntos() {
-		
+
 		return null;
 	}
-	
+
 	public List<Pergunta> listarPerguntas() {
-		
+
 		return null;
 	}
 
