@@ -1,6 +1,10 @@
 package app.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import app.dao.AnoSemestreDAO;
 
 /**
  * AnoSemestre
@@ -14,6 +18,8 @@ public class AnoSemestre {
 	private Integer ano;
 	private Integer semestre;
 
+	private AnoSemestreDAO anoSemestreDAO = new AnoSemestreDAO();
+
 	public AnoSemestre() {
 		// TODO Auto-generated constructor stub
 	}
@@ -25,29 +31,82 @@ public class AnoSemestre {
 		this.semestre = semestre;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean adicionar() {
-
-		return false;
+		return this.anoSemestreDAO.adicionar(ano, semestre) > 0;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean carregar() {
+		Map<String, Object> mapAnoSemestre = this.anoSemestreDAO
+				.buscarPorId(this.id_anoSemestre);
 
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.anoSemestreDAO.getPrimaryKey();
+		String[] campos = this.anoSemestreDAO.getCampos();
+
+		if (mapAnoSemestre != null) {
+			this.id_anoSemestre = (Integer) mapAnoSemestre.get(primaryKey[0]);
+			this.ano = (Integer) mapAnoSemestre.get(campos[0]);
+			this.semestre = (Integer) mapAnoSemestre.get(campos[1]);
+
+			return true;
+		}
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean editar() {
-
-		return false;
+		return this.anoSemestreDAO.editar(id_anoSemestre, ano, id_anoSemestre) > 0;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean excluir() {
-
-		return false;
+		return this.anoSemestreDAO.editar(id_anoSemestre, ano, id_anoSemestre) > 0;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<AnoSemestre> listar() {
+		// buscando a lista de Mapas recuperados pelos parametros
+		List<Map<String, Object>> listMapAnoSemestre = this.anoSemestreDAO
+				.listarPor(this.ano, this.semestre);
 
-		return null;
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.anoSemestreDAO.getPrimaryKey();
+		String[] campos = this.anoSemestreDAO.getCampos();
+
+		// lista
+		List<AnoSemestre> anoSemestres = new ArrayList<AnoSemestre>();
+
+		// Iterando
+		for (Map<String, Object> mapAnoSemestre : listMapAnoSemestre) {
+			// preenchendo o objeto
+			AnoSemestre anoSemestre = new AnoSemestre();
+			anoSemestre.setId_anoSemestre((Integer) mapAnoSemestre
+					.get(primaryKey[0]));
+			anoSemestre.setAno((Integer) mapAnoSemestre.get(campos[0]));
+			anoSemestre.setSemestre((Integer) mapAnoSemestre.get(campos[1]));
+
+			// inserindo à lista
+			anoSemestres.add(anoSemestre);
+		}
+		// retornando a lista
+		return anoSemestres;
 	}
 
 	public Integer getId_anoSemestre() {

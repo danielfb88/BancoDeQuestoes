@@ -1,6 +1,10 @@
 package app.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import app.dao.AssuntoDAO;
 
 /**
  * Assunto
@@ -13,8 +17,10 @@ public class Assunto {
 	private Integer id_assunto;
 	private String descricao;
 
+	private AssuntoDAO assuntoDAO = new AssuntoDAO();
+
 	public Assunto() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Assunto(Integer id_assunto, String descricao) {
@@ -24,28 +30,58 @@ public class Assunto {
 	}
 
 	public boolean adicionar() {
-
-		return false;
+		return this.assuntoDAO.adicionar(descricao) > 0;
 	}
 
 	public boolean carregar() {
+		Map<String, Object> mapAssunto = this.assuntoDAO
+				.buscarPorId(this.id_assunto);
 
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.assuntoDAO.getPrimaryKey();
+		String[] campos = this.assuntoDAO.getCampos();
+
+		if (mapAssunto != null) {
+			this.id_assunto = (Integer) mapAssunto.get(primaryKey[0]);
+			this.descricao = (String) mapAssunto.get(campos[0]);
+
+			return true;
+		}
 		return false;
 	}
 
 	public boolean editar() {
-
-		return false;
+		return this.assuntoDAO.editar(id_assunto, descricao) > 0;
 	}
 
 	public boolean excluir() {
-
-		return false;
+		return this.assuntoDAO.excluir(id_assunto) > 0;
 	}
 
 	public List<Assunto> listar() {
+		// buscando a lista de Mapas recuperados pelos parametros
+		List<Map<String, Object>> listMapAssunto = this.assuntoDAO
+				.listarPor(descricao);
 
-		return null;
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.assuntoDAO.getPrimaryKey();
+		String[] campos = this.assuntoDAO.getCampos();
+
+		// lista
+		List<Assunto> assuntos = new ArrayList<Assunto>();
+
+		// Iterando
+		for (Map<String, Object> mapAssunto : listMapAssunto) {
+			// preenchendo o objeto
+			Assunto assunto = new Assunto();
+			assunto.setId_assunto((Integer) mapAssunto.get(primaryKey[0]));
+			assunto.setDescricao((String) mapAssunto.get(campos[0]));
+
+			// inserindo à lista
+			assuntos.add(assunto);
+		}
+		// retornando a lista
+		return assuntos;
 	}
 
 	public List<Disciplina> listarDisciplinas() {
@@ -57,14 +93,14 @@ public class Assunto {
 
 		return false;
 	}
-	
+
 	public boolean removerPergunta(Pergunta pergunta) {
-		
+
 		return false;
 	}
-	
+
 	public List<Pergunta> listarPerguntas() {
-		
+
 		return null;
 	}
 

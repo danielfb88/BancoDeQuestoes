@@ -2,7 +2,6 @@ package app.controller;
 
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -112,10 +111,7 @@ public class Curso {
 		List<Curso> cursos = new ArrayList<Curso>();
 
 		// Iterando
-		Iterator<Map<String, Object>> it = listMapCursos.iterator();
-		while (it.hasNext()) {
-			Map<String, Object> mapCurso = it.next();
-
+		for (Map<String, Object> mapCurso : listMapCursos) {
 			// preenchendo o objeto curso
 			Curso curso = new Curso();
 			curso.setId_curso((Integer) mapCurso.get(primaryKey[0]));
