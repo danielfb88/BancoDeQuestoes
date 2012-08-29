@@ -1,192 +1,92 @@
 package app.dao;
 
-import java.sql.PreparedStatemendadsadat;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-
-import app.controller.Periodo;
-import app.util.conexao.DAOUtil;
+import java.util.Map;
+import app.util.AbstractDAO;
 
 /**
- * Periodo DAO
- * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 03-08-2012
+ * @since 15-08-2012
  * 
  */
-public class PeriodoDAO {
+public class PeriodoDAO extends AbstractDAO {
+	private Map<Object, Object> campoValor;
 
 	public PeriodoDAO() {
-
+		nomeDaTabela = "periodo";
+		primaryKey = new String[] { "id_periodo" };
+		campos = new String[] { "descricao", "numero" };
 	}
 
+	/**
+	 * 
+	 * @param descricao
+	 * @param numero
+	 * @return
+	 */
 	public int adicionar(String descricao, Integer numero) {
-		int linhasAfetadas = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		try {
+		campoValor.put(campos[0], descricao);
+		campoValor.put(campos[1], numero);
 
-			String sql = "INSERT INTO periodo (descricao, numero) VALUES (?, ?);";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setString(1, descricao);
-			preparedStatement.setInt(2, numero);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._adicionar(campoValor);
 	}
 
+	/**
+	 * 
+	 * @param id_periodo
+	 * @param descricao
+	 * @param numero
+	 * @return
+	 */
 	public int editar(Integer id_periodo, String descricao, Integer numero) {
-		int linhasAfetadas = 0;
 
-		try {
+		campoValor = new HashMap<Object, Object>();
 
-			String sql = "UPDATE periodo SET descricao = ?, numero = ? WHERE id_periodo = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
+		campoValor.put(primaryKey[0], id_periodo);
+		campoValor.put(campos[0], descricao);
+		campoValor.put(campos[1], numero);
 
-			preparedStatement.setString(1, descricao);
-			preparedStatement.setInt(2, numero);
-			preparedStatement.setInt(3, id_periodo);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._editar(campoValor);
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public int excluir(Integer id) {
-		int linhasAfetadas = 0;
-
-		try {
-
-			String sql = "DELETE FROM periodo WHERE id_periodo = ?;";
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
+		return super._excluir(id);
 	}
 
-	public Periodo buscarPorId(Integer id) {
-		Periodo periodo = new Periodo();
-
-		String sql = "SELECT * FROM periodo WHERE id_periodo = ?;";
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(sql);
-
-			preparedStatement.setInt(1, id);
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
-			}
-
-			periodo.setId_periodo(resultSet.getInt("id_periodo"));
-			periodo.setDescricao(resultSet.getString("descricao"));
-			periodo.setNumero(resultSet.getInt("numero"));
-
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return periodo;
+	/**
+	 * Buscar por ID
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public Map<String, Object> buscarPorId(Integer id) {
+		return super._buscarPorId(id);
 	}
 
-	public List<Periodo> listarPor(Integer id_periodo, String descricao,
-			Integer numero) {
-		List<Periodo> periodos = new LinkedList<Periodo>();
-		StringBuilder builder = new StringBuilder();
+	/**
+	 * 
+	 * @param id_periodo
+	 * @param id_curso
+	 * @param descricao
+	 * @param sigla
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPor(String descricao, Integer numero) {
 
-		// Organizador dos parâmetros para o preparedStatement
-		int count = 0;
-		int ordemDoId = 0;
-		int ordemDaDescricao = 0;
-		int ordemDoNumero = 0;
+		campoValor = new HashMap<Object, Object>();
 
-		// Query
-		builder.append("SELECT * FROM periodo WHERE true ");
+		campoValor.put(campos[0], descricao);
+		campoValor.put(campos[1], numero);
 
-		// ID
-		if (id_periodo != null && id_periodo > 0) {
-			builder.append("AND id_periodo = ? ");
-			ordemDoId = ++count;
-		}
-
-		// Descricao
-		if (descricao != null && !descricao.isEmpty()) {
-			builder.append("AND descricao LIKE ? ");
-			ordemDaDescricao = ++count;
-		}
-
-		// Numero
-		if (numero != null) {
-			builder.append("AND numero = ? ");
-			ordemDoNumero = ++count;
-		}
-
-		builder.append(";");
-
-		try {
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
-
-			// Verificando a ordem dos parâmetros
-			if (ordemDoId > 0)
-				preparedStatement.setInt(ordemDoId, id_periodo);
-
-			if (ordemDaDescricao > 0)
-				preparedStatement.setString(ordemDaDescricao, "%" + descricao
-						+ "%");
-
-			if (ordemDoNumero > 0)
-				preparedStatement.setInt(ordemDoNumero, numero);
-
-			// Executando a quary e retornando em um ResultSet
-			ResultSet resultSet = preparedStatement.executeQuery();
-
-			// Iterando entre os objetos retornados e inserindo-os em objetos
-			// Periodo e depois
-			// na lista periodos
-			while (resultSet.next()) {
-				periodos.add(new Periodo(resultSet.getInt("id_periodo"),
-						resultSet.getString("descricao"), resultSet
-								.getInt("numero")));
-			}
-			resultSet.close();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return periodos;
+		return super._listarPor(campoValor);
 	}
 }

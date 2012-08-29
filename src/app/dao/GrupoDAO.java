@@ -80,16 +80,12 @@ public class GrupoDAO extends AbstractDAO {
 	 * @param sigla
 	 * @return
 	 */
-	public List<Map<String, Object>> listarPor(Integer id_curso,
-			Integer id_anoSemestre_inicial, Integer id_anoSemestre_final,
-			String descricao) {
+	public List<Map<String, Object>> listarPor(String descricao, String tipo) {
 
 		campoValor = new HashMap<Object, Object>();
 
-		campoValor.put(campos[0], id_curso);
-		campoValor.put(campos[1], id_anoSemestre_inicial);
-		campoValor.put(campos[2], id_anoSemestre_final);
-		campoValor.put(campos[3], descricao);
+		campoValor.put(campos[0], descricao);
+		campoValor.put(campos[1], tipo);
 
 		return super._listarPor(campoValor);
 	}
