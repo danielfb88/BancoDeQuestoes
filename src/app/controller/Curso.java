@@ -1,5 +1,5 @@
 package app.controller;
-
+dsad
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,20 @@ public class Curso {
 
 	private CursoDAO cursoDAO = new CursoDAO();
 
+	/**
+	 * Curso
+	 */
 	public Curso() {
 
 	}
 
+	/**
+	 * Curso
+	 * @param id_curso
+	 * @param descricao
+	 * @param sigla
+	 * @param tipo_graduacao
+	 */
 	public Curso(Integer id_curso, String descricao, String sigla,
 			String tipo_graduacao) {
 		super();

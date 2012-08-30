@@ -1,5 +1,5 @@
 package app.controller;
-
+dda
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import app.dao.AssuntoDAO;
  * Assunto
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 19-08-2012
+ * @since 30-08-2012
  * 
  */
 public class Assunto {
@@ -19,20 +19,36 @@ public class Assunto {
 
 	private AssuntoDAO assuntoDAO = new AssuntoDAO();
 
+	/**
+	 * Assunto
+	 */
 	public Assunto() {
 
 	}
 
+	/**
+	 * Assunto
+	 * @param id_assunto
+	 * @param descricao
+	 */
 	public Assunto(Integer id_assunto, String descricao) {
 		super();
 		this.id_assunto = id_assunto;
 		this.descricao = descricao;
 	}
 
+	/**
+	 * Adicionar
+	 * @return
+	 */
 	public boolean adicionar() {
 		return this.assuntoDAO.adicionar(descricao) > 0;
 	}
 
+	/**
+	 * Carregar
+	 * @return
+	 */
 	public boolean carregar() {
 		Map<String, Object> mapAssunto = this.assuntoDAO
 				.buscarPorId(this.id_assunto);
@@ -50,14 +66,26 @@ public class Assunto {
 		return false;
 	}
 
+	/**
+	 * Editar
+	 * @return
+	 */
 	public boolean editar() {
 		return this.assuntoDAO.editar(id_assunto, descricao) > 0;
 	}
 
+	/**
+	 * Excluir
+	 * @return
+	 */
 	public boolean excluir() {
 		return this.assuntoDAO.excluir(id_assunto) > 0;
 	}
 
+	/**
+	 * Listar
+	 * @return
+	 */
 	public List<Assunto> listar() {
 		// buscando a lista de Mapas recuperados pelos parametros
 		List<Map<String, Object>> listMapAssunto = this.assuntoDAO
@@ -84,23 +112,41 @@ public class Assunto {
 		return assuntos;
 	}
 
+	/**
+	 * Listar Disciplinas
+	 * @return
+	 */
 	public List<Disciplina> listarDisciplinas() {
-
+		// TODO: Desenvolver
 		return null;
 	}
 
+	/**
+	 * Inserir Pergunta
+	 * @param pergunta
+	 * @return
+	 */
 	public boolean inserirPergunta(Pergunta pergunta) {
-
+		// TODO: Desenvolver
 		return false;
 	}
 
+	/**
+	 * Remover Pergunta
+	 * @param pergunta
+	 * @return
+	 */
 	public boolean removerPergunta(Pergunta pergunta) {
-
+		// TODO: Desenvolver
 		return false;
 	}
 
+	/**
+	 * Listar Perguntas
+	 * @return
+	 */
 	public List<Pergunta> listarPerguntas() {
-
+		// TODO: Desenvolver
 		return null;
 	}
 

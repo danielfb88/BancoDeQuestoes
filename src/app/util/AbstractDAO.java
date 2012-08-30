@@ -19,6 +19,7 @@ import app.util.exceptions.TipoParametroNaoEspecificadoException;
  * Editar, Excluir, Buscar e Listar.
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
+ * @since 10-08-2012
  * 
  */
 public abstract class AbstractDAO {

@@ -47,7 +47,7 @@ public class GrupoDAO extends AbstractDAO {
 
 		campoValor.put(primaryKey[0], id_grupo);
 		campoValor.put(campos[0], descricao);
-		campoValor.put(campos[1], tipo);
+		campoValor.put(campos[1], tipo.toUpperCase());
 
 		return super._editar(campoValor);
 	}

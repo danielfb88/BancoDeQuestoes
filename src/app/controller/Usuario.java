@@ -1,12 +1,18 @@
 package app.controller;
-dasdasd
+
+// TODO: Desenvolver os outros baseados neste Objeto.
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import app.dao.CoordenadorCursoDAO;
+import app.dao.UsuarioDAO;
 
 /**
  * Usuario
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 19-08-2012
+ * @since 30-08-2012
  * 
  */
 public class Usuario {
@@ -16,10 +22,25 @@ public class Usuario {
 	private String login;
 	private String senha;
 
+	private UsuarioDAO usuarioDAO = new UsuarioDAO();
+	private CoordenadorCursoDAO coordenadorCursoDAO = new CoordenadorCursoDAO();
+
+	/**
+	 * Usuario
+	 */
 	public Usuario() {
-		// TODO Auto-generated constructor stub
+		grupo = new Grupo();
 	}
 
+	/**
+	 * Usuario
+	 * 
+	 * @param id_usuario
+	 * @param grupo
+	 * @param nome
+	 * @param login
+	 * @param senha
+	 */
 	public Usuario(Integer id_usuario, Grupo grupo, String nome, String login,
 			String senha) {
 		super();
@@ -30,29 +51,123 @@ public class Usuario {
 		this.senha = senha;
 	}
 
+	/**
+	 * Cria objeto baseado no HashMap de entrada
+	 * 
+	 * @param map
+	 */
+	private Usuario criarUsuario(Map<String, Object> map) {
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.usuarioDAO.getPrimaryKey();
+		String[] campos = this.usuarioDAO.getCampos();
+
+		Usuario usuario = new Usuario();
+		usuario.setId_usuario((Integer) map.get(primaryKey[0]));
+		usuario.grupo.setId_grupo((Integer) map.get(campos[0]));
+		usuario.setNome((String) map.get(campos[1]));
+		usuario.setLogin((String) map.get(campos[2]));
+		usuario.setSenha((String) map.get(campos[3]));
+
+		return usuario;
+	}
+
+	/**
+	 * Carrega objeto baseado no HashMap de Entrada
+	 * 
+	 * @param map
+	 * @return
+	 */
+	private Usuario carregarUsuario(Map<String, Object> map) {
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.usuarioDAO.getPrimaryKey();
+		String[] campos = this.usuarioDAO.getCampos();
+
+		Usuario usuario = new Usuario();
+		this.id_usuario = (Integer) map.get(primaryKey[0]);
+		this.grupo.setId_grupo((Integer) map.get(campos[0]));
+		this.nome = (String) map.get(campos[1]);
+		this.login = (String) map.get(campos[2]);
+		this.senha = (String) map.get(campos[3]);
+
+		return usuario;
+	}
+
+	/**
+	 * Adicionar
+	 * 
+	 * @return
+	 */
 	public boolean adicionar() {
+		return this.usuarioDAO.adicionar(grupo.getId_grupo(), nome, login,
+				senha) > 0;
+	}
 
+	/**
+	 * Carregar
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public boolean carregar(boolean carregarRelacionamentos) {
+		Map<String, Object> mapUsuario = this.usuarioDAO
+				.buscarPorId(this.id_usuario);
+
+		if (mapUsuario != null) {
+			this.carregarUsuario(mapUsuario);
+
+			if (carregarRelacionamentos)
+				this.grupo.carregar();
+
+			return true;
+		}
 		return false;
 	}
 
-	public boolean carregar() {
-
-		return false;
-	}
-
+	/**
+	 * Editar
+	 * 
+	 * @return
+	 */
 	public boolean editar() {
-
-		return false;
+		return this.usuarioDAO.editar(id_usuario, grupo.getId_grupo(), nome,
+				login, senha) > 0;
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @return
+	 */
 	public boolean excluir() {
-
-		return false;
+		return this.usuarioDAO.excluir(id_usuario) > 0;
 	}
 
-	public List<Usuario> listar() {
+	/**
+	 * Listar
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public List<Usuario> listar(boolean carregarRelacionamentos) {
+		// buscando a lista de Mapa recuperando pelos parametros
+		List<Map<String, Object>> listMapUsuarios = this.usuarioDAO.listarPor(
+				grupo.getId_grupo(), nome, login, senha);
 
-		return null;
+		// lista de usuarios
+		List<Usuario> usuarios = new ArrayList<Usuario>();
+
+		// Iterando
+		for (Map<String, Object> mapUsuario : listMapUsuarios) {
+			Usuario usuario = this.criarUsuario(mapUsuario);
+
+			// carregando relacionamento
+			if (carregarRelacionamentos)
+				usuario.getGrupo().carregar();
+
+			usuarios.add(usuario);
+		}
+		// retornando a lista
+		return usuarios;
 	}
 
 	public void autenticar() {
