@@ -10,45 +10,45 @@ import app.util.AbstractDAO;
  * @since 29-08-2012
  * 
  */
-public class Rel_DisciplinaAssuntoDAO extends AbstractDAO {
+public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 	private Map<Object, Object> campoValor;
 
-	public Rel_DisciplinaAssuntoDAO() {
-		nomeDaTabela = "disciplina_assunto";
-		primaryKey = new String[] { "id_disciplina_assunto" };
-		campos = new String[] { "id_disciplina", "id_assunto" };
+	public Rel_AssuntoPerguntaDAO() {
+		nomeDaTabela = "assunto_pergunta";
+		primaryKey = new String[] { "id_assunto_pergunta" };
+		campos = new String[] { "id_assunto", "id_pergunta" };
 	}
 
 	/**
 	 * 
-	 * @param id_disciplina
 	 * @param id_assunto
+	 * @param id_pergunta
 	 * @return
 	 */
-	public int adicionar(Integer id_disciplina, Integer id_assunto) {
+	public int adicionar(Integer id_assunto, Integer id_pergunta) {
 		campoValor = new HashMap<Object, Object>();
 
-		campoValor.put(campos[0], id_disciplina);
-		campoValor.put(campos[1], id_assunto);
+		campoValor.put(campos[0], id_assunto);
+		campoValor.put(campos[1], id_pergunta);
 
 		return super._adicionar(campoValor);
 	}
 
 	/**
 	 * 
-	 * @param id_disciplina_assunto
+	 * @param id_assunto_pergunta
 	 * @param id_disciplina
 	 * @param id_assunto
 	 * @return
 	 */
-	public int editar(Integer id_disciplina_assunto, Integer id_disciplina,
-			Integer id_assunto) {
+	public int editar(Integer id_assunto_pergunta, Integer id_assunto,
+			Integer id_pergunta) {
 
 		campoValor = new HashMap<Object, Object>();
 
-		campoValor.put(primaryKey[0], id_disciplina_assunto);
-		campoValor.put(campos[0], id_disciplina);
-		campoValor.put(campos[1], id_assunto);
+		campoValor.put(primaryKey[0], id_assunto_pergunta);
+		campoValor.put(campos[0], id_assunto);
+		campoValor.put(campos[1], id_pergunta);
 
 		return super._editar(campoValor);
 	}
@@ -79,13 +79,13 @@ public class Rel_DisciplinaAssuntoDAO extends AbstractDAO {
 	 * @param id_assunto
 	 * @return
 	 */
-	public List<Map<String, Object>> listarPor(Integer id_disciplina,
-			Integer id_assunto) {
+	public List<Map<String, Object>> listarPor(Integer id_assunto,
+			Integer id_pergunta) {
 
 		campoValor = new HashMap<Object, Object>();
 
-		campoValor.put(campos[0], id_disciplina);
-		campoValor.put(campos[1], id_assunto);
+		campoValor.put(campos[0], id_assunto);
+		campoValor.put(campos[1], id_pergunta);
 
 		return super._listarPor(campoValor);
 	}

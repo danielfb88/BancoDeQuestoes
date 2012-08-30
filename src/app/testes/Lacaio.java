@@ -14,7 +14,9 @@ public class Lacaio {
 	}
 
 	public static void main(String[] args) {
-		excluir(19);
+		//editar();
+		//adicionar();
+		excluir(20);
 	}
 	
 	private static void adicionar() {
@@ -31,7 +33,7 @@ public class Lacaio {
 	
 	private static void editar() {
 		Curso curso = new Curso();
-		curso.setId_curso(19);
+		curso.setId_curso(20);
 		curso.setDescricao("Psicologia Alterado");
 		curso.setSigla("BUG");
 		curso.setTipo_graduacao("TEC");

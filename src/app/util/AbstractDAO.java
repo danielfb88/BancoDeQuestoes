@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import app.util.conexao.DAOUtil;
 import app.util.exceptions.AbstractDAOException;
@@ -52,27 +51,28 @@ public abstract class AbstractDAO {
 			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
 				switch (parametros.get(i).getClass().getName()) {
-				case "java.lang.String":
-					if (useLike)
-						ps.setString(indexPS, "%" + (String) parametros.get(i)
-								+ "%");
-					else
-						ps.setString(indexPS, (String) parametros.get(i));
-					break;
-				case "java.lang.Integer":
-					ps.setInt(indexPS, (Integer) parametros.get(i));
-					break;
-				case "java.lang.Double":
-					ps.setDouble(indexPS, (Double) parametros.get(i));
-					break;
-				case "java.lang.Boolean":
-					ps.setBoolean(indexPS, (Boolean) parametros.get(i));
-					break;
-				case "java.lang.Date":
-					ps.setDate(indexPS, (Date) parametros.get(i));
-					break;
-				default:
-					throw new TipoParametroNaoEspecificadoException();
+					case "java.lang.String":
+						if (useLike)
+							ps.setString(indexPS, "%"
+									+ (String) parametros.get(i)
+									+ "%");
+						else
+							ps.setString(indexPS, (String) parametros.get(i));
+						break;
+					case "java.lang.Integer":
+						ps.setInt(indexPS, (Integer) parametros.get(i));
+						break;
+					case "java.lang.Double":
+						ps.setDouble(indexPS, (Double) parametros.get(i));
+						break;
+					case "java.lang.Boolean":
+						ps.setBoolean(indexPS, (Boolean) parametros.get(i));
+						break;
+					case "java.lang.Date":
+						ps.setDate(indexPS, (Date) parametros.get(i));
+						break;
+					default:
+						throw new TipoParametroNaoEspecificadoException();
 				}
 			}
 		} catch (SQLException e) {
@@ -175,12 +175,10 @@ public abstract class AbstractDAO {
 			builder.append("(");
 
 			// Iterando os objetos para pegar a chave
-			Set<Map.Entry<Object, Object>> set = campoValor.entrySet();
-			Iterator<Map.Entry<Object, Object>> it = set.iterator();
+			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
 
 			while (it.hasNext()) {
-				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
-						.next();
+				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it.next();
 
 				// inserindo os valores em um arraylist
 				ordem.add(me.getValue());
@@ -252,8 +250,7 @@ public abstract class AbstractDAO {
 			builder.append("SET ");
 
 			// Iterando os objetos para pegar a chave
-			Set<Map.Entry<Object, Object>> set = campoValor.entrySet();
-			Iterator<Map.Entry<Object, Object>> it = set.iterator();
+			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
 
 			while (it.hasNext()) {
 				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
@@ -353,8 +350,7 @@ public abstract class AbstractDAO {
 
 		ResultSet resultSet = null;
 		StringBuilder builder = new StringBuilder();
-		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
-				this.campos.length);
+		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(this.campos.length);
 
 		try {
 			builder.append("SELECT * FROM ");
@@ -436,9 +432,6 @@ public abstract class AbstractDAO {
 			}
 
 			builder.append(";");
-
-			// System.out.println(builder.toString());
-			// System.exit(0);
 
 			PreparedStatement preparedStatement = DAOUtil.getInstance()
 					.getPreparedStatement(builder.toString());
