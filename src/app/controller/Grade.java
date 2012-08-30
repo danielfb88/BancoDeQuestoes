@@ -1,6 +1,9 @@
 package app.controller;
-SA
+
 import java.util.List;
+import java.util.Map;
+
+import app.dao.GradeDAO;
 
 /**
  * Grade
@@ -16,8 +19,12 @@ public class Grade {
 	private AnoSemestre anoSemestre_final;
 	private String descricao;
 
+	private GradeDAO gradeDAO = new GradeDAO();
+
 	public Grade() {
-		// TODO Auto-generated constructor stub
+		curso = new Curso();
+		anoSemestre_inicial = new AnoSemestre();
+		anoSemestre_final = new AnoSemestre();
 	}
 
 	public Grade(Integer id_grade, Curso curso,
@@ -32,12 +39,36 @@ public class Grade {
 	}
 
 	public boolean adicionar() {
-
-		return false;
+		return this.gradeDAO.adicionar(curso.getId_curso(),
+				anoSemestre_inicial.getId_anoSemestre(),
+				anoSemestre_final.getId_anoSemestre(), descricao) > 0;
 	}
 
-	public boolean carregar() {
+	public boolean carregar(boolean carregarRelacionamentos) {
+		Map<String, Object> mapGrade = this.gradeDAO.buscarPorId(this.id_grade);
 
+		// Pegando o nome da primarykey e dos campos da tabela
+		String[] primaryKey = this.gradeDAO.getPrimaryKey();
+		String[] campos = this.gradeDAO.getCampos();
+
+		if (mapGrade != null) {
+			this.id_grade = (Integer) mapGrade.get(primaryKey[0]);
+			this.curso.setId_curso((Integer) mapGrade.get(campos[0]));
+			this.anoSemestre_inicial.setId_anoSemestre((Integer) mapGrade
+					.get(campos[1]));
+			this.anoSemestre_final.setId_anoSemestre((Integer) mapGrade
+					.get(campos[2]));
+			this.descricao = (String) mapGrade.get(campos[2]);
+
+			// carregando relacionamento
+			if (carregarRelacionamentos) {
+				this.curso.carregar();
+				this.anoSemestre_inicial.carregar();
+				this.anoSemestre_final.carregar();
+			}
+
+			return true;
+		}
 		return false;
 	}
 
