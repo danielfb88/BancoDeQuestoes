@@ -15,7 +15,7 @@ public class Periodo {
 	private Integer numero;
 
 	public Periodo() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Periodo(Integer id_periodo, String descricao, Integer numero) {

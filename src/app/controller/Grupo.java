@@ -1,5 +1,7 @@
 package app.controller;
-
+/**
+ * TODO: EFETUAR TESTES
+ */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class Grupo {
 	 * 
 	 * @param map
 	 */
-	private Grupo novoObjeto(Map<String, Object> map) {
+	Grupo novoObjeto(Map<String, Object> map) {
 
 		Grupo grupo = new Grupo();
 		grupo.setId_grupo((Integer) map.get(grupoPrimaryKey[0]));
@@ -64,7 +66,7 @@ public class Grupo {
 	 * 
 	 * @param map
 	 */
-	private void carregarObjeto(Map<String, Object> map) {
+	void carregarObjeto(Map<String, Object> map) {
 
 		this.id_grupo = (Integer) map.get(grupoPrimaryKey[0]);
 		this.descricao = (String) map.get(grupoCampos[0]);
@@ -86,10 +88,10 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean carregar() {
-		Map<String, Object> mapGrupo = this.grupoDAO.buscarPorId(this.id_grupo);
+		Map<String, Object> map = this.grupoDAO.buscarPorId(this.id_grupo);
 
-		if (mapGrupo != null) {
-			this.carregarObjeto(mapGrupo);
+		if (map != null) {
+			this.carregarObjeto(map);
 
 			return true;
 		}
@@ -121,15 +123,15 @@ public class Grupo {
 	 */
 	public List<Grupo> listar() {
 		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMapGrupo = this.grupoDAO.listarPor(
-				descricao, tipo.toString());
+		List<Map<String, Object>> listMap = this.grupoDAO.listarPor(descricao,
+				tipo.toString());
 
 		// lista
 		List<Grupo> grupos = new ArrayList<Grupo>();
 
 		// Iterando
-		for (Map<String, Object> mapGrupo : listMapGrupo) {
-			Grupo grupo = this.novoObjeto(mapGrupo);
+		for (Map<String, Object> map : listMap) {
+			Grupo grupo = this.novoObjeto(map);
 
 			// inserindo à lista
 			grupos.add(grupo);

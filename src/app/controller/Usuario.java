@@ -1,6 +1,5 @@
 package app.controller;
 
-// TODO: INCOMPLETO
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +58,7 @@ public class Usuario {
 	 * 
 	 * @param map
 	 */
-	private Usuario novoObjeto(Map<String, Object> map) {
+	Usuario novoObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
 
 		Usuario usuario = new Usuario();
 		usuario.setId_usuario((Integer) map.get(usuarioPrimaryKey[0]));
@@ -67,6 +66,10 @@ public class Usuario {
 		usuario.setNome((String) map.get(usuarioCampos[1]));
 		usuario.setLogin((String) map.get(usuarioCampos[2]));
 		usuario.setSenha((String) map.get(usuarioCampos[3]));
+
+		// carregando relacionamento
+		if (carregarRelacionamentos)
+			usuario.getGrupo().carregar();
 
 		return usuario;
 	}
@@ -76,13 +79,16 @@ public class Usuario {
 	 * 
 	 * @param map
 	 */
-	private void carregarObjeto(Map<String, Object> map) {
+	void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
 
 		this.id_usuario = (Integer) map.get(usuarioPrimaryKey[0]);
 		this.grupo.setId_grupo((Integer) map.get(usuarioCampos[0]));
 		this.nome = (String) map.get(usuarioCampos[1]);
 		this.login = (String) map.get(usuarioCampos[2]);
 		this.senha = (String) map.get(usuarioCampos[3]);
+
+		if (carregarRelacionamentos)
+			this.grupo.carregar();
 	}
 
 	/**
@@ -102,14 +108,10 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> mapUsuario = this.usuarioDAO
-				.buscarPorId(this.id_usuario);
+		Map<String, Object> map = this.usuarioDAO.buscarPorId(this.id_usuario);
 
-		if (mapUsuario != null) {
-			this.carregarObjeto(mapUsuario);
-
-			if (carregarRelacionamentos)
-				this.grupo.carregar();
+		if (map != null) {
+			this.carregarObjeto(map, carregarRelacionamentos);
 
 			return true;
 		}
@@ -143,19 +145,15 @@ public class Usuario {
 	 */
 	public List<Usuario> listar(boolean carregarRelacionamentos) {
 		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMapUsuarios = this.usuarioDAO.listarPor(
+		List<Map<String, Object>> listMap = this.usuarioDAO.listarPor(
 				grupo.getId_grupo(), nome, login, senha);
 
 		// lista de usuarios
 		List<Usuario> usuarios = new ArrayList<Usuario>();
 
 		// Iterando
-		for (Map<String, Object> mapUsuario : listMapUsuarios) {
-			Usuario usuario = this.novoObjeto(mapUsuario);
-
-			// carregando relacionamento
-			if (carregarRelacionamentos)
-				usuario.getGrupo().carregar();
+		for (Map<String, Object> map : listMap) {
+			Usuario usuario = this.novoObjeto(map, carregarRelacionamentos);
 
 			usuarios.add(usuario);
 		}
@@ -164,32 +162,53 @@ public class Usuario {
 	}
 
 	public void autenticar() {
-
+		// TODO: Transferir esta responsabilidade para o ManagedBean de Usuario
 	}
 
 	public List<Curso> listarCursosAtuais() {
-
+		// TODO: Usuario: Desenvolver
 		return null;
 	}
 
 	public List<Curso> listarTodosOsCursos() {
-
+		// TODO: Usuario: Desenvolver
 		return null;
 	}
 
+	/**
+	 * Criar Pergunta
+	 * 
+	 * @param pergunta
+	 * @return
+	 */
 	public boolean criarPergunta(Pergunta pergunta) {
-
-		return false;
+		pergunta.setUsuario(this);
+		return pergunta.adicionar();
 	}
 
+	/**
+	 * Excluir Pergunta
+	 * 
+	 * @param pergunta
+	 * @return
+	 */
 	public boolean excluirPergunta(Pergunta pergunta) {
+		// Exclui apenas pergunta criada por este usuario
+		if (pergunta.getUsuario().getId_usuario() == this.id_usuario)
+			return pergunta.excluir();
 
 		return false;
 	}
 
+	/**
+	 * Listar Perguntas deste Usuario
+	 * 
+	 * @return
+	 */
 	public List<Pergunta> listarPerguntas() {
-
-		return null;
+		Pergunta pergunta = new Pergunta();
+		pergunta.setUsuario(this);
+		return pergunta.listar(false);
 	}
 
 	public Integer getId_usuario() {

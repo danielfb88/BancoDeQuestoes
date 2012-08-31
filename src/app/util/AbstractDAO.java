@@ -375,17 +375,10 @@ public abstract class AbstractDAO {
 			}
 
 			// inserindo primary keys no hashMap
-			for (int i = 0; i < this.primaryKey.length; i++) {
-				campoValorRetorno.put(this.primaryKey[i],
-						resultSet.getObject(this.primaryKey[i]));
-
-			}
+			this.preencherMap(campoValorRetorno, resultSet, this.primaryKey);
 
 			// inserindo Campos restates no hashMap
-			for (int i = 0; i < this.campos.length; i++) {
-				campoValorRetorno.put(campos[i],
-						resultSet.getObject(this.campos[i]));
-			}
+			this.preencherMap(campoValorRetorno, resultSet, this.campos);
 
 			resultSet.close();
 			preparedStatement.close();
@@ -449,17 +442,10 @@ public abstract class AbstractDAO {
 						this.campos.length);
 
 				// inserindo primary keys no hashMap
-				for (int i = 0; i < this.primaryKey.length; i++) {
-					campoValorRetorno.put(this.primaryKey[i],
-							resultSet.getObject(this.primaryKey[i]));
-
-				}
+				this.preencherMap(campoValorRetorno, resultSet, this.primaryKey);
 
 				// inserindo Campos restates no hashMap
-				for (int i = 0; i < this.campos.length; i++) {
-					campoValorRetorno.put(campos[i],
-							resultSet.getObject(this.campos[i]));
-				}
+				this.preencherMap(campoValorRetorno, resultSet, this.campos);
 
 				// inserindo o hashMap no arrayList
 				camposValoresRetornados.add(campoValorRetorno);
@@ -473,6 +459,23 @@ public abstract class AbstractDAO {
 		}
 
 		return camposValoresRetornados;
+	}
+
+	/**
+	 * Preenche Map com os dados vindos do ResultSet, usando array como chave
+	 * para busca
+	 */
+	protected void preencherMap(Map<String, Object> map, ResultSet rs,
+			String[] chaves) {
+
+		try {
+			for (int i = 0; i < chaves.length; i++) {
+				// inserindo primary keys no Map
+				map.put(chaves[i], rs.getObject(chaves[i]));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

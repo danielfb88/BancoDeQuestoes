@@ -17,7 +17,7 @@ public class Resposta {
 	private String observacao;
 
 	public Resposta() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Resposta(Integer id_resposta, Pergunta pergunta, String descricao,

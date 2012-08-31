@@ -18,7 +18,7 @@ public class Prova {
 	private Date dataProva;
 
 	public Prova() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public Prova(Integer id_prova, Integer id_gradePeriodo,

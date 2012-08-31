@@ -8,7 +8,8 @@ public class TesteModuloAssunto {
 	private static Assunto assunto;
 
 	public static void main(String[] args) {
-		listar();
+		//listar();
+		buscarPorID(6);
 	}
 
 	public static void adicionar() {

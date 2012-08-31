@@ -1,5 +1,7 @@
 package app.controller;
-
+/**
+ * TODO: EFETUAR TESTES
+ */
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +52,7 @@ public class AnoSemestre {
 	 * 
 	 * @param map
 	 */
-	private AnoSemestre novoObjeto(Map<String, Object> map) {
+	AnoSemestre novoObjeto(Map<String, Object> map) {
 
 		AnoSemestre as = new AnoSemestre();
 		as.setId_anoSemestre((Integer) map.get(anoSemestrePrimaryKey[0]));
@@ -65,7 +67,7 @@ public class AnoSemestre {
 	 * 
 	 * @param map
 	 */
-	private void carregarObjeto(Map<String, Object> map) {
+	void carregarObjeto(Map<String, Object> map) {
 
 		this.id_anoSemestre = (Integer) map.get(anoSemestrePrimaryKey[0]);
 		this.ano = (Integer) map.get(anoSemestreCampos[0]);
@@ -87,11 +89,11 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean carregar() {
-		Map<String, Object> mapAnoSemestre = this.anoSemestreDAO
+		Map<String, Object> map = this.anoSemestreDAO
 				.buscarPorId(this.id_anoSemestre);
 
-		if (mapAnoSemestre != null) {
-			this.carregarObjeto(mapAnoSemestre);
+		if (map != null) {
+			this.carregarObjeto(map);
 
 			return true;
 		}
@@ -123,15 +125,15 @@ public class AnoSemestre {
 	 */
 	public List<AnoSemestre> listar() {
 		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMapAnoSemestre = this.anoSemestreDAO
-				.listarPor(this.ano, this.semestre);
+		List<Map<String, Object>> listMap = this.anoSemestreDAO.listarPor(
+				this.ano, this.semestre);
 
 		// lista
 		List<AnoSemestre> anoSemestres = new ArrayList<AnoSemestre>();
 
 		// Iterando
-		for (Map<String, Object> mapAnoSemestre : listMapAnoSemestre) {
-			AnoSemestre anoSemestre = this.novoObjeto(mapAnoSemestre);
+		for (Map<String, Object> map : listMap) {
+			AnoSemestre anoSemestre = this.novoObjeto(map);
 
 			// inserindo à lista
 			anoSemestres.add(anoSemestre);
