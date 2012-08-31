@@ -1,5 +1,5 @@
 package app.controller;
-dsada
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +19,9 @@ public class Grupo {
 	private Character tipo;
 
 	private GrupoDAO grupoDAO = new GrupoDAO();
+
+	private String[] grupoPrimaryKey = this.grupoDAO.getPrimaryKey();
+	private String[] grupoCampos = this.grupoDAO.getCampos();
 
 	/**
 	 * Grupo
@@ -42,6 +45,33 @@ public class Grupo {
 	}
 
 	/**
+	 * Cria objeto baseado no HashMap de entrada
+	 * 
+	 * @param map
+	 */
+	private Grupo novoObjeto(Map<String, Object> map) {
+
+		Grupo grupo = new Grupo();
+		grupo.setId_grupo((Integer) map.get(grupoPrimaryKey[0]));
+		grupo.setDescricao((String) map.get(grupoCampos[0]));
+		grupo.setTipo(map.get(grupoCampos[1]).toString().charAt(0));
+
+		return grupo;
+	}
+
+	/**
+	 * Carrega objeto baseado no HashMap de Entrada
+	 * 
+	 * @param map
+	 */
+	private void carregarObjeto(Map<String, Object> map) {
+
+		this.id_grupo = (Integer) map.get(grupoPrimaryKey[0]);
+		this.descricao = (String) map.get(grupoCampos[0]);
+		this.tipo = map.get(grupoCampos[1]).toString().charAt(0);
+	}
+
+	/**
 	 * Adicionar
 	 * 
 	 * @return
@@ -58,14 +88,8 @@ public class Grupo {
 	public boolean carregar() {
 		Map<String, Object> mapGrupo = this.grupoDAO.buscarPorId(this.id_grupo);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.grupoDAO.getPrimaryKey();
-		String[] campos = this.grupoDAO.getCampos();
-
 		if (mapGrupo != null) {
-			this.id_grupo = (Integer) mapGrupo.get(primaryKey[0]);
-			this.descricao = (String) mapGrupo.get(campos[0]);
-			this.tipo = mapGrupo.get(campos[1]).toString().charAt(0);
+			this.carregarObjeto(mapGrupo);
 
 			return true;
 		}
@@ -100,20 +124,12 @@ public class Grupo {
 		List<Map<String, Object>> listMapGrupo = this.grupoDAO.listarPor(
 				descricao, tipo.toString());
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.grupoDAO.getPrimaryKey();
-		String[] campos = this.grupoDAO.getCampos();
-
 		// lista
 		List<Grupo> grupos = new ArrayList<Grupo>();
 
 		// Iterando
 		for (Map<String, Object> mapGrupo : listMapGrupo) {
-			// preenchendo o objeto
-			Grupo grupo = new Grupo();
-			grupo.setId_grupo((Integer) mapGrupo.get(primaryKey[0]));
-			grupo.setDescricao((String) mapGrupo.get(campos[0]));
-			grupo.setTipo(mapGrupo.get(campos[1]).toString().charAt(0));
+			Grupo grupo = this.novoObjeto(mapGrupo);
 
 			// inserindo à lista
 			grupos.add(grupo);

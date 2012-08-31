@@ -1,12 +1,17 @@
 package app.controller;
-dadasd
+
+// TODO: INCOMPLETO
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import app.dao.PerguntaDAO;
 
 /**
  * Pergunta
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 19-08-2012
+ * @since 30-08-2012
  * 
  */
 public class Pergunta {
@@ -18,10 +23,29 @@ public class Pergunta {
 	private String enunciado;
 	private String comentario;
 
+	private PerguntaDAO perguntaDAO = new PerguntaDAO();
+
+	private String[] perguntaPrimaryKey = this.perguntaDAO.getPrimaryKey();
+	private String[] perguntaCampos = this.perguntaDAO.getCampos();
+
+	/**
+	 * Pergunta
+	 */
 	public Pergunta() {
-		// TODO Auto-generated constructor stub
+		this.usuario = new Usuario();
 	}
 
+	/**
+	 * Pergunta
+	 * 
+	 * @param id_pergunta
+	 * @param usuario
+	 * @param descricao
+	 * @param tipo_pergunta
+	 * @param nivel_pergunta
+	 * @param enunciado
+	 * @param comentario
+	 */
 	public Pergunta(Integer id_pergunta, Usuario usuario, String descricao,
 			Character tipo_pergunta, Character nivel_pergunta,
 			String enunciado, String comentario) {
@@ -35,43 +59,137 @@ public class Pergunta {
 		this.comentario = comentario;
 	}
 
+	/**
+	 * Cria objeto baseado no HashMap de entrada
+	 * 
+	 * @param map
+	 */
+	private Pergunta novoObjeto(Map<String, Object> map) {
+
+		Pergunta pergunta = new Pergunta();
+		pergunta.setId_pergunta((Integer) map.get(perguntaPrimaryKey[0]));
+		pergunta.getUsuario().setId_usuario(
+				(Integer) map.get(perguntaCampos[0]));
+		pergunta.setDescricao((String) map.get(perguntaCampos[1]));
+		pergunta.setTipo_pergunta(map.get(perguntaCampos[2]).toString()
+				.charAt(0));
+		pergunta.setNivel_pergunta(map.get(perguntaCampos[3]).toString()
+				.charAt(0));
+		pergunta.setEnunciado((String) map.get(perguntaCampos[4]));
+		pergunta.setComentario((String) map.get(perguntaCampos[5]));
+
+		return pergunta;
+	}
+
+	/**
+	 * Carrega objeto baseado no HashMap de Entrada
+	 * 
+	 * @param map
+	 */
+	private void carregarObjeto(Map<String, Object> map) {
+
+		this.id_pergunta = (Integer) map.get(perguntaPrimaryKey[0]);
+		this.usuario.setId_usuario((Integer) map.get(perguntaCampos[0]));
+		this.descricao = (String) map.get(perguntaCampos[0]);
+		this.tipo_pergunta = map.get(perguntaCampos[1]).toString().charAt(0);
+		this.nivel_pergunta = map.get(perguntaCampos[2]).toString().charAt(0);
+		this.enunciado = (String) map.get(perguntaCampos[3]);
+		this.comentario = (String) map.get(perguntaCampos[4]);
+	}
+
+	/**
+	 * Adicionar
+	 * 
+	 * @return
+	 */
 	public boolean adicionar() {
+		return this.perguntaDAO.adicionar(usuario.getId_usuario(), descricao,
+				tipo_pergunta.toString(), nivel_pergunta.toString(), enunciado,
+				comentario) > 0;
+	}
 
+	/**
+	 * Carregar
+	 * 
+	 * @return
+	 */
+	public boolean carregar(boolean carregarRelacionamentos) {
+		Map<String, Object> mapPergunta = this.perguntaDAO
+				.buscarPorId(this.id_pergunta);
+
+		if (mapPergunta != null) {
+			this.carregarObjeto(mapPergunta);
+
+			if (carregarRelacionamentos)
+				this.usuario.carregar(carregarRelacionamentos);
+
+			return true;
+		}
 		return false;
 	}
 
-	public boolean carregar() {
-
-		return false;
-	}
-
+	/**
+	 * Editar
+	 * 
+	 * @return
+	 */
 	public boolean editar() {
-
-		return false;
+		return this.perguntaDAO.editar(id_pergunta, usuario.getId_usuario(),
+				descricao, tipo_pergunta.toString(), nivel_pergunta.toString(),
+				enunciado, comentario) > 0;
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @return
+	 */
 	public boolean excluir() {
-
-		return false;
+		return this.perguntaDAO.excluir(id_pergunta) > 0;
 	}
 
-	public List<Assunto> listar() {
+	/**
+	 * Listar
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public List<Pergunta> listar(boolean carregarRelacionamentos) {
+		// buscando a lista de Mapa recuperando pelos parametros
+		List<Map<String, Object>> listMapPerguntas = this.perguntaDAO
+				.listarPor(usuario.getId_usuario(), descricao,
+						tipo_pergunta.toString(), nivel_pergunta.toString(),
+						enunciado, comentario);
 
-		return null;
+		// lista de perguntas
+		List<Pergunta> perguntas = new ArrayList<Pergunta>();
+
+		// Iterando
+		for (Map<String, Object> mapPergunta : listMapPerguntas) {
+			Pergunta pergunta = this.novoObjeto(mapPergunta);
+
+			// carregando relacionamento
+			if (carregarRelacionamentos)
+				pergunta.getUsuario().carregar(carregarRelacionamentos);
+
+			perguntas.add(pergunta);
+		}
+		// retornando a lista
+		return perguntas;
 	}
 
 	public List<Pergunta> listarDisciplinas() {
 
 		return null;
 	}
-	
+
 	public List<Assunto> listarAssuntos() {
-		
+
 		return null;
 	}
-	
+
 	public List<Prova> listarProvas() {
-		
+
 		return null;
 	}
 

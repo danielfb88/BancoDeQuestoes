@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import app.util.conexao.DAOUtil;
-import app.util.exceptions.AbstractDAOException;
-import app.util.exceptions.TipoParametroNaoEspecificadoException;
 
 /**
  * Classe abstrata que efetua as operações básicas de uma DAO: - Adicionar,
@@ -52,34 +50,33 @@ public abstract class AbstractDAO {
 			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
 				switch (parametros.get(i).getClass().getName()) {
-					case "java.lang.String":
-						if (useLike)
-							ps.setString(indexPS, "%"
-									+ (String) parametros.get(i)
-									+ "%");
-						else
-							ps.setString(indexPS, (String) parametros.get(i));
-						break;
-					case "java.lang.Integer":
-						ps.setInt(indexPS, (Integer) parametros.get(i));
-						break;
-					case "java.lang.Double":
-						ps.setDouble(indexPS, (Double) parametros.get(i));
-						break;
-					case "java.lang.Boolean":
-						ps.setBoolean(indexPS, (Boolean) parametros.get(i));
-						break;
-					case "java.lang.Date":
-						ps.setDate(indexPS, (Date) parametros.get(i));
-						break;
-					default:
-						throw new TipoParametroNaoEspecificadoException();
+				case "java.lang.String":
+					if (useLike)
+						ps.setString(indexPS, "%" + (String) parametros.get(i)
+								+ "%");
+					else
+						ps.setString(indexPS, (String) parametros.get(i));
+					break;
+				case "java.lang.Integer":
+					ps.setInt(indexPS, (Integer) parametros.get(i));
+					break;
+				case "java.lang.Double":
+					ps.setDouble(indexPS, (Double) parametros.get(i));
+					break;
+				case "java.lang.Boolean":
+					ps.setBoolean(indexPS, (Boolean) parametros.get(i));
+					break;
+				case "java.lang.Date":
+					ps.setDate(indexPS, (Date) parametros.get(i));
+					break;
+				default:
+					throw new Exception("Tipo do parâmetro não especificado");
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 
-		} catch (TipoParametroNaoEspecificadoException e2) {
+		} catch (Exception e2) {
 			e2.printStackTrace();
 		}
 	}
@@ -90,9 +87,9 @@ public abstract class AbstractDAO {
 	private void verificaNomeTabela() {
 		if (this.nomeDaTabela == null || this.nomeDaTabela.isEmpty()) {
 			try {
-				throw new AbstractDAOException(
+				throw new Exception(
 						"Nome da tabela não informado na sub-classe");
-			} catch (AbstractDAOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(0);
 			}
@@ -105,10 +102,10 @@ public abstract class AbstractDAO {
 	private void verificaPK() {
 		try {
 			if (this.primaryKey == null || this.primaryKey.length == 0) {
-				throw new AbstractDAOException(
+				throw new Exception(
 						"Nome da coluna de ID não informado na sub-classe");
 			}
-		} catch (AbstractDAOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -176,10 +173,12 @@ public abstract class AbstractDAO {
 			builder.append("(");
 
 			// Iterando os objetos para pegar a chave
-			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
+			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet()
+					.iterator();
 
 			while (it.hasNext()) {
-				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it.next();
+				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
+						.next();
 
 				// inserindo os valores em um arraylist
 				ordem.add(me.getValue());
@@ -251,7 +250,8 @@ public abstract class AbstractDAO {
 			builder.append("SET ");
 
 			// Iterando os objetos para pegar a chave
-			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
+			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet()
+					.iterator();
 
 			while (it.hasNext()) {
 				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
@@ -351,7 +351,8 @@ public abstract class AbstractDAO {
 
 		ResultSet resultSet = null;
 		StringBuilder builder = new StringBuilder();
-		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(this.campos.length);
+		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
+				this.campos.length);
 
 		try {
 			builder.append("SELECT * FROM ");

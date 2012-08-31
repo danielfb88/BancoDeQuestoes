@@ -37,8 +37,8 @@ public class PerguntaDAO extends AbstractDAO {
 
 		campoValor.put(campos[0], id_usuario);
 		campoValor.put(campos[1], descricao);
-		campoValor.put(campos[2], tipo_pergunta);
-		campoValor.put(campos[3], nivel_pergunta);
+		campoValor.put(campos[2], tipo_pergunta.toUpperCase());
+		campoValor.put(campos[3], nivel_pergunta.toUpperCase());
 		campoValor.put(campos[4], enunciado);
 		campoValor.put(campos[5], comentario);
 

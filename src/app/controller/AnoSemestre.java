@@ -1,5 +1,5 @@
 package app.controller;
-dadas
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +20,10 @@ public class AnoSemestre {
 
 	private AnoSemestreDAO anoSemestreDAO = new AnoSemestreDAO();
 
+	private String[] anoSemestrePrimaryKey = this.anoSemestreDAO
+			.getPrimaryKey();
+	private String[] anoSemestreCampos = this.anoSemestreDAO.getCampos();
+
 	/**
 	 * AnoSemestre
 	 */
@@ -29,6 +33,7 @@ public class AnoSemestre {
 
 	/**
 	 * AnoSemestre
+	 * 
 	 * @param id_anoSemestre
 	 * @param ano
 	 * @param semestre
@@ -41,7 +46,35 @@ public class AnoSemestre {
 	}
 
 	/**
+	 * Cria objeto baseado no HashMap de entrada
+	 * 
+	 * @param map
+	 */
+	private AnoSemestre novoObjeto(Map<String, Object> map) {
+
+		AnoSemestre as = new AnoSemestre();
+		as.setId_anoSemestre((Integer) map.get(anoSemestrePrimaryKey[0]));
+		as.setAno((Integer) map.get(anoSemestreCampos[0]));
+		as.setSemestre((Integer) map.get(anoSemestreCampos[1]));
+
+		return as;
+	}
+
+	/**
+	 * Carrega objeto baseado no HashMap de Entrada
+	 * 
+	 * @param map
+	 */
+	private void carregarObjeto(Map<String, Object> map) {
+
+		this.id_anoSemestre = (Integer) map.get(anoSemestrePrimaryKey[0]);
+		this.ano = (Integer) map.get(anoSemestreCampos[0]);
+		this.semestre = (Integer) map.get(anoSemestreCampos[1]);
+	}
+
+	/**
 	 * Adicionar
+	 * 
 	 * @return
 	 */
 	public boolean adicionar() {
@@ -50,20 +83,15 @@ public class AnoSemestre {
 
 	/**
 	 * Carregar
+	 * 
 	 * @return
 	 */
 	public boolean carregar() {
 		Map<String, Object> mapAnoSemestre = this.anoSemestreDAO
 				.buscarPorId(this.id_anoSemestre);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.anoSemestreDAO.getPrimaryKey();
-		String[] campos = this.anoSemestreDAO.getCampos();
-
 		if (mapAnoSemestre != null) {
-			this.id_anoSemestre = (Integer) mapAnoSemestre.get(primaryKey[0]);
-			this.ano = (Integer) mapAnoSemestre.get(campos[0]);
-			this.semestre = (Integer) mapAnoSemestre.get(campos[1]);
+			this.carregarObjeto(mapAnoSemestre);
 
 			return true;
 		}
@@ -72,6 +100,7 @@ public class AnoSemestre {
 
 	/**
 	 * Editar
+	 * 
 	 * @return
 	 */
 	public boolean editar() {
@@ -80,6 +109,7 @@ public class AnoSemestre {
 
 	/**
 	 * Excluir
+	 * 
 	 * @return
 	 */
 	public boolean excluir() {
@@ -88,6 +118,7 @@ public class AnoSemestre {
 
 	/**
 	 * Listar
+	 * 
 	 * @return
 	 */
 	public List<AnoSemestre> listar() {
@@ -95,21 +126,12 @@ public class AnoSemestre {
 		List<Map<String, Object>> listMapAnoSemestre = this.anoSemestreDAO
 				.listarPor(this.ano, this.semestre);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.anoSemestreDAO.getPrimaryKey();
-		String[] campos = this.anoSemestreDAO.getCampos();
-
 		// lista
 		List<AnoSemestre> anoSemestres = new ArrayList<AnoSemestre>();
 
 		// Iterando
 		for (Map<String, Object> mapAnoSemestre : listMapAnoSemestre) {
-			// preenchendo o objeto
-			AnoSemestre anoSemestre = new AnoSemestre();
-			anoSemestre.setId_anoSemestre((Integer) mapAnoSemestre
-					.get(primaryKey[0]));
-			anoSemestre.setAno((Integer) mapAnoSemestre.get(campos[0]));
-			anoSemestre.setSemestre((Integer) mapAnoSemestre.get(campos[1]));
+			AnoSemestre anoSemestre = this.novoObjeto(mapAnoSemestre);
 
 			// inserindo à lista
 			anoSemestres.add(anoSemestre);

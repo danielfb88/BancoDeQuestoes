@@ -1,6 +1,6 @@
 package app.controller;
 
-// TODO: Desenvolver os outros baseados neste Objeto.
+// TODO: INCOMPLETO
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +24,9 @@ public class Usuario {
 
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
 	private CoordenadorCursoDAO coordenadorCursoDAO = new CoordenadorCursoDAO();
+
+	private String[] usuarioPrimaryKey = this.usuarioDAO.getPrimaryKey();
+	private String[] usuarioCampos = this.usuarioDAO.getCampos();
 
 	/**
 	 * Usuario
@@ -56,17 +59,14 @@ public class Usuario {
 	 * 
 	 * @param map
 	 */
-	private Usuario criarUsuario(Map<String, Object> map) {
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.usuarioDAO.getPrimaryKey();
-		String[] campos = this.usuarioDAO.getCampos();
+	private Usuario novoObjeto(Map<String, Object> map) {
 
 		Usuario usuario = new Usuario();
-		usuario.setId_usuario((Integer) map.get(primaryKey[0]));
-		usuario.grupo.setId_grupo((Integer) map.get(campos[0]));
-		usuario.setNome((String) map.get(campos[1]));
-		usuario.setLogin((String) map.get(campos[2]));
-		usuario.setSenha((String) map.get(campos[3]));
+		usuario.setId_usuario((Integer) map.get(usuarioPrimaryKey[0]));
+		usuario.grupo.setId_grupo((Integer) map.get(usuarioCampos[0]));
+		usuario.setNome((String) map.get(usuarioCampos[1]));
+		usuario.setLogin((String) map.get(usuarioCampos[2]));
+		usuario.setSenha((String) map.get(usuarioCampos[3]));
 
 		return usuario;
 	}
@@ -75,21 +75,14 @@ public class Usuario {
 	 * Carrega objeto baseado no HashMap de Entrada
 	 * 
 	 * @param map
-	 * @return
 	 */
-	private Usuario carregarUsuario(Map<String, Object> map) {
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.usuarioDAO.getPrimaryKey();
-		String[] campos = this.usuarioDAO.getCampos();
+	private void carregarObjeto(Map<String, Object> map) {
 
-		Usuario usuario = new Usuario();
-		this.id_usuario = (Integer) map.get(primaryKey[0]);
-		this.grupo.setId_grupo((Integer) map.get(campos[0]));
-		this.nome = (String) map.get(campos[1]);
-		this.login = (String) map.get(campos[2]);
-		this.senha = (String) map.get(campos[3]);
-
-		return usuario;
+		this.id_usuario = (Integer) map.get(usuarioPrimaryKey[0]);
+		this.grupo.setId_grupo((Integer) map.get(usuarioCampos[0]));
+		this.nome = (String) map.get(usuarioCampos[1]);
+		this.login = (String) map.get(usuarioCampos[2]);
+		this.senha = (String) map.get(usuarioCampos[3]);
 	}
 
 	/**
@@ -113,7 +106,7 @@ public class Usuario {
 				.buscarPorId(this.id_usuario);
 
 		if (mapUsuario != null) {
-			this.carregarUsuario(mapUsuario);
+			this.carregarObjeto(mapUsuario);
 
 			if (carregarRelacionamentos)
 				this.grupo.carregar();
@@ -158,7 +151,7 @@ public class Usuario {
 
 		// Iterando
 		for (Map<String, Object> mapUsuario : listMapUsuarios) {
-			Usuario usuario = this.criarUsuario(mapUsuario);
+			Usuario usuario = this.novoObjeto(mapUsuario);
 
 			// carregando relacionamento
 			if (carregarRelacionamentos)
