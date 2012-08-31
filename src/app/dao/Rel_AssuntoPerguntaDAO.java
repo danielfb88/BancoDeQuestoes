@@ -105,6 +105,7 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 	 */
 	public List<Map<String, Object>> listarPerguntasPorAssunto(
 			Integer id_assunto) {
+		// TODO: UTILIZAR MÉTODO DA DAO ABSTRATA
 
 		StringBuilder builder = new StringBuilder();
 		Map<String, Object> campoValorRetorno = new HashMap<String, Object>();

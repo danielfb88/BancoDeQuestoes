@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -144,6 +145,71 @@ public abstract class AbstractDAO {
 				builder.append(", ");
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * Executa query retornando um Map do ResultSet
+	 * 
+	 * @param query
+	 *            SQL
+	 * @param pk
+	 *            Array com o nome da(s) primary key(s)
+	 * @param campos
+	 *            Array com o nome dos campos
+	 * @return
+	 */
+	protected List<Map<String, Object>> executarQuery(String query,
+			String[] pk, String[] campos) {
+
+		// TODO: TESTAR ESTE MÉTODO
+
+		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+		try {
+			Statement s = DAOUtil.getInstance().getStatement();
+			ResultSet rs = s.executeQuery(query);
+
+			if (!rs.next()) {
+				rs.close();
+				s.close();
+				return null;
+			}
+
+			while (rs.next()) {
+				// preencher map com primary key e campos vindos do resultSet
+				Map<String, Object> map = new HashMap<String, Object>();
+				this.preencherMap(map, rs, pk);
+				this.preencherMap(map, rs, campos);
+				listMap.add(map);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		// lista
+		return listMap;
+	}
+
+	/**
+	 * Executa Query retornando a quantidade de linhas afetadas
+	 * 
+	 * @param query
+	 *            SQL
+	 * @return
+	 */
+	protected int executarUpdate(String query) {
+		// TODO: TESTAR ESTE MÉTODO
+		int linhasAfetadas = 0;
+		try {
+			Statement s = DAOUtil.getInstance().getStatement();
+			linhasAfetadas = s.executeUpdate(query);
+			s.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return linhasAfetadas;
 	}
 
 	/**
