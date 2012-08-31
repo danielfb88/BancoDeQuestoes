@@ -168,12 +168,6 @@ public abstract class AbstractDAO {
 			Statement s = DAOUtil.getInstance().getStatement();
 			ResultSet rs = s.executeQuery(query);
 
-			if (!rs.next()) {
-				rs.close();
-				s.close();
-				return null;
-			}
-
 			while (rs.next()) {
 				// preencher map com primary key e campos vindos do resultSet
 				Map<String, Object> map = new HashMap<String, Object>();
@@ -181,6 +175,9 @@ public abstract class AbstractDAO {
 				this.preencherMap(map, rs, campos);
 				listMap.add(map);
 			}
+
+			rs.close();
+			s.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();

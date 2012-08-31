@@ -1,14 +1,9 @@
 package app.dao;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import app.util.AbstractDAO;
-import app.util.conexao.DAOUtil;
 
 /**
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
@@ -105,13 +100,14 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 	 */
 	public List<Map<String, Object>> listarPerguntasPorAssunto(
 			Integer id_assunto) {
-		// TODO: UTILIZAR MÉTODO DA DAO ABSTRATA
 
 		StringBuilder builder = new StringBuilder();
-		Map<String, Object> campoValorRetorno = new HashMap<String, Object>();
-		List<Map<String, Object>> camposValoresRetornados = new ArrayList<Map<String, Object>>();
 
-		builder.append("SELECT * ");
+		builder.append("SELECT ");
+		builder.append("p.id_pergunta, p.id_usuario, p.descricao, ");
+		builder.append("p.tipo_pergunta, p.nivel_pergunta, ");
+		builder.append("p.enunciado, p.comentario ");
+
 		builder.append("FROM pergunta p ");
 
 		builder.append("JOIN assunto_pergunta ap ");
@@ -120,43 +116,14 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 		builder.append("JOIN assunto a ");
 		builder.append("ON (ap.id_assunto = a.id_assunto) ");
 
-		builder.append("WHERE id_assunto = ? ");
+		builder.append("WHERE a.id_assunto = " + id_assunto + " ");
 		builder.append(";");
 
-		try {
-			PreparedStatement ps = DAOUtil.getInstance().getPreparedStatement(
-					builder.toString());
+		String[] perguntaPK = this.perguntaDAO.getPrimaryKey();
+		String[] perguntaCampos = this.perguntaDAO.getCampos();
 
-			ps.setInt(1, id_assunto);
-
-			ResultSet rs = ps.executeQuery();
-
-			if (!rs.next()) {
-				rs.close();
-				ps.close();
-				return null;
-			}
-
-			String[] perguntaPK = this.perguntaDAO.getPrimaryKey();
-			String[] perguntaCampos = this.perguntaDAO.getCampos();
-
-			// inserindo primary keys no hashMap
-			super.preencherMap(campoValorRetorno, rs, perguntaPK);
-
-			// inserindo Campos restates no hashMap
-			super.preencherMap(campoValorRetorno, rs, perguntaCampos);
-
-			// inserindo o hashMap no arrayList
-			camposValoresRetornados.add(campoValorRetorno);
-
-			rs.close();
-			ps.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return camposValoresRetornados;
+		return super.executarQuery(builder.toString(), perguntaPK,
+				perguntaCampos);
 	}
 
 	/**
@@ -169,8 +136,6 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 			Integer id_pergunta) {
 
 		StringBuilder builder = new StringBuilder();
-		Map<String, Object> campoValorRetorno = new HashMap<String, Object>();
-		List<Map<String, Object>> camposValoresRetornados = new ArrayList<Map<String, Object>>();
 
 		builder.append("SELECT * ");
 		builder.append("FROM assunto a ");
@@ -184,39 +149,10 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 		builder.append("WHERE id_pergunta = ? ");
 		builder.append(";");
 
-		try {
-			PreparedStatement ps = DAOUtil.getInstance().getPreparedStatement(
-					builder.toString());
+		String[] assuntoPK = this.assuntoDAO.getPrimaryKey();
+		String[] assuntoCampos = this.assuntoDAO.getCampos();
 
-			ps.setInt(1, id_pergunta);
-
-			ResultSet rs = ps.executeQuery();
-
-			if (!rs.next()) {
-				rs.close();
-				ps.close();
-				return null;
-			}
-
-			String[] assuntoPK = this.assuntoDAO.getPrimaryKey();
-			String[] assuntoCampos = this.assuntoDAO.getCampos();
-
-			// inserindo primary keys no hashMap
-			super.preencherMap(campoValorRetorno, rs, assuntoPK);
-
-			// inserindo Campos restates no hashMap
-			super.preencherMap(campoValorRetorno, rs, assuntoCampos);
-
-			// inserindo o hashMap no arrayList
-			camposValoresRetornados.add(campoValorRetorno);
-
-			rs.close();
-			ps.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return camposValoresRetornados;
+		return super
+				.executarQuery(builder.toString(), assuntoPK, assuntoCampos);
 	}
 }
