@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import app.dao.CoordenadorCursoDAO;
 import app.dao.UsuarioDAO;
 
 /**
@@ -22,14 +21,7 @@ public class Usuario {
 	private String senha;
 
 	private UsuarioDAO usuarioDAO = new UsuarioDAO();
-	private CoordenadorCursoDAO coordenadorCursoDAO = new CoordenadorCursoDAO();
 
-	private String[] usuarioPrimaryKey = this.usuarioDAO.getPrimaryKey();
-	private String[] usuarioCampos = this.usuarioDAO.getCampos();
-
-	/**
-	 * Usuario
-	 */
 	public Usuario() {
 
 	}
@@ -54,38 +46,28 @@ public class Usuario {
 	}
 
 	/**
-	 * Cria objeto baseado no HashMap de entrada
-	 * 
-	 * @param map
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
 	 */
-	Usuario novoObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
-
-		Usuario usuario = new Usuario();
-		usuario.setId_usuario((Integer) map.get(usuarioPrimaryKey[0]));
-		usuario.grupo.setId_grupo((Integer) map.get(usuarioCampos[0]));
-		usuario.setNome((String) map.get(usuarioCampos[1]));
-		usuario.setLogin((String) map.get(usuarioCampos[2]));
-		usuario.setSenha((String) map.get(usuarioCampos[3]));
-
-		// carregando relacionamento
-		if (carregarRelacionamentos)
-			usuario.getGrupo().carregar();
-
-		return usuario;
+	public Usuario(Map<String, Object> map, boolean carregarRelacionamentos) {
+		this.carregarObjeto(map, carregarRelacionamentos);
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
 	 * 
 	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
 	 */
-	void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
+	private void carregarObjeto(Map<String, Object> map,
+			boolean carregarRelacionamentos) {
 
-		this.id_usuario = (Integer) map.get(usuarioPrimaryKey[0]);
-		this.grupo.setId_grupo((Integer) map.get(usuarioCampos[0]));
-		this.nome = (String) map.get(usuarioCampos[1]);
-		this.login = (String) map.get(usuarioCampos[2]);
-		this.senha = (String) map.get(usuarioCampos[3]);
+		this.id_usuario = (Integer) map.get("id_usuario");
+		this.grupo.setId_grupo((Integer) map.get("id_grupo"));
+		this.nome = (String) map.get("nome");
+		this.login = (String) map.get("login");
+		this.senha = (String) map.get("senha");
 
 		if (carregarRelacionamentos)
 			this.grupo.carregar();
@@ -148,18 +130,18 @@ public class Usuario {
 		List<Map<String, Object>> listMap = this.usuarioDAO.listarPor(
 				grupo.getId_grupo(), nome, login, senha);
 
-		// lista de usuarios
-		List<Usuario> usuarios = new ArrayList<Usuario>();
+		List<Usuario> listUsuario = new ArrayList<Usuario>();
 
-		// Iterando
 		for (Map<String, Object> map : listMap) {
-			// inserindo à lista
-			usuarios.add(this.novoObjeto(map, carregarRelacionamentos));
+			listUsuario.add(new Usuario(map, carregarRelacionamentos));
 		}
-		// retornando a lista
-		return usuarios;
+
+		return listUsuario;
 	}
 
+	/**
+	 * 
+	 */
 	public void autenticar() {
 		// TODO: Transferir esta responsabilidade para o ManagedBean de Usuario
 	}
@@ -210,42 +192,77 @@ public class Usuario {
 		return pergunta.listar(false);
 	}
 
+	/**
+	 * @return the id_usuario
+	 */
 	public Integer getId_usuario() {
 		return id_usuario;
 	}
 
+	/**
+	 * @param id_usuario
+	 *            the id_usuario to set
+	 */
 	public void setId_usuario(Integer id_usuario) {
 		this.id_usuario = id_usuario;
 	}
 
+	/**
+	 * @return the grupo
+	 */
 	public Grupo getGrupo() {
 		return grupo;
 	}
 
+	/**
+	 * @param grupo
+	 *            the grupo to set
+	 */
 	public void setGrupo(Grupo grupo) {
 		this.grupo = grupo;
 	}
 
+	/**
+	 * @return the nome
+	 */
 	public String getNome() {
 		return nome;
 	}
 
+	/**
+	 * @param nome
+	 *            the nome to set
+	 */
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
+	/**
+	 * @return the login
+	 */
 	public String getLogin() {
 		return login;
 	}
 
+	/**
+	 * @param login
+	 *            the login to set
+	 */
 	public void setLogin(String login) {
 		this.login = login;
 	}
 
+	/**
+	 * @return the senha
+	 */
 	public String getSenha() {
 		return senha;
 	}
 
+	/**
+	 * @param senha
+	 *            the senha to set
+	 */
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}

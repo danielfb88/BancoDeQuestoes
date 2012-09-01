@@ -1,6 +1,5 @@
 package app.controller;
 
-// TODO: VERIFIQUE O QUE PODE SER OTIMIZADO ANTES DE CONTINUAR DESENVOLVENDO OS OUTROS
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,13 +20,6 @@ public class AnoSemestre {
 
 	private AnoSemestreDAO anoSemestreDAO = new AnoSemestreDAO();
 
-	private String[] anoSemestrePrimaryKey = this.anoSemestreDAO
-			.getPrimaryKey();
-	private String[] anoSemestreCampos = this.anoSemestreDAO.getCampos();
-
-	/**
-	 * AnoSemestre
-	 */
 	public AnoSemestre() {
 
 	}
@@ -47,30 +39,24 @@ public class AnoSemestre {
 	}
 
 	/**
-	 * Cria objeto baseado no HashMap de entrada
-	 * 
-	 * @param map
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
 	 */
-	AnoSemestre novoObjeto(Map<String, Object> map) {
-
-		AnoSemestre as = new AnoSemestre();
-		as.setId_anoSemestre((Integer) map.get(anoSemestrePrimaryKey[0]));
-		as.setAno((Integer) map.get(anoSemestreCampos[0]));
-		as.setSemestre((Integer) map.get(anoSemestreCampos[1]));
-
-		return as;
+	public AnoSemestre(Map<String, Object> map) {
+		this.carregarObjeto(map);
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
 	 * 
 	 * @param map
 	 */
-	void carregarObjeto(Map<String, Object> map) {
+	private void carregarObjeto(Map<String, Object> map) {
 
-		this.id_anoSemestre = (Integer) map.get(anoSemestrePrimaryKey[0]);
-		this.ano = (Integer) map.get(anoSemestreCampos[0]);
-		this.semestre = (Integer) map.get(anoSemestreCampos[1]);
+		this.id_anoSemestre = (Integer) map.get("id_anosemestre");
+		this.ano = (Integer) map.get("ano");
+		this.semestre = (Integer) map.get("semestre");
 	}
 
 	/**
@@ -127,38 +113,56 @@ public class AnoSemestre {
 		List<Map<String, Object>> listMap = this.anoSemestreDAO.listarPor(
 				this.ano, this.semestre);
 
-		// lista
-		List<AnoSemestre> anoSemestres = new ArrayList<AnoSemestre>();
+		List<AnoSemestre> listAnoSemestre = new ArrayList<AnoSemestre>();
 
-		// Iterando
 		for (Map<String, Object> map : listMap) {
-			// inserindo à lista
-			anoSemestres.add(this.novoObjeto(map));
+			listAnoSemestre.add(new AnoSemestre(map));
 		}
-		// retornando a lista
-		return anoSemestres;
+
+		return listAnoSemestre;
 	}
 
+	/**
+	 * @return the id_anoSemestre
+	 */
 	public Integer getId_anoSemestre() {
 		return id_anoSemestre;
 	}
 
+	/**
+	 * @param id_anoSemestre
+	 *            the id_anoSemestre to set
+	 */
 	public void setId_anoSemestre(Integer id_anoSemestre) {
 		this.id_anoSemestre = id_anoSemestre;
 	}
 
+	/**
+	 * @return the ano
+	 */
 	public Integer getAno() {
 		return ano;
 	}
 
+	/**
+	 * @param ano
+	 *            the ano to set
+	 */
 	public void setAno(Integer ano) {
 		this.ano = ano;
 	}
 
+	/**
+	 * @return the semestre
+	 */
 	public Integer getSemestre() {
 		return semestre;
 	}
 
+	/**
+	 * @param semestre
+	 *            the semestre to set
+	 */
 	public void setSemestre(Integer semestre) {
 		this.semestre = semestre;
 	}

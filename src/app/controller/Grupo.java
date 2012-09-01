@@ -23,12 +23,6 @@ public class Grupo {
 
 	private GrupoDAO grupoDAO = new GrupoDAO();
 
-	private String[] grupoPrimaryKey = this.grupoDAO.getPrimaryKey();
-	private String[] grupoCampos = this.grupoDAO.getCampos();
-
-	/**
-	 * Grupo
-	 */
 	public Grupo() {
 
 	}
@@ -48,30 +42,25 @@ public class Grupo {
 	}
 
 	/**
-	 * Cria objeto baseado no HashMap de entrada
-	 * 
-	 * @param map
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
 	 */
-	Grupo novoObjeto(Map<String, Object> map) {
-
-		Grupo grupo = new Grupo();
-		grupo.setId_grupo((Integer) map.get(grupoPrimaryKey[0]));
-		grupo.setDescricao((String) map.get(grupoCampos[0]));
-		grupo.setTipo(map.get(grupoCampos[1]).toString().charAt(0));
-
-		return grupo;
+	public Grupo(Map<String, Object> map) {
+		this.carregarObjeto(map);
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
 	 * 
 	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
 	 */
-	void carregarObjeto(Map<String, Object> map) {
+	private void carregarObjeto(Map<String, Object> map) {
 
-		this.id_grupo = (Integer) map.get(grupoPrimaryKey[0]);
-		this.descricao = (String) map.get(grupoCampos[0]);
-		this.tipo = map.get(grupoCampos[1]).toString().charAt(0);
+		this.id_grupo = (Integer) map.get("id_grupo");
+		this.descricao = (String) map.get("descricao");
+		this.tipo = map.get("tipo").toString().charAt(0);
 	}
 
 	/**
@@ -127,16 +116,13 @@ public class Grupo {
 		List<Map<String, Object>> listMap = this.grupoDAO.listarPor(descricao,
 				tipo.toString());
 
-		// lista
-		List<Grupo> grupos = new ArrayList<Grupo>();
+		List<Grupo> listGrupo = new ArrayList<Grupo>();
 
-		// Iterando
 		for (Map<String, Object> map : listMap) {
-			// inserindo à lista
-			grupos.add(this.novoObjeto(map));
+			listGrupo.add(new Grupo(map));
 		}
-		// retornando a lista
-		return grupos;
+
+		return listGrupo;
 	}
 
 	/**
@@ -175,26 +161,47 @@ public class Grupo {
 		return usuario.listar(carregarRelacionamentos);
 	}
 
+	/**
+	 * @return the id_grupo
+	 */
 	public Integer getId_grupo() {
 		return id_grupo;
 	}
 
+	/**
+	 * @param id_grupo
+	 *            the id_grupo to set
+	 */
 	public void setId_grupo(Integer id_grupo) {
 		this.id_grupo = id_grupo;
 	}
 
+	/**
+	 * @return the descricao
+	 */
 	public String getDescricao() {
 		return descricao;
 	}
 
+	/**
+	 * @param descricao
+	 *            the descricao to set
+	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
+	/**
+	 * @return the tipo
+	 */
 	public Character getTipo() {
 		return tipo;
 	}
 
+	/**
+	 * @param tipo
+	 *            the tipo to set
+	 */
 	public void setTipo(Character tipo) {
 		this.tipo = tipo;
 	}

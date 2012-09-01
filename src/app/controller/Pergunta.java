@@ -25,12 +25,6 @@ public class Pergunta {
 
 	private PerguntaDAO perguntaDAO = new PerguntaDAO();
 
-	private String[] perguntaPrimaryKey = this.perguntaDAO.getPrimaryKey();
-	private String[] perguntaCampos = this.perguntaDAO.getCampos();
-
-	/**
-	 * Pergunta
-	 */
 	public Pergunta() {
 
 	}
@@ -60,45 +54,30 @@ public class Pergunta {
 	}
 
 	/**
-	 * Cria objeto baseado no HashMap de entrada
-	 * 
-	 * @param map
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
 	 */
-	Pergunta novoObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
-
-		Pergunta pergunta = new Pergunta();
-		pergunta.setId_pergunta((Integer) map.get(perguntaPrimaryKey[0]));
-		pergunta.getUsuario().setId_usuario(
-				(Integer) map.get(perguntaCampos[0]));
-		pergunta.setDescricao((String) map.get(perguntaCampos[1]));
-		pergunta.setTipo_pergunta(map.get(perguntaCampos[2]).toString()
-				.charAt(0));
-		pergunta.setNivel_pergunta(map.get(perguntaCampos[3]).toString()
-				.charAt(0));
-		pergunta.setEnunciado((String) map.get(perguntaCampos[4]));
-		pergunta.setComentario((String) map.get(perguntaCampos[5]));
-
-		// carregando relacionamento
-		if (carregarRelacionamentos)
-			pergunta.getUsuario().carregar(carregarRelacionamentos);
-
-		return pergunta;
+	public Pergunta(Map<String, Object> map, boolean carregarRelacionamentos) {
+		this.carregarObjeto(map, carregarRelacionamentos);
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
 	 * 
 	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
 	 */
-	void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
+	private void carregarObjeto(Map<String, Object> map,
+			boolean carregarRelacionamentos) {
 
-		this.id_pergunta = (Integer) map.get(perguntaPrimaryKey[0]);
-		this.usuario.setId_usuario((Integer) map.get(perguntaCampos[0]));
-		this.descricao = (String) map.get(perguntaCampos[0]);
-		this.tipo_pergunta = map.get(perguntaCampos[1]).toString().charAt(0);
-		this.nivel_pergunta = map.get(perguntaCampos[2]).toString().charAt(0);
-		this.enunciado = (String) map.get(perguntaCampos[3]);
-		this.comentario = (String) map.get(perguntaCampos[4]);
+		this.id_pergunta = (Integer) map.get("id_pergunta");
+		this.usuario.setId_usuario((Integer) map.get("id_usuario"));
+		this.descricao = (String) map.get("descricao");
+		this.tipo_pergunta = map.get("tipo_pergunta").toString().charAt(0);
+		this.nivel_pergunta = map.get("nivel_pergunta").toString().charAt(0);
+		this.enunciado = (String) map.get("enunciado");
+		this.comentario = (String) map.get("comentario");
 
 		if (carregarRelacionamentos)
 			this.usuario.carregar(carregarRelacionamentos);
@@ -164,85 +143,143 @@ public class Pergunta {
 				usuario.getId_usuario(), descricao, tipo_pergunta.toString(),
 				nivel_pergunta.toString(), enunciado, comentario);
 
-		// lista de perguntas
-		List<Pergunta> perguntas = new ArrayList<Pergunta>();
+		List<Pergunta> listPergunta = new ArrayList<Pergunta>();
 
-		// Iterando
 		for (Map<String, Object> map : listMap) {
-			// inserindo à lista
-			perguntas.add(this.novoObjeto(map, carregarRelacionamentos));
+			listPergunta.add(new Pergunta(map, carregarRelacionamentos));
 		}
-		// retornando a lista
-		return perguntas;
+
+		return listPergunta;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Pergunta> listarDisciplinas() {
 		// TODO: Pergunta - Desenvolver
 		return null;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Assunto> listarAssuntos() {
 		// TODO: Pergunta - Desenvolver
 		return null;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Prova> listarProvas() {
 		// TODO: Pergunta - Desenvolver
 		return null;
 	}
 
+	/**
+	 * @return the id_pergunta
+	 */
 	public Integer getId_pergunta() {
 		return id_pergunta;
 	}
 
+	/**
+	 * @param id_pergunta
+	 *            the id_pergunta to set
+	 */
 	public void setId_pergunta(Integer id_pergunta) {
 		this.id_pergunta = id_pergunta;
 	}
 
+	/**
+	 * @return the usuario
+	 */
 	public Usuario getUsuario() {
 		return usuario;
 	}
 
+	/**
+	 * @param usuario
+	 *            the usuario to set
+	 */
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
 
+	/**
+	 * @return the descricao
+	 */
 	public String getDescricao() {
 		return descricao;
 	}
 
+	/**
+	 * @param descricao
+	 *            the descricao to set
+	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
+	/**
+	 * @return the tipo_pergunta
+	 */
 	public Character getTipo_pergunta() {
 		return tipo_pergunta;
 	}
 
+	/**
+	 * @param tipo_pergunta
+	 *            the tipo_pergunta to set
+	 */
 	public void setTipo_pergunta(Character tipo_pergunta) {
 		this.tipo_pergunta = tipo_pergunta;
 	}
 
+	/**
+	 * @return the nivel_pergunta
+	 */
 	public Character getNivel_pergunta() {
 		return nivel_pergunta;
 	}
 
+	/**
+	 * @param nivel_pergunta
+	 *            the nivel_pergunta to set
+	 */
 	public void setNivel_pergunta(Character nivel_pergunta) {
 		this.nivel_pergunta = nivel_pergunta;
 	}
 
+	/**
+	 * @return the enunciado
+	 */
 	public String getEnunciado() {
 		return enunciado;
 	}
 
+	/**
+	 * @param enunciado
+	 *            the enunciado to set
+	 */
 	public void setEnunciado(String enunciado) {
 		this.enunciado = enunciado;
 	}
 
+	/**
+	 * @return the comentario
+	 */
 	public String getComentario() {
 		return comentario;
 	}
 
+	/**
+	 * @param comentario
+	 *            the comentario to set
+	 */
 	public void setComentario(String comentario) {
 		this.comentario = comentario;
 	}

@@ -21,14 +21,6 @@ public class Assunto {
 	private AssuntoDAO assuntoDAO = new AssuntoDAO();
 	private Rel_AssuntoPerguntaDAO rel_assuntoPerguntaDAO = new Rel_AssuntoPerguntaDAO();
 
-	private String[] assuntoPrimaryKey = this.assuntoDAO.getPrimaryKey();
-	private String[] rel_assuntoPerguntaPK = this.rel_assuntoPerguntaDAO
-			.getPrimaryKey();
-	private String[] assuntoCampos = this.assuntoDAO.getCampos();
-
-	/**
-	 * Assunto
-	 */
 	public Assunto() {
 
 	}
@@ -46,28 +38,24 @@ public class Assunto {
 	}
 
 	/**
-	 * Cria objeto baseado no HashMap de entrada
-	 * 
-	 * @param map
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
 	 */
-	Assunto novoObjeto(Map<String, Object> map) {
-
-		Assunto assunto = new Assunto();
-		assunto.setId_assunto((Integer) map.get(assuntoPrimaryKey[0]));
-		assunto.setDescricao((String) map.get(assuntoCampos[0]));
-
-		return assunto;
+	public Assunto(Map<String, Object> map) {
+		this.carregarObjeto(map);
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
 	 * 
 	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
 	 */
-	void carregarObjeto(Map<String, Object> map) {
+	private void carregarObjeto(Map<String, Object> map) {
 
-		this.id_assunto = (Integer) map.get(assuntoPrimaryKey[0]);
-		this.descricao = (String) map.get(assuntoCampos[0]);
+		this.id_assunto = (Integer) map.get("id_assunto");
+		this.descricao = (String) map.get("descricao");
 	}
 
 	/**
@@ -123,16 +111,13 @@ public class Assunto {
 		List<Map<String, Object>> listMap = this.assuntoDAO
 				.listarPor(descricao);
 
-		// lista
-		List<Assunto> assuntos = new ArrayList<Assunto>();
+		List<Assunto> listAssunto = new ArrayList<Assunto>();
 
-		// Iterando
 		for (Map<String, Object> map : listMap) {
-			// inserindo à lista
-			assuntos.add(this.novoObjeto(map));
+			listAssunto.add(new Assunto(map));
 		}
-		// retornando a lista
-		return assuntos;
+
+		return listAssunto;
 	}
 
 	/**
@@ -168,7 +153,7 @@ public class Assunto {
 
 		if (map != null) {
 			// pegando o id
-			Integer id = (Integer) map.get(this.rel_assuntoPerguntaPK[0]);
+			Integer id = (Integer) map.get("id_assunto_pergunta");
 			// excluindo
 			return this.rel_assuntoPerguntaDAO.excluir(id) > 0;
 		}
@@ -187,24 +172,37 @@ public class Assunto {
 		List<Pergunta> perguntas = new ArrayList<Pergunta>();
 
 		for (Map<String, Object> map : listMap) {
-			perguntas.add(new Pergunta().novoObjeto(map,
-					carregarRelacionamentos));
+			perguntas.add(new Pergunta(map, carregarRelacionamentos));
 		}
 		return perguntas;
 	}
 
+	/**
+	 * @return the id_assunto
+	 */
 	public Integer getId_assunto() {
 		return id_assunto;
 	}
 
+	/**
+	 * @param id_assunto
+	 *            the id_assunto to set
+	 */
 	public void setId_assunto(Integer id_assunto) {
 		this.id_assunto = id_assunto;
 	}
 
+	/**
+	 * @return the descricao
+	 */
 	public String getDescricao() {
 		return descricao;
 	}
 
+	/**
+	 * @param descricao
+	 *            the descricao to set
+	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
