@@ -1,4 +1,5 @@
 package app.controller;
+
 /**
  * TODO: EFETUAR TESTES
  */
@@ -131,10 +132,8 @@ public class Grupo {
 
 		// Iterando
 		for (Map<String, Object> map : listMap) {
-			Grupo grupo = this.novoObjeto(map);
-
 			// inserindo à lista
-			grupos.add(grupo);
+			grupos.add(this.novoObjeto(map));
 		}
 		// retornando a lista
 		return grupos;

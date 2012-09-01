@@ -128,11 +128,8 @@ public class Assunto {
 
 		// Iterando
 		for (Map<String, Object> map : listMap) {
-			// preenchendo o objeto
-			Assunto assunto = this.novoObjeto(map);
-
 			// inserindo à lista
-			assuntos.add(assunto);
+			assuntos.add(this.novoObjeto(map));
 		}
 		// retornando a lista
 		return assuntos;

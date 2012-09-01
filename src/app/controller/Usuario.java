@@ -16,7 +16,7 @@ import app.dao.UsuarioDAO;
  */
 public class Usuario {
 	private Integer id_usuario;
-	private Grupo grupo;
+	private Grupo grupo = new Grupo();
 	private String nome;
 	private String login;
 	private String senha;
@@ -31,7 +31,7 @@ public class Usuario {
 	 * Usuario
 	 */
 	public Usuario() {
-		grupo = new Grupo();
+
 	}
 
 	/**
@@ -153,9 +153,8 @@ public class Usuario {
 
 		// Iterando
 		for (Map<String, Object> map : listMap) {
-			Usuario usuario = this.novoObjeto(map, carregarRelacionamentos);
-
-			usuarios.add(usuario);
+			// inserindo à lista
+			usuarios.add(this.novoObjeto(map, carregarRelacionamentos));
 		}
 		// retornando a lista
 		return usuarios;

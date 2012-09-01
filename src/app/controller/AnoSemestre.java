@@ -1,7 +1,6 @@
 package app.controller;
-/**
- * TODO: EFETUAR TESTES
- */
+
+// TODO: VERIFIQUE O QUE PODE SER OTIMIZADO ANTES DE CONTINUAR DESENVOLVENDO OS OUTROS
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -133,10 +132,8 @@ public class AnoSemestre {
 
 		// Iterando
 		for (Map<String, Object> map : listMap) {
-			AnoSemestre anoSemestre = this.novoObjeto(map);
-
 			// inserindo à lista
-			anoSemestres.add(anoSemestre);
+			anoSemestres.add(this.novoObjeto(map));
 		}
 		// retornando a lista
 		return anoSemestres;

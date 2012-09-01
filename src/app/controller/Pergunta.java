@@ -16,7 +16,7 @@ import app.dao.PerguntaDAO;
  */
 public class Pergunta {
 	private Integer id_pergunta;
-	private Usuario usuario;
+	private Usuario usuario = new Usuario();
 	private String descricao;
 	private Character tipo_pergunta;
 	private Character nivel_pergunta;
@@ -32,7 +32,7 @@ public class Pergunta {
 	 * Pergunta
 	 */
 	public Pergunta() {
-		this.usuario = new Usuario();
+
 	}
 
 	/**
@@ -169,9 +169,8 @@ public class Pergunta {
 
 		// Iterando
 		for (Map<String, Object> map : listMap) {
-			Pergunta pergunta = this.novoObjeto(map, carregarRelacionamentos);
-
-			perguntas.add(pergunta);
+			// inserindo à lista
+			perguntas.add(this.novoObjeto(map, carregarRelacionamentos));
 		}
 		// retornando a lista
 		return perguntas;
