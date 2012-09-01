@@ -39,11 +39,13 @@ public abstract class AbstractDAO {
 	protected String[] campos;
 
 	/**
-	 * Prepara os dados contra injection
+	 * Prepara os dados contra SQL Injection.
 	 * 
 	 * @param ps
+	 *            Objeto PreparedStatement com a query já inserida.
 	 * @param parametros
-	 * @return
+	 *            Lista com os valores inseridos na mesma ordem dos caracteres
+	 *            curinga na query do PreparedStatemet
 	 */
 	protected void prepareStatement(PreparedStatement ps,
 			List<Object> parametros, Boolean useLike) {
@@ -98,7 +100,7 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Verifica Primary Keys
+	 * Verifica se o nome da(s) Primary Key(s) foi informado na subclasse
 	 */
 	private void verificaPK() {
 		try {
@@ -113,7 +115,8 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Verifica se a string de entrada é igual ao campo de alguma primary key
+	 * Verifica se a string de entrada é igual ao nome do campo de alguma
+	 * primary key
 	 * 
 	 * @param campo
 	 * @return
@@ -121,18 +124,48 @@ public abstract class AbstractDAO {
 	private boolean is_campoIgualPrimaryKey(String campo) {
 		boolean igualAlgumaPK = false;
 		for (int npk = 0; npk < this.primaryKey.length; npk++) {
-			if (campo.equals(this.primaryKey[npk]))
+			if (campo.equalsIgnoreCase(this.primaryKey[npk]))
 				igualAlgumaPK = true;
 		}
 		return igualAlgumaPK;
 	}
 
 	/**
+	 * Retorna o nome da Tabela
+	 * 
+	 * @return
+	 */
+	public String getNomeDaTabela() {
+		return nomeDaTabela;
+	}
+
+	/**
+	 * Retorna o nome das primary keys
+	 * 
+	 * @return
+	 */
+	public String[] getPrimaryKey() {
+		return primaryKey;
+	}
+
+	/**
+	 * Retorna o nome dos campos da Tabela
+	 * 
+	 * @return
+	 */
+	public String[] getCampos() {
+		return campos;
+	}
+
+	/**
 	 * Monta pedaço da query onde é inserido os IDs. Ex:
 	 * 
-	 * UPDATE tabela SET campo1 = 'valor1', campo2 = 'valor2' WHERE id = 5; A
-	 * parte da query "id = 5" é o que será retornado por este método.
+	 * UPDATE tabela SET campo1 = 'valor1', campo2 = 'valor2' WHERE id = 5;
 	 * 
+	 * A parte da query "id = 5" é o que será retornado por este método.
+	 * 
+	 * @param campoValor
+	 *            Map contendo a(s) primary key(s) como chave
 	 * @return String da parte da query relacionada aos IDs
 	 */
 	private String montaParteQueryID(Map<Object, Object> campoValor) {
@@ -145,68 +178,6 @@ public abstract class AbstractDAO {
 				builder.append(", ");
 		}
 		return builder.toString();
-	}
-
-	/**
-	 * Executa query retornando um Map do ResultSet
-	 * 
-	 * @param query
-	 *            SQL
-	 * @param pk
-	 *            Array com o nome da(s) primary key(s)
-	 * @param campos
-	 *            Array com o nome dos campos
-	 * @return
-	 */
-	protected List<Map<String, Object>> executarQuery(String query,
-			String[] pk, String[] campos) {
-
-		// TODO: TESTAR ESTE MÉTODO
-
-		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-		try {
-			Statement s = DAOUtil.getInstance().getStatement();
-			ResultSet rs = s.executeQuery(query);
-
-			while (rs.next()) {
-				// preencher map com primary key e campos vindos do resultSet
-				Map<String, Object> map = new HashMap<String, Object>();
-				this.preencherMap(map, rs, pk);
-				this.preencherMap(map, rs, campos);
-				listMap.add(map);
-			}
-
-			rs.close();
-			s.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		// lista
-		return listMap;
-	}
-
-	/**
-	 * Executa Query retornando a quantidade de linhas afetadas
-	 * 
-	 * @param query
-	 *            SQL
-	 * @return
-	 */
-	protected int executarUpdate(String query) {
-		// TODO: TESTAR ESTE MÉTODO
-		int linhasAfetadas = 0;
-		try {
-			Statement s = DAOUtil.getInstance().getStatement();
-			linhasAfetadas = s.executeUpdate(query);
-			s.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return linhasAfetadas;
 	}
 
 	/**
@@ -285,12 +256,13 @@ public abstract class AbstractDAO {
 	/**
 	 * Efetua um:
 	 * 
-	 * "UPDATE 'tabela' SET 'campos/valores' WHERE filros"
+	 * "UPDATE 'tabela' SET 'campos/valores' WHERE filtros"
 	 * 
 	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
 	 * parâmetro.
 	 * 
 	 * @param campoValor
+	 *            Map com a primary key e os campos alterados
 	 * @return Retorno do executeUpdate
 	 */
 	protected int _editar(Map<Object, Object> campoValor) {
@@ -357,6 +329,27 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Método de exclusão que recebe um ou vários parâmetros PrimaryKey para
+	 * serem inseridos ao filtro. A ordem dos parâmetros é a mesma do array
+	 * informado na subclasse.
+	 * 
+	 * @param id
+	 *            Primary Key
+	 * @return
+	 */
+	protected int _excluir(Integer... primaryKey) {
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(
+				primaryKey.length);
+
+		// mapeando id - valor
+		for (int i = 0; i < primaryKey.length; i++) {
+			campoValor.put(this.primaryKey[i], primaryKey[i]);
+		}
+
+		return this.__excluir(campoValor);
+	}
+
+	/**
 	 * Efetua um:
 	 * 
 	 * "DELETE FROM 'tabela' WHERE filtros"
@@ -365,9 +358,10 @@ public abstract class AbstractDAO {
 	 * parâmetro.
 	 * 
 	 * @param campoValor
+	 *            Map apenas com a(s) Primary key(s)
 	 * @return Retorno do executeUpdate
 	 */
-	private int _excluir(Map<Object, Object> campoValor) {
+	private int __excluir(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
 
@@ -397,6 +391,26 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Método de busca que recebe um ou vários parâmetros PrimaryKey para serem
+	 * inseridos ao filtro. A ordem dos parâmetros é a mesma do array informado
+	 * na subclasse.
+	 * 
+	 * @param primaryKey
+	 * @return
+	 */
+	protected Map<String, Object> _buscarPorId(Integer... primaryKey) {
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(
+				primaryKey.length);
+
+		// mapeando id - valor
+		for (int i = 0; i < primaryKey.length; i++) {
+			campoValor.put(this.primaryKey[i], primaryKey[i]);
+		}
+
+		return this.__buscarPorId(campoValor);
+	}
+
+	/**
 	 * Efetua uma busca por ID
 	 * 
 	 * "SELECT * FROM WHERE primaryKey(s)"
@@ -406,7 +420,7 @@ public abstract class AbstractDAO {
 	 * 
 	 * @param campoValor
 	 *            HashMap com o nome da primary key e o valor do id
-	 * @return HashMap com os valores vindos do ResultSet
+	 * @return Map com os valores vindos do ResultSet
 	 */
 	private Map<String, Object> __buscarPorId(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
@@ -456,6 +470,8 @@ public abstract class AbstractDAO {
 	 * Retorna uma Lista de Map de cada registro
 	 * 
 	 * @param campoValor
+	 *            Map com os campos e seus respectivos valores (Não insira a
+	 *            Primary Key)
 	 * @return
 	 */
 	protected List<Map<String, Object>> _listarPor(
@@ -533,80 +549,83 @@ public abstract class AbstractDAO {
 
 		try {
 			for (int i = 0; i < chaves.length; i++) {
-				// inserindo primary keys no Map
 				map.put(chaves[i], rs.getObject(chaves[i]));
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Método de exclusão que recebe um ou vários parâmetros PrimaryKey para
-	 * serem inseridos ao filtro. A ordem dos parâmetros é a mesma do array
-	 * informado na subclasse.
+	 * Executa query retornando um Map do ResultSet
 	 * 
-	 * @param id
-	 *            Primary Key
+	 * @param query
+	 *            SQL
+	 * @param primaryKey
+	 *            Array com o nome da(s) primary key(s)
+	 * @param campos
+	 *            Array com o nome dos campos
 	 * @return
 	 */
-	protected int _excluir(Integer... primaryKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(
-				primaryKey.length);
+	protected List<Map<String, Object>> executarQuery(String query,
+			String[] primaryKey, String[] campos) {
 
-		// mapeando id - valor
-		for (int i = 0; i < primaryKey.length; i++) {
-			campoValor.put(this.primaryKey[i], primaryKey[i]);
+		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+
+		try {
+			Statement s = DAOUtil.getInstance().getStatement();
+			ResultSet rs = s.executeQuery(query);
+
+			while (rs.next()) {
+				// preencher map com primary key e campos vindos do resultSet
+				Map<String, Object> map = new HashMap<String, Object>();
+				this.preencherMap(map, rs, primaryKey);
+				this.preencherMap(map, rs, campos);
+				listMap.add(map);
+			}
+
+			rs.close();
+			s.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
-		return this._excluir(campoValor);
+		// lista
+		return listMap;
+	}
+
+	protected List<Map<String, Object>> executarQueryPreparada(String query,
+			Object[] ordem, String[] primaryKey, String[] campos) {
+		/**
+		 * TODO: DESENVOLVER = Executar query Preparada com caracters curingas,
+		 * recebendo um array com a ordem dos valores a serem inseridos e
+		 * retornando um map dos seus registros. Isto será bastante usado para
+		 * relatórios
+		 */
+		return null;
 	}
 
 	/**
-	 * Método parcial de busca que recebe um ou vários parâmetros PrimaryKey e
-	 * retornam um HashMap para ser concluído na subclasse.
+	 * Executa Query livre retornando a quantidade de linhas afetadas
 	 * 
-	 * @param id
-	 *            Primary Key
+	 * @param query
+	 *            SQL
 	 * @return
 	 */
-	protected Map<String, Object> _buscarPorId(Integer... primaryKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(
-				primaryKey.length);
+	protected int executarUpdate(String query) {
+		int linhasAfetadas = 0;
+		try {
+			Statement s = DAOUtil.getInstance().getStatement();
+			linhasAfetadas = s.executeUpdate(query);
+			s.close();
 
-		// mapeando id - valor
-		for (int i = 0; i < primaryKey.length; i++) {
-			campoValor.put(this.primaryKey[i], primaryKey[i]);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
-		return this.__buscarPorId(campoValor);
-	}
-
-	/**
-	 * Retorna o nome dos campos da Tabela
-	 * 
-	 * @return
-	 */
-	public String[] getCampos() {
-		return campos;
-	}
-
-	/**
-	 * Retorna o nome da Tabela
-	 * 
-	 * @return
-	 */
-	public String getNomeDaTabela() {
-		return nomeDaTabela;
-	}
-
-	/**
-	 * Retorna o nome das primary keys
-	 * 
-	 * @return
-	 */
-	public String[] getPrimaryKey() {
-		return primaryKey;
+		return linhasAfetadas;
 	}
 
 }

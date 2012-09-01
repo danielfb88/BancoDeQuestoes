@@ -8,7 +8,9 @@ import app.dao.Rel_AssuntoPerguntaDAO;
 public class AssuntoTeste {
 
 	public static void main(String[] args) {
-		buscarPerguntaPorAssunto(1);
+		// editar();
+		// buscarPerguntaPorAssunto(1);
+		// buscarAssuntoPorPergunta(2);
 	}
 
 	public static void adicionar() {
@@ -22,7 +24,7 @@ public class AssuntoTeste {
 
 	public static void editar() {
 		Rel_AssuntoPerguntaDAO rel_ap = new Rel_AssuntoPerguntaDAO();
-		if (rel_ap.editar(1, 3, 2) > 0)
+		if (rel_ap.editar(2, 1, 2) > 0)
 			System.out.println("Editado");
 		else
 			System.out.println("Não Editado");
@@ -40,4 +42,15 @@ public class AssuntoTeste {
 		}
 	}
 
+	public static void buscarAssuntoPorPergunta(Integer id_pergunta) {
+		Rel_AssuntoPerguntaDAO rel_ap = new Rel_AssuntoPerguntaDAO();
+		List<Map<String, Object>> listMap = rel_ap
+				.listarAssuntosPorPergunta(id_pergunta);
+
+		for (Map<String, Object> map : listMap) {
+			System.out.println("Id pergunta: " + map.get("id_assunto"));
+			System.out.println("Descricao: " + map.get("descricao"));
+			System.out.println("*********");
+		}
+	}
 }

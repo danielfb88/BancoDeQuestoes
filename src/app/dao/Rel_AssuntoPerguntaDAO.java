@@ -137,16 +137,16 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("SELECT * ");
+		builder.append("SELECT a.id_assunto, a.descricao ");
 		builder.append("FROM assunto a ");
 
 		builder.append("JOIN assunto_pergunta ap ");
 		builder.append("ON (a.id_assunto = ap.id_assunto) ");
 
 		builder.append("JOIN pergunta p ");
-		builder.append("ON (ap.id_assunto = p.id_pergunta) ");
+		builder.append("ON (ap.id_pergunta = p.id_pergunta) ");
 
-		builder.append("WHERE id_pergunta = ? ");
+		builder.append("WHERE p.id_pergunta = " + id_pergunta + " ");
 		builder.append(";");
 
 		String[] assuntoPK = this.assuntoDAO.getPrimaryKey();
