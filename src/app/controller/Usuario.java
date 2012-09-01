@@ -45,9 +45,12 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	/**
+	/***
 	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
 	 * nomes das colunas do banco, referente a este objeto
+	 * 
+	 * @param map
+	 * @param carregarRelacionamentos
 	 */
 	public Usuario(Map<String, Object> map, boolean carregarRelacionamentos) {
 		this.carregarObjeto(map, carregarRelacionamentos);
@@ -59,6 +62,8 @@ public class Usuario {
 	 * 
 	 * @param map
 	 *            Map espelhando a tabela correspondente deste objeto
+	 * @param map
+	 * @param carregarRelacionamentos
 	 */
 	private void carregarObjeto(Map<String, Object> map,
 			boolean carregarRelacionamentos) {

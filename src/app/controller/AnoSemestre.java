@@ -41,6 +41,7 @@ public class AnoSemestre {
 	/**
 	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
 	 * nomes das colunas do banco, referente a este objeto
+	 * @param map
 	 */
 	public AnoSemestre(Map<String, Object> map) {
 		this.carregarObjeto(map);

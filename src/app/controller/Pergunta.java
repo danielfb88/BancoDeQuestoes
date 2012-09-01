@@ -56,6 +56,9 @@ public class Pergunta {
 	/**
 	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
 	 * nomes das colunas do banco, referente a este objeto
+	 * 
+	 * @param map
+	 * @param carregarRelacionamentos
 	 */
 	public Pergunta(Map<String, Object> map, boolean carregarRelacionamentos) {
 		this.carregarObjeto(map, carregarRelacionamentos);
@@ -67,6 +70,7 @@ public class Pergunta {
 	 * 
 	 * @param map
 	 *            Map espelhando a tabela correspondente deste objeto
+	 * @param carregarRelacionamentos
 	 */
 	private void carregarObjeto(Map<String, Object> map,
 			boolean carregarRelacionamentos) {
@@ -97,6 +101,7 @@ public class Pergunta {
 	/**
 	 * Carregar
 	 * 
+	 * @param carregarRelacionamentos
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
