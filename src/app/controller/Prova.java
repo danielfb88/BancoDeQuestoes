@@ -1,12 +1,12 @@
 package app.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import app.dao.ProvaDAO;
 import app.dao.Rel_GradePeriodoDAO;
-import app.dao.Rel_GradePeriodo_DisciplinaDAO;
 
 /**
  * Prova
@@ -114,67 +114,172 @@ public class Prova {
 		}
 	}
 
-	// TODO: CONTINUAR...
-	public boolean carregar() {
+	/**
+	 * Carregar
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public boolean carregar(boolean carregarRelacionamentos) {
+		Map<String, Object> map = this.provaDAO.buscarPorId(this.id_prova);
 
+		if (map != null) {
+			this.carregarObjeto(map, carregarRelacionamentos);
+
+			return true;
+		}
 		return false;
 	}
 
-	public boolean editar() {
+	/**
+	 * Editar
+	 * 
+	 * @return
+	 */
+	public boolean editar() throws Exception {
+		// primeiro busca o id_grade_periodo para inserir no DAO
+		Map<String, Object> mapGradePeriodo = this.rel_gp.listarPor(
+				this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
 
-		return false;
+		if (mapGradePeriodo != null) {
+			return this.provaDAO.editar(id_prova,
+					(Integer) mapGradePeriodo.get("id_grade_periodo"),
+					this.anoSemestre.getId_anoSemestre(), descricao, dataProva) > 0;
+		} else {
+			throw new Exception("A relação GradePeriodo id_grade="
+					+ this.grade.getId_grade() + " e id_periodo="
+					+ this.periodo.getId_periodo() + " não existe.");
+		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean excluir() {
-
-		return false;
+		return this.provaDAO.excluir(id_prova) > 0;
 	}
 
-	public List<Prova> listar() {
+	/**
+	 * Listar
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public List<Prova> listar(boolean carregarRelacionamentos) {
+		// primeiro busca o id_grade_periodo para inserir no DAO
+		Map<String, Object> mapGradePeriodo = this.rel_gp.listarPor(
+				this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
 
-		return null;
+		// buscando a lista de Mapa recuperando pelos parametros
+		List<Map<String, Object>> listMap = this.provaDAO.listarPor(
+				(Integer) mapGradePeriodo.get("id_grade_periodo"),
+				anoSemestre.getId_anoSemestre(), descricao, dataProva);
+
+		List<Prova> listProva = new ArrayList<Prova>();
+
+		for (Map<String, Object> map : listMap) {
+			listProva.add(new Prova(map, carregarRelacionamentos));
+		}
+
+		return listProva;
 	}
 
+	/**
+	 * @return the id_prova
+	 */
 	public Integer getId_prova() {
 		return id_prova;
 	}
 
+	/**
+	 * @param id_prova
+	 *            the id_prova to set
+	 */
 	public void setId_prova(Integer id_prova) {
 		this.id_prova = id_prova;
 	}
 
-	public Integer getId_gradePeriodo() {
-		return id_gradePeriodo;
+	/**
+	 * @return the grade
+	 */
+	public Grade getGrade() {
+		return grade;
 	}
 
-	public void setId_gradePeriodo(Integer id_gradePeriodo) {
-		this.id_gradePeriodo = id_gradePeriodo;
+	/**
+	 * @param grade
+	 *            the grade to set
+	 */
+	public void setGrade(Grade grade) {
+		this.grade = grade;
 	}
 
+	/**
+	 * @return the periodo
+	 */
+	public Periodo getPeriodo() {
+		return periodo;
+	}
+
+	/**
+	 * @param periodo
+	 *            the periodo to set
+	 */
+	public void setPeriodo(Periodo periodo) {
+		this.periodo = periodo;
+	}
+
+	/**
+	 * @return the anoSemestre
+	 */
 	public AnoSemestre getAnoSemestre() {
 		return anoSemestre;
 	}
 
+	/**
+	 * @param anoSemestre
+	 *            the anoSemestre to set
+	 */
 	public void setAnoSemestre(AnoSemestre anoSemestre) {
 		this.anoSemestre = anoSemestre;
 	}
 
+	/**
+	 * @return the descricao
+	 */
 	public String getDescricao() {
 		return descricao;
 	}
 
+	/**
+	 * @param descricao
+	 *            the descricao to set
+	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
+	/**
+	 * @return the dataProva
+	 */
 	public Date getDataProva() {
 		return dataProva;
 	}
 
+	/**
+	 * @param dataProva
+	 *            the dataProva to set
+	 */
 	public void setDataProva(Date dataProva) {
 		this.dataProva = dataProva;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -185,13 +290,18 @@ public class Prova {
 				+ ((dataProva == null) ? 0 : dataProva.hashCode());
 		result = prime * result
 				+ ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result
-				+ ((id_gradePeriodo == null) ? 0 : id_gradePeriodo.hashCode());
+		result = prime * result + ((grade == null) ? 0 : grade.hashCode());
 		result = prime * result
 				+ ((id_prova == null) ? 0 : id_prova.hashCode());
+		result = prime * result + ((periodo == null) ? 0 : periodo.hashCode());
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -216,15 +326,20 @@ public class Prova {
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
-		if (id_gradePeriodo == null) {
-			if (other.id_gradePeriodo != null)
+		if (grade == null) {
+			if (other.grade != null)
 				return false;
-		} else if (!id_gradePeriodo.equals(other.id_gradePeriodo))
+		} else if (!grade.equals(other.grade))
 			return false;
 		if (id_prova == null) {
 			if (other.id_prova != null)
 				return false;
 		} else if (!id_prova.equals(other.id_prova))
+			return false;
+		if (periodo == null) {
+			if (other.periodo != null)
+				return false;
+		} else if (!periodo.equals(other.periodo))
 			return false;
 		return true;
 	}
