@@ -119,11 +119,8 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 		builder.append("WHERE a.id_assunto = " + id_assunto + " ");
 		builder.append(";");
 
-		String[] perguntaPK = this.perguntaDAO.getPrimaryKey();
-		String[] perguntaCampos = this.perguntaDAO.getCampos();
-
-		return super.executarQuery(builder.toString(), perguntaPK,
-				perguntaCampos);
+		return super.executarQuery(builder.toString(),
+				this.perguntaDAO.getAtributos());
 	}
 
 	/**
@@ -149,10 +146,7 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 		builder.append("WHERE p.id_pergunta = " + id_pergunta + " ");
 		builder.append(";");
 
-		String[] assuntoPK = this.assuntoDAO.getPrimaryKey();
-		String[] assuntoCampos = this.assuntoDAO.getCampos();
-
-		return super
-				.executarQuery(builder.toString(), assuntoPK, assuntoCampos);
+		return super.executarQuery(builder.toString(),
+				this.assuntoDAO.getAtributos());
 	}
 }

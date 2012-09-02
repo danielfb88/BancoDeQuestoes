@@ -158,6 +158,26 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Retorna os atributos da Tabela. PrimaryKey + Campos
+	 * 
+	 * @return
+	 */
+	public String[] getAtributos() {
+		String[] pk = this.getPrimaryKey();
+		String[] campos = this.getCampos();
+
+		String[] atributos = new String[pk.length + campos.length];
+		for (int i = 0; i < pk.length; i++) {
+			atributos[i] = pk[i];
+		}
+		int indiceCampos = 0;
+		for (int i = pk.length; i < pk.length + campos.length; i++) {
+			atributos[i] = campos[indiceCampos++];
+		}
+		return atributos;
+	}
+
+	/**
 	 * Monta pedaço da query onde é inserido os IDs. Ex:
 	 * 
 	 * UPDATE tabela SET campo1 = 'valor1', campo2 = 'valor2' WHERE id = 5;
@@ -428,8 +448,7 @@ public abstract class AbstractDAO {
 
 		ResultSet resultSet = null;
 		StringBuilder builder = new StringBuilder();
-		Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
-				this.campos.length);
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		try {
 			builder.append("SELECT * FROM ");
@@ -451,11 +470,8 @@ public abstract class AbstractDAO {
 				return null;
 			}
 
-			// inserindo primary keys no hashMap
-			this.preencherMap(campoValorRetorno, resultSet, this.primaryKey);
-
-			// inserindo Campos restates no hashMap
-			this.preencherMap(campoValorRetorno, resultSet, this.campos);
+			// inserindo atributos no hashMap
+			this.preencherMap(map, resultSet, this.getAtributos());
 
 			resultSet.close();
 			preparedStatement.close();
@@ -463,7 +479,7 @@ public abstract class AbstractDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return campoValorRetorno;
+		return map;
 	}
 
 	/**
@@ -481,7 +497,7 @@ public abstract class AbstractDAO {
 
 		ResultSet resultSet = null;
 		StringBuilder builder = new StringBuilder();
-		List<Map<String, Object>> camposValoresRetornados = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
 		List<Object> ordem = new ArrayList<Object>();
 
 		try {
@@ -515,19 +531,16 @@ public abstract class AbstractDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
+			String[] atributos = this.getAtributos();
 			// Iterando os valores retornados no resultSet
 			while (resultSet.next()) {
-				Map<String, Object> campoValorRetorno = new HashMap<String, Object>(
-						this.campos.length);
+				Map<String, Object> map = new HashMap<String, Object>();
 
-				// inserindo primary keys no hashMap
-				this.preencherMap(campoValorRetorno, resultSet, this.primaryKey);
-
-				// inserindo Campos restates no hashMap
-				this.preencherMap(campoValorRetorno, resultSet, this.campos);
+				// inserindo atributos no Map
+				this.preencherMap(map, resultSet, atributos);
 
 				// inserindo o hashMap no arrayList
-				camposValoresRetornados.add(campoValorRetorno);
+				listMap.add(map);
 			}
 
 			resultSet.close();
@@ -537,7 +550,7 @@ public abstract class AbstractDAO {
 			e.printStackTrace();
 		}
 
-		return camposValoresRetornados;
+		return listMap;
 	}
 
 	/**
@@ -562,14 +575,13 @@ public abstract class AbstractDAO {
 	 * 
 	 * @param query
 	 *            SQL
-	 * @param primaryKey
-	 *            Array com o nome da(s) primary key(s)
-	 * @param campos
-	 *            Array com o nome dos campos
+	 * @param atributos
+	 *            Atributos que serão procurados no ResultSet para inserir no
+	 *            Map
 	 * @return
 	 */
 	protected List<Map<String, Object>> executarQuery(String query,
-			String[] primaryKey, String[] campos) {
+			String[] atributos) {
 
 		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
 
@@ -580,8 +592,8 @@ public abstract class AbstractDAO {
 			while (rs.next()) {
 				// preencher map com primary key e campos vindos do resultSet
 				Map<String, Object> map = new HashMap<String, Object>();
-				this.preencherMap(map, rs, primaryKey);
-				this.preencherMap(map, rs, campos);
+				this.preencherMap(map, rs, atributos);
+
 				listMap.add(map);
 			}
 
@@ -594,6 +606,18 @@ public abstract class AbstractDAO {
 
 		// lista
 		return listMap;
+	}
+
+	/**
+	 * Executa query retornando um Map do ResultSet utilizando os atributos
+	 * desta DAO filha para o mapeamento.
+	 * 
+	 * @param query
+	 *            SQL
+	 * @return
+	 */
+	protected List<Map<String, Object>> executarQuery(String query) {
+		return this.executarQuery(query, this.getAtributos());
 	}
 
 	protected List<Map<String, Object>> executarQueryPreparada(String query,

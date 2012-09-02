@@ -3,14 +3,17 @@ package app.testes;
 import java.util.List;
 import java.util.Map;
 
+import app.dao.AssuntoDAO;
 import app.dao.Rel_AssuntoPerguntaDAO;
+import app.dao.UsuarioDAO;
 
 public class AssuntoTeste {
 
 	public static void main(String[] args) {
+
 		// editar();
 		// buscarPerguntaPorAssunto(1);
-		// buscarAssuntoPorPergunta(2);
+		buscarAssuntoPorPergunta(2);
 	}
 
 	public static void adicionar() {

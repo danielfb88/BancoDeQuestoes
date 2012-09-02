@@ -82,7 +82,7 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean adicionar() {
-		int respostaCorreta = (correta == true) ? 1 : 0;
+		int respostaCorreta = (correta) ? 1 : 0;
 
 		return this.respostaDAO.adicionar(pergunta.getId_pergunta(), descricao,
 				respostaCorreta, observacao) > 0;
@@ -112,7 +112,7 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean editar() {
-		int respostaCorreta = (correta == true) ? 1 : 0;
+		int respostaCorreta = (correta) ? 1 : 0;
 
 		return this.respostaDAO.editar(id_resposta, pergunta.getId_pergunta(),
 				descricao, respostaCorreta, observacao) > 0;
@@ -134,7 +134,7 @@ public class Resposta {
 	 * @return
 	 */
 	public List<Resposta> listar(boolean carregarRelacionamentos) {
-		int respostaCorreta = (correta == true ? 1 : 0);
+		int respostaCorreta = (correta) ? 1 : 0;
 		// buscando a lista de Mapa recuperando pelos parametros
 		List<Map<String, Object>> listMap = this.respostaDAO.listarPor(
 				pergunta.getId_pergunta(), descricao, respostaCorreta,
