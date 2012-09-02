@@ -309,20 +309,20 @@ public abstract class AbstractDAO {
 					.iterator();
 
 			while (it.hasNext()) {
-				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
+				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it
 						.next();
 
 				// verificando se é igual a alguma PK
 				// ignorando a(s) primary key(s)
-				if (!this.is_campoIgualPrimaryKey((String) me.getKey())) {
+				if (!this.is_campoIgualPrimaryKey((String) map.getKey())) {
 					// inserindo a virgula depois do primeiro elemento
 					if (i++ != 0)
 						builder.append(", ");
 
-					builder.append((String) me.getKey() + " = ?");
+					builder.append((String) map.getKey() + " = ?");
 
 					// inserindo os valores em um array
-					ordem.add(me.getValue());
+					ordem.add(map.getValue());
 				}
 			}
 
@@ -531,13 +531,12 @@ public abstract class AbstractDAO {
 
 			resultSet = preparedStatement.executeQuery();
 
-			String[] atributos = this.getAtributos();
 			// Iterando os valores retornados no resultSet
 			while (resultSet.next()) {
 				Map<String, Object> map = new HashMap<String, Object>();
 
 				// inserindo atributos no Map
-				this.preencherMap(map, resultSet, atributos);
+				this.preencherMap(map, resultSet, this.getAtributos());
 
 				// inserindo o hashMap no arrayList
 				listMap.add(map);

@@ -1,41 +1,120 @@
 package app.controller;
-dadasd
+
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
+
+import app.dao.ProvaDAO;
+import app.dao.Rel_GradePeriodoDAO;
+import app.dao.Rel_GradePeriodo_DisciplinaDAO;
 
 /**
  * Prova
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 19-08-2012
+ * @since 02-09-2012
  * 
  */
 public class Prova {
 	private Integer id_prova;
-	private Integer id_gradePeriodo;
-	private AnoSemestre anoSemestre;
+	private Grade grade = new Grade();
+	private Periodo periodo = new Periodo();
+	private AnoSemestre anoSemestre = new AnoSemestre();
 	private String descricao;
 	private Date dataProva;
+
+	private ProvaDAO provaDAO = new ProvaDAO();
+	private Rel_GradePeriodoDAO rel_gp = new Rel_GradePeriodoDAO();
 
 	public Prova() {
 
 	}
 
-	public Prova(Integer id_prova, Integer id_gradePeriodo,
+	/**
+	 * Prova
+	 * 
+	 * @param id_prova
+	 * @param grade
+	 * @param periodo
+	 * @param anoSemestre
+	 * @param descricao
+	 * @param dataProva
+	 */
+	public Prova(Integer id_prova, Grade grade, Periodo periodo,
 			AnoSemestre anoSemestre, String descricao, Date dataProva) {
 		super();
 		this.id_prova = id_prova;
-		this.id_gradePeriodo = id_gradePeriodo;
+		this.grade = grade;
+		this.periodo = periodo;
 		this.anoSemestre = anoSemestre;
 		this.descricao = descricao;
 		this.dataProva = dataProva;
 	}
 
-	public boolean adicionar() {
-
-		return false;
+	/**
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
+	 * 
+	 * @param map
+	 * @param carregarRelacionamentos
+	 */
+	public Prova(Map<String, Object> map, boolean carregarRelacionamentos) {
+		this.carregarObjeto(map, carregarRelacionamentos);
 	}
 
+	/**
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
+	 * 
+	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
+	 * @param carregarRelacionamentos
+	 */
+	private void carregarObjeto(Map<String, Object> map,
+			boolean carregarRelacionamentos) {
+
+		// buscando ID grade e ID periodo
+		Map<String, Object> mapGradePeriodo = this.rel_gp
+				.buscarPorId((Integer) map.get("id_grade_periodo"));
+
+		this.id_prova = (Integer) map.get("id_prova");
+		this.grade.setId_grade((Integer) mapGradePeriodo.get("id_grade"));
+		this.periodo.setId_periodo((Integer) map.get("id_periodo"));
+		this.anoSemestre.setId_anoSemestre((Integer) map.get("id_anosemestre"));
+		this.descricao = (String) map.get("descricao");
+		/* TODO: Tratar esta data. É provavel que dê erro aqui */
+		this.dataProva = (Date) map.get("data_prova");
+
+		if (carregarRelacionamentos) {
+			this.grade.carregar(carregarRelacionamentos);
+			this.periodo.carregar();
+			this.anoSemestre.carregar();
+		}
+	}
+
+	/**
+	 * Adicionar
+	 * 
+	 * @return
+	 */
+	public boolean adicionar() throws Exception {
+		// primeiro busca o id_grade_periodo para inserir no DAO
+		Map<String, Object> mapGradePeriodo = this.rel_gp.listarPor(
+				this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
+
+		if (mapGradePeriodo != null) {
+			return this.provaDAO.adicionar(
+					(Integer) mapGradePeriodo.get("id_grade_periodo"),
+					this.anoSemestre.getId_anoSemestre(), descricao,
+					this.dataProva) > 0;
+		} else {
+			throw new Exception("A relação GradePeriodo id_grade="
+					+ this.grade.getId_grade() + " e id_periodo="
+					+ this.periodo.getId_periodo() + " não existe.");
+		}
+	}
+
+	// TODO: CONTINUAR...
 	public boolean carregar() {
 
 		return false;
