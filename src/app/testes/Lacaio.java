@@ -1,12 +1,17 @@
 package app.testes;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import app.controller.AnoSemestre;
 import app.controller.Assunto;
 import app.controller.Curso;
+import app.controller.Grupo;
+import app.controller.Periodo;
 import app.dao.CursoDAO;
+import app.util.conexao.DAOUtil;
 
 public class Lacaio {
 
@@ -15,18 +20,92 @@ public class Lacaio {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new Date());
-		System.exit(0);
-		
-		Assunto a = new Assunto();
-		a.setId_assunto(6);
-		a.carregar();
+		adicionarPeriodo();
+	}
 
-		System.out.println("****");
-		System.out.println(a.getId_assunto());
-		System.out.println(a.getDescricao());
-		System.out.println("****");
+	private static void adicionarPeriodo() {
+		List<Periodo> listPeriodo = new ArrayList<Periodo>();
 
+		listPeriodo.add(new Periodo(null, "Primeiro", 1));
+		listPeriodo.add(new Periodo(null, "Segunda", 2));
+		listPeriodo.add(new Periodo(null, "Terceiro", 3));
+		listPeriodo.add(new Periodo(null, "Quarto", 4));
+		listPeriodo.add(new Periodo(null, "Quinto", 5));
+		listPeriodo.add(new Periodo(null, "Sexto", 6));
+		listPeriodo.add(new Periodo(null, "Sétimo", 7));
+		listPeriodo.add(new Periodo(null, "Oitavo", 8));
+
+		DAOUtil.getInstance().iniciarTransacao();
+		for (Periodo periodo : listPeriodo) {
+			if (periodo.adicionar())
+				System.out.println(periodo.getDescricao() + ", "
+						+ periodo.getNumero() + " Adicionado com sucesso");
+			else
+				System.out.println(periodo.getDescricao() + ", "
+						+ periodo.getNumero() + " Não foi possivel adicionar");
+		}
+		DAOUtil.getInstance().commit();
+		DAOUtil.getInstance().finalizarTransacao();
+	}
+
+	private static void adicionarAnoSemestre() {
+		List<AnoSemestre> listAS = new ArrayList<AnoSemestre>();
+
+		listAS.add(new AnoSemestre(null, 2010, 1));
+		listAS.add(new AnoSemestre(null, 2010, 2));
+		listAS.add(new AnoSemestre(null, 2011, 1));
+		listAS.add(new AnoSemestre(null, 2011, 2));
+		listAS.add(new AnoSemestre(null, 2012, 1));
+		listAS.add(new AnoSemestre(null, 2012, 2));
+
+		for (AnoSemestre as : listAS) {
+			if (as.adicionar())
+				System.out.println(as.getAno() + ", " + as.getSemestre()
+						+ " Adicionado com sucesso");
+			else
+				System.out.println(as.getAno() + ", " + as.getSemestre()
+						+ " Não foi possivel adicionar");
+		}
+	}
+
+	private static void adicionarGrupo() {
+		List<Grupo> listGrupo = new ArrayList<Grupo>();
+
+		listGrupo.add(new Grupo(null, "Admin", 'A'));
+		listGrupo.add(new Grupo(null, "Coord", 'C'));
+
+		for (Grupo grupo : listGrupo) {
+			if (grupo.adicionar())
+				System.out.println(grupo.getDescricao()
+						+ "Adicionado com sucesso");
+			else
+				System.out.println(grupo.getDescricao()
+						+ "Não foi possivel adicionar");
+		}
+	}
+
+	private static void adicionarCursos() {
+		List<Curso> listCurso = new ArrayList<Curso>();
+
+		listCurso.add(new Curso(null, "Sistemas de Informação", "SI", "BAC"));
+		listCurso.add(new Curso(null, "Psicologia", "PS", "BAC"));
+		listCurso.add(new Curso(null, "Ciência da Computação", "CC", "BAC"));
+		listCurso.add(new Curso(null, "Engenharia", "ENG", "BAC"));
+		listCurso.add(new Curso(null, "Geologia", "GEO", "BAC"));
+		listCurso.add(new Curso(null, "Física", "FIS", "BAC"));
+		listCurso.add(new Curso(null, "Desenvolvimento de Software", "DS",
+				"TEC"));
+		listCurso.add(new Curso(null, "Redes", "RD", "TEC"));
+
+		for (Curso curso : listCurso) {
+			if (curso.adicionar())
+				System.out.println("Curso: " + curso.getDescricao()
+						+ "Adicionado com sucesso");
+			else
+				System.out.println("Curso: " + curso.getDescricao()
+						+ "Não foi pssível adicionar o curso "
+						+ curso.getDescricao());
+		}
 	}
 
 	private static void adicionar() {

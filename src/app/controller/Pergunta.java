@@ -163,7 +163,7 @@ public class Pergunta {
 	 * @return
 	 */
 	public List<Pergunta> listarDisciplinas() {
-		// TODO: Pergunta - Desenvolver
+		// TODO: CRIAR QUERY
 		return null;
 	}
 
@@ -189,7 +189,7 @@ public class Pergunta {
 	 * @return
 	 */
 	public List<Prova> listarProvas() {
-		// TODO: Pergunta - Desenvolver
+		// TODO: CRIAR QUERY
 		return null;
 	}
 

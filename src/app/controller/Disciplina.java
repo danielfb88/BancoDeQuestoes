@@ -1,31 +1,42 @@
 package app.controller;
-dsadsa
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import app.dao.DisciplinaDAO;
+import app.dao.Rel_DisciplinaAssuntoDAO;
 
 /**
  * Disciplina
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 19-08-2012
+ * @since 03-09-2012
  * 
  */
 public class Disciplina {
 	private Integer id_disciplina;
-	private Curso curso;
+	private Curso curso = new Curso();
 	private String descricao;
 	private String sigla;
 
 	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
+	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssunto = new Rel_DisciplinaAssuntoDAO();
 
 	public Disciplina() {
-		this.curso = new Curso();
+
 	}
 
-	public Disciplina(Integer id_disciplina, Curso curso, String descricao, String sigla) {
+	/**
+	 * Disciplina
+	 * 
+	 * @param id_disciplina
+	 * @param curso
+	 * @param descricao
+	 * @param sigla
+	 */
+	public Disciplina(Integer id_disciplina, Curso curso, String descricao,
+			String sigla) {
 		super();
 		this.id_disciplina = id_disciplina;
 		this.curso = curso;
@@ -33,134 +44,201 @@ public class Disciplina {
 		this.sigla = sigla;
 	}
 
-	public boolean adicionar() {
-		return this.disciplinaDAO.adicionar(curso.getId_curso(), descricao, sigla) > 0;
+	/***
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
+	 * 
+	 * @param map
+	 * @param carregarRelacionamentos
+	 */
+	public Disciplina(Map<String, Object> map, boolean carregarRelacionamentos) {
+		this.carregarObjeto(map, carregarRelacionamentos);
 	}
 
 	/**
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
+	 * 
+	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
+	 * @param map
+	 * @param carregarRelacionamentos
+	 */
+	private void carregarObjeto(Map<String, Object> map,
+			boolean carregarRelacionamentos) {
+
+		this.id_disciplina = (Integer) map.get("id_disciplina");
+		this.curso.setId_curso((Integer) map.get("id_curso"));
+		this.descricao = (String) map.get("descricao");
+		this.sigla = (String) map.get("sigla");
+
+		if (carregarRelacionamentos)
+			this.curso.carregar();
+	}
+
+	/**
+	 * Adicionar
+	 * 
+	 * @return
+	 */
+	public boolean adicionar() {
+		return this.disciplinaDAO.adicionar(curso.getId_curso(), descricao,
+				sigla) > 0;
+	}
+
+	/**
+	 * Carregar
 	 * 
 	 * @param carregarRelacionamentos
-	 *            Define se os objetos que fazem relação com este devem ser
-	 *            carregados
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> mapDisciplina = this.disciplinaDAO.buscarPorId(this.id_disciplina);
+		Map<String, Object> map = this.disciplinaDAO
+				.buscarPorId(this.id_disciplina);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.disciplinaDAO.getPrimaryKey();
-		String[] campos = this.disciplinaDAO.getCampos();
-
-		if (mapDisciplina != null) {
-			this.id_disciplina = (Integer) mapDisciplina.get(primaryKey[0]);
-			this.curso.setId_curso((Integer) mapDisciplina.get(campos[0]));
-			this.descricao = (String) mapDisciplina.get(campos[1]);
-			this.sigla = (String) mapDisciplina.get(campos[2]);
-
-			// carregando relacionamento
-			if (carregarRelacionamentos)
-				this.curso.carregar();
+		if (map != null) {
+			this.carregarObjeto(map, carregarRelacionamentos);
 
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Editar
+	 * 
+	 * @return
+	 */
 	public boolean editar() {
-		return this.disciplinaDAO.editar(id_disciplina, curso.getId_curso(), descricao, sigla) > 0;
+		return this.disciplinaDAO.editar(id_disciplina, curso.getId_curso(),
+				descricao, sigla) > 0;
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @return
+	 */
 	public boolean excluir() {
 		return this.disciplinaDAO.excluir(id_disciplina) > 0;
 	}
 
 	/**
+	 * Listar
 	 * 
 	 * @param carregarRelacionamentos
-	 *            Define se os objetos que fazem relação com este devem ser
-	 *            carregados
 	 * @return
 	 */
 	public List<Disciplina> listar(boolean carregarRelacionamentos) {
 		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMapDisciplinas = this.disciplinaDAO.listarPor(curso.getId_curso(), descricao, sigla);
+		List<Map<String, Object>> listMap = this.disciplinaDAO.listarPor(
+				curso.getId_curso(), descricao, sigla);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.disciplinaDAO.getPrimaryKey();
-		String[] campos = this.disciplinaDAO.getCampos();
+		List<Disciplina> listDisciplina = new ArrayList<Disciplina>();
 
-		// lista de disciplinas
-		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
-
-		// Iterando
-		for (Map<String, Object> mapDisciplina : listMapDisciplinas) {
-			Disciplina disciplina = new Disciplina();
-			
-			// preenchendo o objeto disciplina
-			disciplina.setId_disciplina((Integer) mapDisciplina.get(primaryKey[0]));
-			disciplina.getCurso().setId_curso(
-					(Integer) mapDisciplina.get(campos[0]));
-			disciplina.setDescricao((String) mapDisciplina.get(campos[1]));
-			disciplina.setSigla((String) mapDisciplina.get(campos[2]));
-
-			// carregando relacionamento
-			if (carregarRelacionamentos)
-				disciplina.getCurso().carregar();
-
-			disciplinas.add(disciplina);
+		for (Map<String, Object> map : listMap) {
+			listDisciplina.add(new Disciplina(map, carregarRelacionamentos));
 		}
-		// retornando a lista
-		return disciplinas;
+
+		return listDisciplina;
 	}
 
+	/**
+	 * Inserir Assunto
+	 * 
+	 * @param assunto
+	 * @return
+	 */
 	public boolean inserirAssunto(Assunto assunto) {
-
-		return false;
+		return this.rel_disciplinaAssunto.adicionar(id_disciplina,
+				assunto.getId_assunto()) > 0;
 	}
 
+	/**
+	 * Remover Assunto
+	 * 
+	 * @param assunto
+	 * @return
+	 */
 	public boolean removerAssunto(Assunto assunto) {
+		// verificando se a relação existe
+		Map<String, Object> map = this.rel_disciplinaAssunto.listarPor(
+				id_disciplina, assunto.getId_assunto()).get(0);
+
+		if (map != null) {
+			int id = (Integer) map.get("id_disciplina_assunto");
+			return this.rel_disciplinaAssunto.excluir(id) > 0;
+		}
 
 		return false;
 	}
 
 	public List<Assunto> listarAssuntos() {
-
+		// TODO: CRIAR QUERY
 		return null;
 	}
 
 	public List<Pergunta> listarPerguntas() {
-
+		// TODO: CRIAR QUERY
 		return null;
 	}
 
+	/**
+	 * @return the id_disciplina
+	 */
 	public Integer getId_disciplina() {
 		return id_disciplina;
 	}
 
+	/**
+	 * @param id_disciplina
+	 *            the id_disciplina to set
+	 */
 	public void setId_disciplina(Integer id_disciplina) {
 		this.id_disciplina = id_disciplina;
 	}
 
+	/**
+	 * @return the curso
+	 */
 	public Curso getCurso() {
 		return curso;
 	}
 
+	/**
+	 * @param curso
+	 *            the curso to set
+	 */
 	public void setCurso(Curso curso) {
 		this.curso = curso;
 	}
 
+	/**
+	 * @return the descricao
+	 */
 	public String getDescricao() {
 		return descricao;
 	}
 
+	/**
+	 * @param descricao
+	 *            the descricao to set
+	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
+	/**
+	 * @return the sigla
+	 */
 	public String getSigla() {
 		return sigla;
 	}
 
+	/**
+	 * @param sigla
+	 *            the sigla to set
+	 */
 	public void setSigla(String sigla) {
 		this.sigla = sigla;
 	}
