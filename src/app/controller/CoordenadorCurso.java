@@ -1,32 +1,41 @@
 package app.controller;
 
+import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
 import app.dao.CoordenadorCursoDAO;
-// TODO: ACredito que esta classe não seja necessária. Apenas a DAO.
+
 /**
  * CoordenadorCurso
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 19-08-2012
+ * @since 02-09-2012
  * 
  */
 public class CoordenadorCurso {
 	private Integer id_coordenadorCurso;
-	private Usuario coordenador;
-	private Curso curso;
+	private Usuario coordenador = new Usuario();
+	private Curso curso = new Curso();
 	private Date dataEntrada;
 	private Date dataSaida;
-	
+
 	private CoordenadorCursoDAO coordCursoDAO = new CoordenadorCursoDAO();
 
 	public CoordenadorCurso() {
-		this.coordenador = new Usuario();
-		this.curso = new Curso();
+
 	}
 
+	/**
+	 * CoordenadorCurso
+	 * 
+	 * @param id_coordenadorCurso
+	 * @param coordenador
+	 * @param curso
+	 * @param dataEntrada
+	 * @param dataSaida
+	 */
 	public CoordenadorCurso(Integer id_coordenadorCurso, Usuario coordenador,
 			Curso curso, Date dataEntrada, Date dataSaida) {
 		super();
@@ -37,82 +46,185 @@ public class CoordenadorCurso {
 		this.dataSaida = dataSaida;
 	}
 
-	public Integer getId_coordenadorCurso() {
-		return id_coordenadorCurso;
+	/***
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
+	 * 
+	 * @param map
+	 * @param carregarRelacionamentos
+	 */
+	public CoordenadorCurso(Map<String, Object> map,
+			boolean carregarRelacionamentos) {
+		this.carregarObjeto(map, carregarRelacionamentos);
 	}
 
-	public void setId_coordenadorCurso(Integer id_coordenadorCurso) {
-		this.id_coordenadorCurso = id_coordenadorCurso;
+	/**
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
+	 * 
+	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
+	 * @param map
+	 * @param carregarRelacionamentos
+	 */
+	private void carregarObjeto(Map<String, Object> map,
+			boolean carregarRelacionamentos) {
+
+		this.id_coordenadorCurso = (Integer) map.get("id_coordenador_curso");
+		this.coordenador.setId_usuario((Integer) map.get("id_usuario"));
+		this.curso.setId_curso((Integer) map.get("id_curso"));
+		this.dataEntrada = (Date) map.get("data_entrada");
+		this.dataSaida = (Date) map.get("data_saida");
+
+		if (carregarRelacionamentos) {
+			this.curso.carregar();
+			this.coordenador.carregar(carregarRelacionamentos);
+		}
 	}
 
-	public Usuario getCoordenador() {
-		return coordenador;
-	}
-
-	public void setCoordenador(Usuario coordenador) {
-		this.coordenador = coordenador;
-	}
-
-	public Curso getCurso() {
-		return curso;
-	}
-
-	public void setCurso(Curso curso) {
-		this.curso = curso;
-	}
-
-	public Date getDataEntrada() {
-		return dataEntrada;
-	}
-
-	public void setDataEntrada(Date dataEntrada) {
-		this.dataEntrada = dataEntrada;
-	}
-
-	public Date getDataSaida() {
-		return dataSaida;
-	}
-
-	public void setDataSaida(Date dataSaida) {
-		this.dataSaida = dataSaida;
-	}
-
+	/**
+	 * Adicionar
+	 * 
+	 * @return
+	 */
 	public boolean adicionar() {
 		return this.coordCursoDAO.adicionar(coordenador.getId_usuario(),
 				curso.getId_curso(), dataEntrada, dataSaida) > 0;
 	}
 
-	public boolean carregar() {
-		Map<String, Object> mapCC = this.coordenadorCursoDAO.buscarPorId(this.id_coordenadorCurso);
+	/**
+	 * Carregar
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public boolean carregar(boolean carregarRelacionamentos) {
+		Map<String, Object> map = this.coordCursoDAO
+				.buscarPorId(this.id_coordenadorCurso);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.coordenadorCursoDAO.getPrimaryKey();
-		String[] campos = this.coordenadorCursoDAO.getCampos();
-
-		if (mapCC != null) {
-			this.id_coordenadorCurso = (Integer) mapCC.get(primaryKey[0]);
-			this.coordenador = (String) mapCC.get(campos[0]);
-			this.sigla = (String) mapCC.get(campos[1]);
-			this.tipo_graduacao = (String) mapCC.get(campos[2]);
+		if (map != null) {
+			this.carregarObjeto(map, carregarRelacionamentos);
 
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Editar
+	 * 
+	 * @return
+	 */
 	public boolean editar() {
-
-		return false;
+		return this.coordCursoDAO.editar(id_coordenadorCurso,
+				coordenador.getId_usuario(), curso.getId_curso(), dataEntrada,
+				dataSaida) > 0;
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @return
+	 */
 	public boolean excluir() {
-
-		return false;
+		return this.coordCursoDAO.excluir(id_coordenadorCurso) > 0;
 	}
 
-	public List<CoordenadorCurso> listar() {
+	/**
+	 * Listar
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public List<CoordenadorCurso> listar(boolean carregarRelacionamentos) {
+		// buscando a lista de Mapa recuperando pelos parametros
+		List<Map<String, Object>> listMap = this.coordCursoDAO.listarPor(
+				coordenador.getId_usuario(), curso.getId_curso(), dataEntrada,
+				dataSaida);
 
-		return null;
+		List<CoordenadorCurso> listCoordenadorCurso = new ArrayList<CoordenadorCurso>();
+
+		for (Map<String, Object> map : listMap) {
+			listCoordenadorCurso.add(new CoordenadorCurso(map,
+					carregarRelacionamentos));
+		}
+
+		return listCoordenadorCurso;
+	}
+
+	/**
+	 * @return the id_coordenadorCurso
+	 */
+	public Integer getId_coordenadorCurso() {
+		return id_coordenadorCurso;
+	}
+
+	/**
+	 * @param id_coordenadorCurso
+	 *            the id_coordenadorCurso to set
+	 */
+	public void setId_coordenadorCurso(Integer id_coordenadorCurso) {
+		this.id_coordenadorCurso = id_coordenadorCurso;
+	}
+
+	/**
+	 * @return the coordenador
+	 */
+	public Usuario getCoordenador() {
+		return coordenador;
+	}
+
+	/**
+	 * @param coordenador
+	 *            the coordenador to set
+	 */
+	public void setCoordenador(Usuario coordenador) {
+		this.coordenador = coordenador;
+	}
+
+	/**
+	 * @return the curso
+	 */
+	public Curso getCurso() {
+		return curso;
+	}
+
+	/**
+	 * @param curso
+	 *            the curso to set
+	 */
+	public void setCurso(Curso curso) {
+		this.curso = curso;
+	}
+
+	/**
+	 * @return the dataEntrada
+	 */
+	public Date getDataEntrada() {
+		return dataEntrada;
+	}
+
+	/**
+	 * @param dataEntrada
+	 *            the dataEntrada to set
+	 */
+	public void setDataEntrada(Date dataEntrada) {
+		this.dataEntrada = dataEntrada;
+	}
+
+	/**
+	 * @return the dataSaida
+	 */
+	public Date getDataSaida() {
+		return dataSaida;
+	}
+
+	/**
+	 * @param dataSaida
+	 *            the dataSaida to set
+	 */
+	public void setDataSaida(Date dataSaida) {
+		this.dataSaida = dataSaida;
 	}
 
 	@Override

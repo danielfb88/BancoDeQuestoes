@@ -15,6 +15,9 @@ public class Lacaio {
 	}
 
 	public static void main(String[] args) {
+		System.out.println(new Date());
+		System.exit(0);
+		
 		Assunto a = new Assunto();
 		a.setId_assunto(6);
 		a.carregar();

@@ -82,7 +82,6 @@ public class Prova {
 		this.periodo.setId_periodo((Integer) map.get("id_periodo"));
 		this.anoSemestre.setId_anoSemestre((Integer) map.get("id_anosemestre"));
 		this.descricao = (String) map.get("descricao");
-		/* TODO: Tratar esta data. É provavel que dê erro aqui */
 		this.dataProva = (Date) map.get("data_prova");
 
 		if (carregarRelacionamentos) {

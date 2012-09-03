@@ -1,5 +1,5 @@
 package app.controller;
-dsad
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import app.dao.CursoDAO;
  * Curso
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 19-08-2012
+ * @since 02-09-2012
  * 
  */
 public class Curso {
@@ -22,15 +22,13 @@ public class Curso {
 
 	private CursoDAO cursoDAO = new CursoDAO();
 
-	/**
-	 * Curso
-	 */
 	public Curso() {
 
 	}
 
 	/**
 	 * Curso
+	 * 
 	 * @param id_curso
 	 * @param descricao
 	 * @param sigla
@@ -45,160 +43,277 @@ public class Curso {
 		this.tipo_graduacao = tipo_graduacao;
 	}
 
-	public Integer getId_curso() {
-		return id_curso;
+	/**
+	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
+	 * nomes das colunas do banco, referente a este objeto
+	 * 
+	 * @param map
+	 */
+	public Curso(Map<String, Object> map) {
+		this.carregarObjeto(map);
 	}
 
-	public void setId_curso(Integer id_curso) {
-		this.id_curso = id_curso;
+	/**
+	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
+	 * iguais ao nome dos campos da tabela.
+	 * 
+	 * @param map
+	 *            Map espelhando a tabela correspondente deste objeto
+	 */
+	private void carregarObjeto(Map<String, Object> map) {
+
+		this.id_curso = (Integer) map.get("id_curso");
+		this.descricao = (String) map.get("descricao");
+		this.sigla = (String) map.get("sigla");
+		this.tipo_graduacao = (String) map.get("tipo_graduacao");
 	}
 
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public String getSigla() {
-		return sigla;
-	}
-
-	public void setSigla(String sigla) {
-		this.sigla = sigla;
-	}
-
-	public String getTipo_graduacao() {
-		return tipo_graduacao;
-	}
-
-	public void setTipo_graduacao(String tipo_graduacao) {
-		this.tipo_graduacao = tipo_graduacao;
-	}
-
+	/**
+	 * Adicionar
+	 * 
+	 * @return
+	 */
 	public boolean adicionar() {
 		return this.cursoDAO.adicionar(descricao, sigla, tipo_graduacao) > 0;
 	}
 
+	/**
+	 * Carregar
+	 * 
+	 * @return
+	 */
 	public boolean carregar() {
-		Map<String, Object> mapCurso = this.cursoDAO.buscarPorId(this.id_curso);
+		Map<String, Object> map = this.cursoDAO.buscarPorId(this.id_curso);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.cursoDAO.getPrimaryKey();
-		String[] campos = this.cursoDAO.getCampos();
-
-		if (mapCurso != null) {
-			this.id_curso = (Integer) mapCurso.get(primaryKey[0]);
-			this.descricao = (String) mapCurso.get(campos[0]);
-			this.sigla = (String) mapCurso.get(campos[1]);
-			this.tipo_graduacao = (String) mapCurso.get(campos[2]);
+		if (map != null) {
+			this.carregarObjeto(map);
 
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Editar
+	 * 
+	 * @return
+	 */
 	public boolean editar() {
 		return this.cursoDAO.editar(id_curso, descricao, sigla, tipo_graduacao) > 0;
 	}
 
+	/**
+	 * Excluir
+	 * 
+	 * @return
+	 */
 	public boolean excluir() {
 		return this.cursoDAO.excluir(id_curso) > 0;
-
 	}
 
+	/**
+	 * Listar
+	 * 
+	 * @return
+	 */
 	public List<Curso> listar() {
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMapCursos = this.cursoDAO.listarPor(
-				descricao, sigla, tipo_graduacao);
+		// buscando a lista de Mapas recuperados pelos parametros
+		List<Map<String, Object>> listMap = this.cursoDAO.listarPor(descricao,
+				sigla, tipo_graduacao);
 
-		// Pegando o nome da primarykey e dos campos da tabela
-		String[] primaryKey = this.cursoDAO.getPrimaryKey();
-		String[] campos = this.cursoDAO.getCampos();
+		List<Curso> listCurso = new ArrayList<Curso>();
 
-		// lista de cursos
-		List<Curso> cursos = new ArrayList<Curso>();
-
-		// Iterando
-		for (Map<String, Object> mapCurso : listMapCursos) {
-			// preenchendo o objeto curso
-			Curso curso = new Curso();
-			curso.setId_curso((Integer) mapCurso.get(primaryKey[0]));
-			curso.setDescricao((String) mapCurso.get(campos[0]));
-			curso.setSigla((String) mapCurso.get(campos[1]));
-			curso.setTipo_graduacao((String) mapCurso.get(campos[2]));
-			// inserindo à lista
-			cursos.add(curso);
+		for (Map<String, Object> map : listMap) {
+			listCurso.add(new Curso(map));
 		}
-		// retornando a lista
-		return cursos;
+
+		return listCurso;
 	}
 
+	/**
+	 * 
+	 * @param usuario
+	 * @return
+	 */
 	public boolean definirCoordenadorAtual(Usuario usuario) {
-
+		// TODO: DESENVOLVER
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean excluirCoordenadorAtual() {
-
+		// TODO: DESENVOLVER
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Usuario buscarCoordenadorAtual() {
-
+		// TODO: DESENVOLVER
 		return null;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Usuario> listarTodosOsCoordenadores() {
-
+		// TODO: DESENVOLVER
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param dataInicio
+	 * @param dataFim
+	 * @return
+	 */
 	public List<Usuario> listarCoordenadoresEntre(Date dataInicio, Date dataFim) {
-
+		// TODO: DESENVOLVER
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param disciplina
+	 * @return
+	 */
 	public boolean inserirDisciplina(Disciplina disciplina) {
-
+		// TODO: DESENVOLVER
 		return false;
 	}
 
+	/**
+	 * 
+	 * @param disciplina
+	 * @return
+	 */
 	public boolean removerDisciplina(Disciplina disciplina) {
-
+		// TODO: DESENVOLVER
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Disciplina> listarDisciplinas() {
-
+		// TODO: DESENVOLVER
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param grade
+	 * @return
+	 */
 	public boolean definirGradeAtual(Grade grade) {
-
+		// TODO: DESENVOLVER
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean excluirGradeAtual() {
-
+		// TODO: DESENVOLVER
 		return false;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public Grade buscarGradeAtual() {
-
+		// TODO: DESENVOLVER
 		return null;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Grade> listarTodasAsGrades() {
-
+		// TODO: DESENVOLVER
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param anoSemestreInicio
+	 * @param anoSemestreFim
+	 * @return
+	 */
 	public List<Grade> listarGradesEntre(AnoSemestre anoSemestreInicio,
 			AnoSemestre anoSemestreFim) {
-
+		// TODO: DESENVOLVER
 		return null;
+	}
+
+	/**
+	 * @return the id_curso
+	 */
+	public Integer getId_curso() {
+		return id_curso;
+	}
+
+	/**
+	 * @param id_curso
+	 *            the id_curso to set
+	 */
+	public void setId_curso(Integer id_curso) {
+		this.id_curso = id_curso;
+	}
+
+	/**
+	 * @return the descricao
+	 */
+	public String getDescricao() {
+		return descricao;
+	}
+
+	/**
+	 * @param descricao
+	 *            the descricao to set
+	 */
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	/**
+	 * @return the sigla
+	 */
+	public String getSigla() {
+		return sigla;
+	}
+
+	/**
+	 * @param sigla
+	 *            the sigla to set
+	 */
+	public void setSigla(String sigla) {
+		this.sigla = sigla;
+	}
+
+	/**
+	 * @return the tipo_graduacao
+	 */
+	public String getTipo_graduacao() {
+		return tipo_graduacao;
+	}
+
+	/**
+	 * @param tipo_graduacao
+	 *            the tipo_graduacao to set
+	 */
+	public void setTipo_graduacao(String tipo_graduacao) {
+		this.tipo_graduacao = tipo_graduacao;
 	}
 
 	@Override
