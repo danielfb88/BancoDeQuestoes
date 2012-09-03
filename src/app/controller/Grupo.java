@@ -125,42 +125,6 @@ public class Grupo {
 	}
 
 	/**
-	 * Adicionar Usuario
-	 * 
-	 * @param usuario
-	 * @return
-	 */
-	public boolean adicionarUsuario(Usuario usuario) {
-		usuario.setGrupo(this);
-		return usuario.adicionar();
-	}
-
-	/**
-	 * Exclui Usuario deste grupo
-	 * 
-	 * @param usuario
-	 * @return
-	 */
-	public boolean excluirUsuario(Usuario usuario) {
-		// Apenas remove se o usuario for deste grupo
-		if (usuario.getGrupo().getId_grupo() == this.id_grupo)
-			return usuario.excluir();
-
-		return false;
-	}
-
-	/**
-	 * Retorna Usuarios deste grupo
-	 * 
-	 * @return
-	 */
-	public List<Usuario> listarUsuarios(boolean carregarRelacionamentos) {
-		Usuario usuario = new Usuario();
-		usuario.setGrupo(this);
-		return usuario.listar(carregarRelacionamentos);
-	}
-
-	/**
 	 * @return the id_grupo
 	 */
 	public Integer getId_grupo() {

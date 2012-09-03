@@ -127,7 +127,7 @@ public class Assunto {
 	 * @return
 	 */
 	public List<Disciplina> listarDisciplinas() {
-		// TODO: Desenvolver
+		// TODO: CRIAR QUERY
 		return null;
 	}
 

@@ -162,42 +162,6 @@ public class Usuario {
 	}
 
 	/**
-	 * Criar Pergunta
-	 * 
-	 * @param pergunta
-	 * @return
-	 */
-	public boolean criarPergunta(Pergunta pergunta) {
-		pergunta.setUsuario(this);
-		return pergunta.adicionar();
-	}
-
-	/**
-	 * Excluir Pergunta
-	 * 
-	 * @param pergunta
-	 * @return
-	 */
-	public boolean excluirPergunta(Pergunta pergunta) {
-		// Exclui apenas pergunta criada por este usuario
-		if (pergunta.getUsuario().getId_usuario() == this.id_usuario)
-			return pergunta.excluir();
-
-		return false;
-	}
-
-	/**
-	 * Listar Perguntas deste Usuario
-	 * 
-	 * @return
-	 */
-	public List<Pergunta> listarPerguntas() {
-		Pergunta pergunta = new Pergunta();
-		pergunta.setUsuario(this);
-		return pergunta.listar(false);
-	}
-
-	/**
 	 * @return the id_usuario
 	 */
 	public Integer getId_usuario() {

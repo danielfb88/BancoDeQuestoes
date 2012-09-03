@@ -203,7 +203,7 @@ public class Curso {
 	 * @return
 	 */
 	public List<Disciplina> listarDisciplinas() {
-		// TODO: DESENVOLVER
+		// TODO: CRIAR QUERY
 		return null;
 	}
 
