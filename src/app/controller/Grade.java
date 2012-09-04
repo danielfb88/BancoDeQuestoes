@@ -6,6 +6,7 @@ import java.util.Map;
 
 import app.dao.GradeDAO;
 import app.dao.Rel_GradePeriodoDAO;
+import app.dao.Rel_GradePeriodo_DisciplinaDAO;
 
 /**
  * Grade
@@ -23,6 +24,7 @@ public class Grade {
 
 	private GradeDAO gradeDAO = new GradeDAO();
 	private Rel_GradePeriodoDAO rel_gradePeriodoDAO = new Rel_GradePeriodoDAO();
+	private Rel_GradePeriodo_DisciplinaDAO rel_gradePeriodo_disciplinaDAO = new Rel_GradePeriodo_DisciplinaDAO();
 
 	public Grade() {
 
@@ -191,8 +193,15 @@ public class Grade {
 	 * @return
 	 */
 	public List<Periodo> listarPeriodos() {
-		// TODO: Criar Query
-		return null;
+		List<Map<String, Object>> listMap = this.rel_gradePeriodoDAO
+				.listarPeriodosPorGrade(id_grade);
+
+		List<Periodo> periodos = new ArrayList<Periodo>();
+
+		for (Map<String, Object> map : listMap) {
+			periodos.add(new Periodo(map));
+		}
+		return periodos;
 	}
 
 	/**
@@ -203,7 +212,16 @@ public class Grade {
 	 * @return
 	 */
 	public boolean inserirDisciplina(Disciplina disciplina, Periodo periodo) {
-		// TODO: DESENVOLVER
+		// pegando o Id_grade_periodo
+		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade,
+				periodo.getId_periodo()).get(0);
+
+		if (map != null) {
+			int id_gradePeriodo = (Integer) map.get("id_grade_periodo");
+			return this.rel_gradePeriodo_disciplinaDAO.adicionar(
+					id_gradePeriodo, disciplina.getId_disciplina()) > 0;
+		}
+
 		return false;
 	}
 
@@ -215,7 +233,24 @@ public class Grade {
 	 * @return
 	 */
 	public boolean removerDisciplina(Disciplina disciplina, Periodo periodo) {
-		// TODO: DESENVOLVER
+		// pegando o Id_grade_periodo
+		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade,
+				periodo.getId_periodo()).get(0);
+		int id_gradePeriodo = (Integer) map.get("id_grade_periodo");
+
+		// pegando o id_grade_periodo__disciplina
+		map = this.rel_gradePeriodo_disciplinaDAO.listarPor(id_gradePeriodo,
+				disciplina.getId_disciplina()).get(0);
+
+		if (map != null) {
+			int id_gradePeriodo_disciplina = (Integer) map
+					.get("id_grade_periodo__disciplina");
+
+			// excluindo pelo id_gradePeriodo_disciplina
+			return this.rel_gradePeriodo_disciplinaDAO
+					.excluir(id_gradePeriodo_disciplina) > 0;
+		}
+
 		return false;
 	}
 
@@ -236,51 +271,6 @@ public class Grade {
 	 * @return
 	 */
 	public List<Disciplina> listarTodasAsDisciplinas() {
-		// TODO: CRIAR QUERY
-		return null;
-	}
-
-	/**
-	 * Adicionar Prova
-	 * 
-	 * @param prova
-	 * @param periodo
-	 * @return
-	 */
-	public boolean adicionarProva(Prova prova, Periodo periodo) {
-		// TODO: DESENVOLVER
-		return false;
-	}
-
-	/**
-	 * Excluir Prova
-	 * 
-	 * @param prova
-	 * @param periodo
-	 * @return
-	 */
-	public boolean excluirProva(Prova prova, Periodo periodo) {
-		// TODO: DESENVOLVER
-		return false;
-	}
-
-	/**
-	 * Listar Provas
-	 * 
-	 * @param periodo
-	 * @return
-	 */
-	public List<Prova> listarProvas(Periodo periodo) {
-		// TODO: CRIAR QUERY
-		return null;
-	}
-
-	/**
-	 * Listar Provas
-	 * 
-	 * @return
-	 */
-	public List<Prova> listarTodasAsProvas() {
 		// TODO: CRIAR QUERY
 		return null;
 	}
