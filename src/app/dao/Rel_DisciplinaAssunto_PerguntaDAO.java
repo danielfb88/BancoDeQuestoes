@@ -12,6 +12,8 @@ import app.util.AbstractDAO;
  */
 public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	private Map<Object, Object> campoValor;
+	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssunto = new Rel_DisciplinaAssuntoDAO();
+	private PerguntaDAO perguntaDAO = new PerguntaDAO();
 
 	public Rel_DisciplinaAssunto_PerguntaDAO() {
 		nomeDaTabela = "disciplina_assunto__pergunta";
@@ -89,6 +91,38 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 
 		return super._listarPor(campoValor);
 	}
-	
-	// TODO: Desenvolver Query de Relacionamentos
+
+	/**
+	 * Lista DisciplinaAssunto por Pergunta
+	 * 
+	 * @param id_pergunta
+	 * @return
+	 */
+	public List<Map<String, Object>> listarDisciplinaAssuntoPorPergunta(
+			Integer id_pergunta) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.rel_disciplinaAssunto.getAtributos());
+	}
+
+	/**
+	 * Lista Pergunta por DisciplinaAssunto
+	 * 
+	 * @param id_disciplina_assunto
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPerguntaPorDisciplinaAssunto(
+			Integer id_disciplina_assunto) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.perguntaDAO.getAtributos());
+	}
 }
