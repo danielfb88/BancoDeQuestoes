@@ -12,6 +12,8 @@ import app.util.AbstractDAO;
  */
 public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 	private Map<Object, Object> campoValor;
+	private Rel_GradePeriodoDAO rel_gradePeriodoDAO = new Rel_GradePeriodoDAO();
+	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
 
 	public Rel_GradePeriodo_DisciplinaDAO() {
 		nomeDaTabela = "grade_periodo__disciplina";
@@ -73,6 +75,7 @@ public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_disciplinaAssunto
 	 * @param id_pergunta
@@ -88,6 +91,38 @@ public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 
 		return super._listarPor(campoValor);
 	}
-	
-	// TODO: Desenvolver Query de Relacionamentos
+
+	/**
+	 * Lista GradePeriodo por Disciplina
+	 * 
+	 * @param id_periodo
+	 * @return
+	 */
+	public List<Map<String, Object>> listarGradePeriodoPorDisciplina(
+			Integer id_disciplina) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.rel_gradePeriodoDAO.getAtributos());
+	}
+
+	/**
+	 * Lista Disciplinas por GradePeriodo
+	 * 
+	 * @param id_grade_periodo
+	 * @return
+	 */
+	public List<Map<String, Object>> listarDisciplinasPorGradePeriodo(
+			Integer id_grade_periodo) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.disciplinaDAO.getAtributos());
+	}
 }

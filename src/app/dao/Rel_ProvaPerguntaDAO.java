@@ -12,6 +12,8 @@ import app.util.AbstractDAO;
  */
 public class Rel_ProvaPerguntaDAO extends AbstractDAO {
 	private Map<Object, Object> campoValor;
+	private ProvaDAO provaDAO = new ProvaDAO();
+	private PerguntaDAO perguntaDAO = new PerguntaDAO();
 
 	public Rel_ProvaPerguntaDAO() {
 		nomeDaTabela = "prova_pergunta";
@@ -89,6 +91,36 @@ public class Rel_ProvaPerguntaDAO extends AbstractDAO {
 
 		return super._listarPor(campoValor);
 	}
-	
-	// TODO: Desenvolver Query de Relacionamentos
+
+	/**
+	 * Lista Provas por Pergunta
+	 * 
+	 * @param id_pergunta
+	 * @return
+	 */
+	public List<Map<String, Object>> listarProvasPorPergunta(Integer id_pergunta) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.provaDAO.getAtributos());
+	}
+
+	/**
+	 * Lista Perguntas por Prova
+	 * 
+	 * @param id_prova
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPerguntasPorProva(Integer id_prova) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.perguntaDAO.getAtributos());
+	}
 }

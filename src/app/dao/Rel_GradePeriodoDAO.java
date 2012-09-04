@@ -12,6 +12,8 @@ import app.util.AbstractDAO;
  */
 public class Rel_GradePeriodoDAO extends AbstractDAO {
 	private Map<Object, Object> campoValor;
+	private GradeDAO gradeDAO = new GradeDAO();
+	private PeriodoDAO periodoDAO = new PeriodoDAO();
 
 	public Rel_GradePeriodoDAO() {
 		nomeDaTabela = "grade_periodo";
@@ -89,6 +91,36 @@ public class Rel_GradePeriodoDAO extends AbstractDAO {
 
 		return super._listarPor(campoValor);
 	}
-	
-	// TODO: Desenvolver Query de Relacionamentos
+
+	/**
+	 * Lista Grades Por Periodo
+	 * 
+	 * @param id_pergunta
+	 * @return
+	 */
+	public List<Map<String, Object>> listarGradesPorPeriodo(Integer id_periodo) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.gradeDAO.getAtributos());
+	}
+
+	/**
+	 * Lista Periodos por Grade
+	 * 
+	 * @param id_prova
+	 * @return
+	 */
+	public List<Map<String, Object>> listarPeriodosPorGrade(Integer id_grade) {
+
+		StringBuilder builder = new StringBuilder();
+
+		// TODO: DESENVOLVER QUERY
+
+		return super.executarQuery(builder.toString(),
+				this.periodoDAO.getAtributos());
+	}
 }
