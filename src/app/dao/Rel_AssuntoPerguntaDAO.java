@@ -22,6 +22,7 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_assunto
 	 * @param id_pergunta
@@ -37,6 +38,7 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_assunto_pergunta
 	 * @param id_disciplina
@@ -76,6 +78,7 @@ public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_disciplina
 	 * @param id_assunto

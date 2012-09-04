@@ -22,6 +22,7 @@ public class ProvaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_grade_periodo
 	 * @param id_anoSemestre
@@ -42,6 +43,7 @@ public class ProvaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_prova
 	 * @param id_grade_periodo
@@ -85,6 +87,7 @@ public class ProvaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_grade_periodo
 	 * @param id_anoSemestre

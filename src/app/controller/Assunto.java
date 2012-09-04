@@ -6,7 +6,6 @@ import java.util.Map;
 
 import app.dao.AssuntoDAO;
 import app.dao.Rel_AssuntoPerguntaDAO;
-import app.dao.Rel_DisciplinaAssuntoDAO;
 
 /**
  * Assunto
@@ -21,7 +20,6 @@ public class Assunto {
 
 	private AssuntoDAO assuntoDAO = new AssuntoDAO();
 	private Rel_AssuntoPerguntaDAO rel_assuntoPerguntaDAO = new Rel_AssuntoPerguntaDAO();
-	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssuntoDAO = new Rel_DisciplinaAssuntoDAO();
 
 	public Assunto() {
 
@@ -122,23 +120,6 @@ public class Assunto {
 		}
 
 		return listAssunto;
-	}
-
-	/**
-	 * Listar Disciplinas
-	 * 
-	 * @return
-	 */
-	public List<Disciplina> listarDisciplinas(boolean carregarRelacionamentos) {
-		List<Map<String, Object>> listMap = this.rel_disciplinaAssuntoDAO
-				.listarDisciplinasPorAssunto(id_assunto);
-
-		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
-
-		for (Map<String, Object> map : listMap) {
-			disciplinas.add(new Disciplina(map, carregarRelacionamentos));
-		}
-		return disciplinas;
 	}
 
 	/**

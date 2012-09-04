@@ -20,6 +20,7 @@ public class PeriodoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param descricao
 	 * @param numero
@@ -35,6 +36,7 @@ public class PeriodoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_periodo
 	 * @param descricao
@@ -73,6 +75,7 @@ public class PeriodoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_periodo
 	 * @param id_curso

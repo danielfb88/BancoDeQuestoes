@@ -22,6 +22,7 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_disciplinaAssunto
 	 * @param id_pergunta
@@ -37,6 +38,7 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_disciplinaAssunto_pergunta
 	 * @param id_disciplinaAssunto
@@ -76,6 +78,7 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_disciplinaAssunto
 	 * @param id_pergunta
@@ -93,36 +96,34 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
-	 * Lista DisciplinaAssunto por Pergunta
+	 * Lista Disciplina por Pergunta
 	 * 
 	 * @param id_pergunta
 	 * @return
 	 */
-	public List<Map<String, Object>> listarDisciplinaAssuntoPorPergunta(
+	public List<Map<String, Object>> listarDisciplinasPorPergunta(
 			Integer id_pergunta) {
 
 		StringBuilder builder = new StringBuilder();
 
 		// TODO: DESENVOLVER QUERY
 
-		return super.executarQuery(builder.toString(),
-				this.rel_disciplinaAssunto.getAtributos());
+		return null;
 	}
 
 	/**
-	 * Lista Pergunta por DisciplinaAssunto
+	 * Lista Pergunta por Disciplina
 	 * 
-	 * @param id_disciplina_assunto
+	 * @param id_disciplina
 	 * @return
 	 */
-	public List<Map<String, Object>> listarPerguntaPorDisciplinaAssunto(
-			Integer id_disciplina_assunto) {
+	public List<Map<String, Object>> listarPerguntasPorDisciplina(
+			Integer id_disciplina) {
 
 		StringBuilder builder = new StringBuilder();
 
 		// TODO: DESENVOLVER QUERY
 
-		return super.executarQuery(builder.toString(),
-				this.perguntaDAO.getAtributos());
+		return null;
 	}
 }

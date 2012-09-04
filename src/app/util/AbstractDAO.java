@@ -124,8 +124,10 @@ public abstract class AbstractDAO {
 	private boolean is_campoIgualPrimaryKey(String campo) {
 		boolean igualAlgumaPK = false;
 		for (int npk = 0; npk < this.primaryKey.length; npk++) {
-			if (campo.equalsIgnoreCase(this.primaryKey[npk]))
+			if (campo.equalsIgnoreCase(this.primaryKey[npk])) {
 				igualAlgumaPK = true;
+				break;
+			}			
 		}
 		return igualAlgumaPK;
 	}

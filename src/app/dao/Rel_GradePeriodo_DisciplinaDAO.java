@@ -22,6 +22,7 @@ public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_gradePeriodo
 	 * @param id_disciplina
@@ -37,6 +38,7 @@ public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_gradePeriodo
 	 * @param id_disciplina
@@ -90,23 +92,6 @@ public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 		campoValor.put(campos[1], id_disciplina);
 
 		return super._listarPor(campoValor);
-	}
-
-	/**
-	 * Lista GradePeriodo por Disciplina
-	 * 
-	 * @param id_periodo
-	 * @return
-	 */
-	public List<Map<String, Object>> listarGradePeriodoPorDisciplina(
-			Integer id_disciplina) {
-
-		StringBuilder builder = new StringBuilder();
-
-		// TODO: DESENVOLVER QUERY
-
-		return super.executarQuery(builder.toString(),
-				this.rel_gradePeriodoDAO.getAtributos());
 	}
 
 	/**

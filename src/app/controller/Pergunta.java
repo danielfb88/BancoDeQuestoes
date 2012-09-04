@@ -1,12 +1,10 @@
 package app.controller;
 
-// TODO: INCOMPLETO
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import app.dao.PerguntaDAO;
-import app.dao.Rel_AssuntoPerguntaDAO;
 
 /**
  * Pergunta
@@ -156,41 +154,6 @@ public class Pergunta {
 		}
 
 		return listPergunta;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<Pergunta> listarDisciplinas() {
-		// TODO: CRIAR QUERY
-		return null;
-	}
-
-	/**
-	 * Listar Assuntos
-	 * @return
-	 */
-	public List<Assunto> listarAssuntos() {
-		Rel_AssuntoPerguntaDAO rel_ap = new Rel_AssuntoPerguntaDAO();
-		List<Map<String, Object>> listMap = rel_ap
-				.listarAssuntosPorPergunta(id_pergunta);
-
-		List<Assunto> listAssunto = new ArrayList<Assunto>();
-
-		for (Map<String, Object> map : listMap) {
-			listAssunto.add(new Assunto(map));
-		}
-		return listAssunto;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public List<Prova> listarProvas() {
-		// TODO: CRIAR QUERY
-		return null;
 	}
 
 	/**

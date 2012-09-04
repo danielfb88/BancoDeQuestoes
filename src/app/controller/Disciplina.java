@@ -6,6 +6,7 @@ import java.util.Map;
 
 import app.dao.DisciplinaDAO;
 import app.dao.Rel_DisciplinaAssuntoDAO;
+import app.dao.Rel_DisciplinaAssunto_PerguntaDAO;
 
 /**
  * Disciplina
@@ -22,6 +23,7 @@ public class Disciplina {
 
 	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
 	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssunto = new Rel_DisciplinaAssuntoDAO();
+	private Rel_DisciplinaAssunto_PerguntaDAO rel_disciplinaAssunto_pergunta = new Rel_DisciplinaAssunto_PerguntaDAO();
 
 	public Disciplina() {
 
@@ -173,14 +175,39 @@ public class Disciplina {
 		return false;
 	}
 
+	/**
+	 * Listar Assuntos
+	 * 
+	 * @return
+	 */
 	public List<Assunto> listarAssuntos() {
-		// TODO: CRIAR QUERY
-		return null;
+		List<Map<String, Object>> listMap = rel_disciplinaAssunto
+				.listarAssuntosPorDisciplina(id_disciplina);
+
+		List<Assunto> listAssunto = new ArrayList<Assunto>();
+
+		for (Map<String, Object> map : listMap) {
+			listAssunto.add(new Assunto(map));
+		}
+		return listAssunto;
 	}
 
-	public List<Pergunta> listarPerguntas() {
-		// TODO: CRIAR QUERY
-		return null;
+	/**
+	 * Listar Perguntas
+	 * 
+	 * @param carregarRelacionamentos
+	 * @return
+	 */
+	public List<Pergunta> listarPerguntas(boolean carregarRelacionamentos) {
+		List<Map<String, Object>> listMap = rel_disciplinaAssunto_pergunta
+				.listarPerguntasPorDisciplina(id_disciplina);
+
+		List<Pergunta> listPergunta = new ArrayList<Pergunta>();
+
+		for (Map<String, Object> map : listMap) {
+			listPergunta.add(new Pergunta(map, carregarRelacionamentos));
+		}
+		return listPergunta;
 	}
 
 	/**

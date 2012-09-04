@@ -151,16 +151,6 @@ public class Usuario {
 		// TODO: Transferir esta responsabilidade para o ManagedBean de Usuario
 	}
 
-	public List<Curso> listarCursosAtuais() {
-		// TODO: Usuario: Desenvolver
-		return null;
-	}
-
-	public List<Curso> listarTodosOsCursos() {
-		// TODO: Usuario: Desenvolver
-		return null;
-	}
-
 	/**
 	 * @return the id_usuario
 	 */

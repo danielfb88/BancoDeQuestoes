@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import app.dao.GradeDAO;
+import app.dao.Rel_GradePeriodoDAO;
 
 /**
  * Grade
@@ -21,6 +22,7 @@ public class Grade {
 	private String descricao;
 
 	private GradeDAO gradeDAO = new GradeDAO();
+	private Rel_GradePeriodoDAO rel_gradePeriodoDAO = new Rel_GradePeriodoDAO();
 
 	public Grade() {
 
@@ -160,8 +162,8 @@ public class Grade {
 	 * @return
 	 */
 	public boolean inserirPeriodo(Periodo periodo) {
-		// TODO: DESENVOLVER
-		return false;
+		return this.rel_gradePeriodoDAO.adicionar(id_grade,
+				periodo.getId_periodo()) > 0;
 	}
 
 	/**
@@ -171,7 +173,15 @@ public class Grade {
 	 * @return
 	 */
 	public boolean removerPeriodo(Periodo periodo) {
-		// TODO: DESENVOLVER
+		// verificando se a relação existe
+		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade,
+				periodo.getId_periodo()).get(0);
+
+		if (map != null) {
+			int id = (Integer) map.get("id_grade_periodo");
+			return this.rel_gradePeriodoDAO.excluir(id) > 0;
+		}
+
 		return false;
 	}
 
@@ -210,7 +220,7 @@ public class Grade {
 	}
 
 	/**
-	 * Listar Disciplinas
+	 * Listar Disciplinas por Periodo
 	 * 
 	 * @param periodo
 	 * @return

@@ -21,6 +21,7 @@ public class RespostaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_pergunta
 	 * @param descricao
@@ -41,6 +42,7 @@ public class RespostaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_resposta
 	 * @param id_pergunta
@@ -84,6 +86,7 @@ public class RespostaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_resposta
 	 * @param id_curso

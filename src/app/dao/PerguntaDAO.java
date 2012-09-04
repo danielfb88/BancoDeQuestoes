@@ -21,6 +21,7 @@ public class PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_usuario
 	 * @param descricao
@@ -46,6 +47,7 @@ public class PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_pergunta
 	 * @param id_usuario
@@ -94,6 +96,7 @@ public class PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_usuario
 	 * @param descricao

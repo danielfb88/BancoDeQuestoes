@@ -20,6 +20,7 @@ public class DisciplinaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_curso
 	 * @param descricao
@@ -37,6 +38,7 @@ public class DisciplinaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_disciplina
 	 * @param id_curso
@@ -78,6 +80,7 @@ public class DisciplinaDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_disciplina
 	 * @param id_curso

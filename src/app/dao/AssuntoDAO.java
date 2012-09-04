@@ -20,6 +20,7 @@ public class AssuntoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param descricao
 	 * @return
@@ -31,8 +32,9 @@ public class AssuntoDAO extends AbstractDAO {
 
 		return super._adicionar(campoValor);
 	}
-	
+
 	/**
+	 * Editar
 	 * 
 	 * @param id_assunto
 	 * @param descricao
@@ -69,6 +71,7 @@ public class AssuntoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param descricao
 	 * @return

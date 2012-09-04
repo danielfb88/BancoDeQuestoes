@@ -21,6 +21,7 @@ public class GradeDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_curso
 	 * @param id_anoSemestre_inicial
@@ -41,6 +42,7 @@ public class GradeDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_grade
 	 * @param id_curso
@@ -85,6 +87,7 @@ public class GradeDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_grade
 	 * @param id_curso

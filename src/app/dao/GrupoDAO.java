@@ -20,6 +20,7 @@ public class GrupoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param descricao
 	 * @param tipo
@@ -35,6 +36,7 @@ public class GrupoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_grupo
 	 * @param descricao
@@ -73,6 +75,7 @@ public class GrupoDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_grupo
 	 * @param id_curso

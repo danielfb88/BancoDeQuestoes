@@ -20,6 +20,7 @@ public class AnoSemestreDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param ano
 	 * @param semestre
@@ -35,6 +36,7 @@ public class AnoSemestreDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_anoSemestre
 	 * @param ano
@@ -73,6 +75,7 @@ public class AnoSemestreDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param ano
 	 * @param semestre

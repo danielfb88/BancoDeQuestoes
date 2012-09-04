@@ -20,6 +20,7 @@ public class UsuarioDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Adicionar
 	 * 
 	 * @param id_grupo
 	 * @param nome
@@ -41,6 +42,7 @@ public class UsuarioDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Editar
 	 * 
 	 * @param id_usuario
 	 * @param id_grupo
@@ -84,6 +86,7 @@ public class UsuarioDAO extends AbstractDAO {
 	}
 
 	/**
+	 * Listar Por
 	 * 
 	 * @param id_grupo
 	 * @param nome
