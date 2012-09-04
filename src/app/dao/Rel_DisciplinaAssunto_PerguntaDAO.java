@@ -89,4 +89,6 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 
 		return super._listarPor(campoValor);
 	}
+	
+	// TODO: Desenvolver Query de Relacionamentos
 }

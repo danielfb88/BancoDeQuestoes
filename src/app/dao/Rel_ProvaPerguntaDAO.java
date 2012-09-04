@@ -89,4 +89,6 @@ public class Rel_ProvaPerguntaDAO extends AbstractDAO {
 
 		return super._listarPor(campoValor);
 	}
+	
+	// TODO: Desenvolver Query de Relacionamentos
 }

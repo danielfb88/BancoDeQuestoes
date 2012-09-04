@@ -88,4 +88,6 @@ public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 
 		return super._listarPor(campoValor);
 	}
+	
+	// TODO: Desenvolver Query de Relacionamentos
 }

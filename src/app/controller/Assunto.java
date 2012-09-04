@@ -6,6 +6,7 @@ import java.util.Map;
 
 import app.dao.AssuntoDAO;
 import app.dao.Rel_AssuntoPerguntaDAO;
+import app.dao.Rel_DisciplinaAssuntoDAO;
 
 /**
  * Assunto
@@ -20,6 +21,7 @@ public class Assunto {
 
 	private AssuntoDAO assuntoDAO = new AssuntoDAO();
 	private Rel_AssuntoPerguntaDAO rel_assuntoPerguntaDAO = new Rel_AssuntoPerguntaDAO();
+	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssuntoDAO = new Rel_DisciplinaAssuntoDAO();
 
 	public Assunto() {
 
@@ -40,6 +42,7 @@ public class Assunto {
 	/**
 	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
 	 * nomes das colunas do banco, referente a este objeto
+	 * 
 	 * @param map
 	 */
 	public Assunto(Map<String, Object> map) {
