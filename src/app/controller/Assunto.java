@@ -129,9 +129,16 @@ public class Assunto {
 	 * 
 	 * @return
 	 */
-	public List<Disciplina> listarDisciplinas() {
-		// TODO: CRIAR QUERY
-		return null;
+	public List<Disciplina> listarDisciplinas(boolean carregarRelacionamentos) {
+		List<Map<String, Object>> listMap = this.rel_disciplinaAssuntoDAO
+				.listarDisciplinasPorAssunto(id_assunto);
+
+		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+
+		for (Map<String, Object> map : listMap) {
+			disciplinas.add(new Disciplina(map, carregarRelacionamentos));
+		}
+		return disciplinas;
 	}
 
 	/**
