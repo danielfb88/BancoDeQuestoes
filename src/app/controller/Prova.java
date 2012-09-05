@@ -24,7 +24,7 @@ public class Prova {
 	private Date dataProva;
 
 	private ProvaDAO provaDAO = new ProvaDAO();
-	private Rel_GradePeriodoDAO rel_gp = new Rel_GradePeriodoDAO();
+	private Rel_GradePeriodoDAO rel_gradePeriodoDAO = new Rel_GradePeriodoDAO();
 
 	public Prova() {
 
@@ -74,7 +74,7 @@ public class Prova {
 			boolean carregarRelacionamentos) {
 
 		// buscando ID grade e ID periodo
-		Map<String, Object> mapGradePeriodo = this.rel_gp
+		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
 				.buscarPorId((Integer) map.get("id_grade_periodo"));
 
 		this.id_prova = (Integer) map.get("id_prova");
@@ -98,8 +98,9 @@ public class Prova {
 	 */
 	public boolean adicionar() throws Exception {
 		// primeiro busca o id_grade_periodo para inserir no DAO
-		Map<String, Object> mapGradePeriodo = this.rel_gp.listarPor(
-				this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
+		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
+				.listarPor(this.grade.getId_grade(),
+						this.periodo.getId_periodo()).get(0);
 
 		if (mapGradePeriodo != null) {
 			return this.provaDAO.adicionar(
@@ -137,8 +138,9 @@ public class Prova {
 	 */
 	public boolean editar() throws Exception {
 		// primeiro busca o id_grade_periodo para inserir no DAO
-		Map<String, Object> mapGradePeriodo = this.rel_gp.listarPor(
-				this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
+		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
+				.listarPor(this.grade.getId_grade(),
+						this.periodo.getId_periodo()).get(0);
 
 		if (mapGradePeriodo != null) {
 			return this.provaDAO.editar(id_prova,
@@ -167,13 +169,13 @@ public class Prova {
 	 */
 	public List<Prova> listar(boolean carregarRelacionamentos) {
 		// primeiro busca o id_grade_periodo para inserir no DAO
-		Map<String, Object> mapGradePeriodo = this.rel_gp.listarPor(
-				this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
-
+		Integer id_grade_periodo = this.rel_gradePeriodoDAO.getValuePrimaryKey(
+				grade.getId_grade(), periodo.getId_periodo());
+		
 		// buscando a lista de Mapa recuperando pelos parametros
 		List<Map<String, Object>> listMap = this.provaDAO.listarPor(
-				(Integer) mapGradePeriodo.get("id_grade_periodo"),
-				anoSemestre.getId_anoSemestre(), descricao, dataProva);
+				id_grade_periodo, anoSemestre.getId_anoSemestre(), descricao,
+				dataProva);
 
 		List<Prova> listProva = new ArrayList<Prova>();
 

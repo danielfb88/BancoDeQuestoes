@@ -12,8 +12,7 @@ import app.util.AbstractDAO;
  */
 public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	private Map<Object, Object> campoValor;
-	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssunto = new Rel_DisciplinaAssuntoDAO();
-	private PerguntaDAO perguntaDAO = new PerguntaDAO();
+	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
 
 	public Rel_DisciplinaAssunto_PerguntaDAO() {
 		nomeDaTabela = "disciplina_assunto__pergunta";
@@ -96,22 +95,6 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	}
 
 	/**
-	 * Lista Disciplina por Pergunta
-	 * 
-	 * @param id_pergunta
-	 * @return
-	 */
-	public List<Map<String, Object>> listarDisciplinasPorPergunta(
-			Integer id_pergunta) {
-
-		StringBuilder builder = new StringBuilder();
-
-		// TODO: DESENVOLVER QUERY
-
-		return null;
-	}
-
-	/**
 	 * Lista Pergunta por Disciplina
 	 * 
 	 * @param id_disciplina
@@ -122,8 +105,23 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 
 		StringBuilder builder = new StringBuilder();
 
-		// TODO: DESENVOLVER QUERY
+		builder.append("SELECT p.id_pergunta, p.id_usuario, ");
+		builder.append("p.descricao, p.tipo_pergunta, p.nivel_pergunta, ");
+		builder.append("p.enunciado, p.comentario ");
 
-		return null;
+		builder.append("FROM pergunta p ");
+
+		builder.append("JOIN disciplina_assunto__pergunta da_p ");
+		builder.append("ON (da_p.id_pergunta = p.id_pergunta) ");
+
+		builder.append("JOIN disciplina_assunto da ");
+		builder.append("ON (da.id_disciplina_assunto = da_p.id_disciplina_assunto)");
+
+		builder.append(" WHERE ");
+		builder.append("id_disciplina = " + id_disciplina);
+		builder.append(";");
+
+		return this.executarQuery(builder.toString(),
+				disciplinaDAO.getAtributos());
 	}
 }

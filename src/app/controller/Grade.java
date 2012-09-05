@@ -233,25 +233,8 @@ public class Grade {
 	 * @return
 	 */
 	public boolean removerDisciplina(Disciplina disciplina, Periodo periodo) {
-		// pegando o Id_grade_periodo
-		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade,
-				periodo.getId_periodo()).get(0);
-		int id_gradePeriodo = (Integer) map.get("id_grade_periodo");
-
-		// pegando o id_grade_periodo__disciplina
-		map = this.rel_gradePeriodo_disciplinaDAO.listarPor(id_gradePeriodo,
-				disciplina.getId_disciplina()).get(0);
-
-		if (map != null) {
-			int id_gradePeriodo_disciplina = (Integer) map
-					.get("id_grade_periodo__disciplina");
-
-			// excluindo pelo id_gradePeriodo_disciplina
-			return this.rel_gradePeriodo_disciplinaDAO
-					.excluir(id_gradePeriodo_disciplina) > 0;
-		}
-
-		return false;
+		return this.rel_gradePeriodo_disciplinaDAO.removerDisciplina(id_grade,
+				periodo.getId_periodo(), disciplina.getId_disciplina());
 	}
 
 	/**
@@ -260,9 +243,20 @@ public class Grade {
 	 * @param periodo
 	 * @return
 	 */
-	public List<Disciplina> listarDisciplinas(Periodo periodo) {
-		// TODO: CRIAR QUERY
-		return null;
+	public List<Disciplina> listarDisciplinas(Periodo periodo,
+			boolean carregarRelacionamentos) {
+
+		List<Map<String, Object>> listMap = this.rel_gradePeriodo_disciplinaDAO
+				.listarDisciplinasPorGradePeriodo(id_grade,
+						periodo.getId_periodo());
+
+		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+
+		for (Map<String, Object> map : listMap) {
+			disciplinas.add(new Disciplina(map, carregarRelacionamentos));
+		}
+
+		return disciplinas;
 	}
 
 	/**
@@ -270,9 +264,19 @@ public class Grade {
 	 * 
 	 * @return
 	 */
-	public List<Disciplina> listarTodasAsDisciplinas() {
-		// TODO: CRIAR QUERY
-		return null;
+	public List<Disciplina> listarTodasAsDisciplinas(
+			boolean carregarRelacionamentos) {
+
+		List<Map<String, Object>> listMap = this.rel_gradePeriodo_disciplinaDAO
+				.listarDisciplinasPorGrade(id_grade);
+
+		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+
+		for (Map<String, Object> map : listMap) {
+			disciplinas.add(new Disciplina(map, carregarRelacionamentos));
+		}
+
+		return disciplinas;
 	}
 
 	/**

@@ -127,7 +127,7 @@ public abstract class AbstractDAO {
 			if (campo.equalsIgnoreCase(this.primaryKey[npk])) {
 				igualAlgumaPK = true;
 				break;
-			}			
+			}
 		}
 		return igualAlgumaPK;
 	}
@@ -369,6 +369,32 @@ public abstract class AbstractDAO {
 		}
 
 		return this.__excluir(campoValor);
+	}
+
+	/**
+	 * Recupera o valor da Primary Key (Quando unitária) inserindo as
+	 * foreignkeys.
+	 * 
+	 * Este método deve ser usado APENAS em classes que representem tabelas de
+	 * relacionamentos *muitos para muitos*.
+	 * 
+	 * A ordem dos parâmetros deve ser a mesma definida no array 'campos' do DAO
+	 * 
+	 * TODO: AbstractDAO: Testar
+	 * 
+	 * @param foreignKey
+	 * @return
+	 */
+	public int getValuePrimaryKey(Integer... foreignKey) {
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(
+				campos.length);
+
+		for (int i = 0; i < campos.length; i++) {
+			campoValor.put(this.campos[i], foreignKey[i]);
+		}
+
+		Map<String, Object> map = this._listarPor(campoValor).get(0);
+		return (Integer) map.get(this.primaryKey[0]);
 	}
 
 	/**
