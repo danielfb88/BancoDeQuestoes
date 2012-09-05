@@ -16,7 +16,7 @@ import app.dao.GrupoDAO;
 public class Grupo {
 	private Integer id_grupo;
 	private String descricao;
-	private Character tipo;
+	private String tipo;
 
 	private GrupoDAO grupoDAO = new GrupoDAO();
 
@@ -31,7 +31,7 @@ public class Grupo {
 	 * @param descricao
 	 * @param tipo
 	 */
-	public Grupo(Integer id_grupo, String descricao, Character tipo) {
+	public Grupo(Integer id_grupo, String descricao, String tipo) {
 		super();
 		this.id_grupo = id_grupo;
 		this.descricao = descricao;
@@ -59,7 +59,7 @@ public class Grupo {
 
 		this.id_grupo = (Integer) map.get("id_grupo");
 		this.descricao = (String) map.get("descricao");
-		this.tipo = map.get("tipo").toString().charAt(0);
+		this.tipo = (String) map.get("tipo");
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class Grupo {
 	public List<Grupo> listar() {
 		// buscando a lista de Mapas recuperados pelos parametros
 		List<Map<String, Object>> listMap = this.grupoDAO.listarPor(descricao,
-				tipo.toString());
+				tipo);
 
 		List<Grupo> listGrupo = new ArrayList<Grupo>();
 
@@ -157,7 +157,7 @@ public class Grupo {
 	/**
 	 * @return the tipo
 	 */
-	public Character getTipo() {
+	public String getTipo() {
 		return tipo;
 	}
 
@@ -165,10 +165,15 @@ public class Grupo {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(Character tipo) {
+	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -181,6 +186,11 @@ public class Grupo {
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

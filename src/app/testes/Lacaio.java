@@ -11,16 +11,18 @@ import app.controller.Curso;
 import app.controller.Grupo;
 import app.controller.Periodo;
 import app.dao.CursoDAO;
+import app.dao.Rel_AssuntoPerguntaDAO;
 import app.util.conexao.DAOUtil;
 
 public class Lacaio {
 
-	public Lacaio() {
-
+	public static void main(String[] args) {
+		id();
 	}
 
-	public static void main(String[] args) {
-		adicionarPeriodo();
+	public static void id() {
+		Rel_AssuntoPerguntaDAO rel_ap = new Rel_AssuntoPerguntaDAO();
+		System.out.println(rel_ap.getValuePrimaryKey(1, 12));
 	}
 
 	private static void adicionarPeriodo() {

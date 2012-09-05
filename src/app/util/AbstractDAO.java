@@ -380,9 +380,8 @@ public abstract class AbstractDAO {
 	 * 
 	 * A ordem dos parâmetros deve ser a mesma definida no array 'campos' do DAO
 	 * 
-	 * TODO: AbstractDAO: Testar
-	 * 
 	 * @param foreignKey
+	 *            os ids do relacionamento
 	 * @return
 	 */
 	public int getValuePrimaryKey(Integer... foreignKey) {

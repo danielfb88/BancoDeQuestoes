@@ -1,11 +1,8 @@
 package app.managedbean;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-//import javax.faces.bean.ManagedBean;
-//import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import app.controller.Grupo;
@@ -20,22 +17,68 @@ import app.controller.Grupo;
  */
 public class GrupoManagedBean {
 	private Grupo grupo = new Grupo();
-	private List<Grupo> grupos = new LinkedList<Grupo>();
+	private List<Grupo> grupos;
 
+	/**
+	 * Direciona para a Página de Adicionar Novo
+	 * 
+	 * @return
+	 */
 	public String novo() {
 		this.grupo = new Grupo();
 		return "novo";
 	}
-	
+
+	/**
+	 * Direciona para a página de edição
+	 * 
+	 * @return
+	 */
 	public String formularioEditar() {
 		return "formularioEditar";
 	}
 
+	/**
+	 * Direciona para a página de listagem
+	 * 
+	 * @return
+	 */
+	public String listar() {
+		this.grupos = new Grupo().listar();
+
+		return "listar";
+	}
+
+	/**
+	 * Edita registro
+	 * 
+	 * @return
+	 */
+	public String editar() {
+		if (grupo.editar()) {
+			this.grupo = new Grupo();
+			return this.listar();
+
+		} else {
+			FacesContext context = FacesContext.getCurrentInstance();
+			FacesMessage facesMessage = new FacesMessage(
+					"Não foi possível editar o grupo");
+			context.addMessage(null, facesMessage);
+			// Vai permanecer na mesma página
+			return null;
+		}
+	}
+
+	/**
+	 * Grava registro
+	 * 
+	 * @return
+	 */
 	public String adicionar() {
 		if (grupo.adicionar()) {
 			this.grupo = new Grupo();
-			return "adicionadoComSucesso";
-			
+			return this.listar();
+
 		} else {
 			// Adicionando uma mensagem ao contexto do JSF
 			FacesMessage facesMessage = new FacesMessage(
@@ -47,55 +90,36 @@ public class GrupoManagedBean {
 		}
 	}
 
+	/**
+	 * Exclui registro
+	 * 
+	 * @return
+	 */
 	public String excluir() {
 		if (grupo.excluir()) {
 			this.grupo = new Grupo();
-			return "excluidoComSucesso";
-			
-		} else {
-			this.grupo = new Grupo();
-			FacesMessage facesMessage = new FacesMessage("Não é possível excluir o grupo");
-			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, facesMessage);
-			return null;
-		}
-		
-	}
+			return this.listar();
 
-	public String editar() {
-		if (grupo.editar()) {
-			this.grupo = new Grupo();
-			return "editadoComSucesso";
-			
 		} else {
-			FacesContext context = FacesContext.getCurrentInstance();
+			this.grupo = new Grupo();
 			FacesMessage facesMessage = new FacesMessage(
-					"Não foi possível editar o grupo");
+					"Não é possível excluir o grupo");
+			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
-			// Vai permanecer na mesma página
 			return null;
 		}
-	}
-	
-	public String listar() {
-		return "listar";
 	}
 
 	public List<Grupo> getGrupos() {
-		this.grupos = grupo.listar();
 		return this.grupos;
 	}
 
 	public Grupo getGrupo() {
 		return grupo;
 	}
-	
+
 	public void setGrupo(Grupo grupo) {
 		this.grupo = grupo;
-	}
-
-	public void setGrupos(List<Grupo> grupos) {
-		this.grupos = grupos;
 	}
 
 }
