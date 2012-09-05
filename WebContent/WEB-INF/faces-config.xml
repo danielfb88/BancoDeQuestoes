@@ -5,8 +5,11 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
 	version="2.1">
 
-	<!-- <managed-bean> <managed-bean-name>grupoBean</managed-bean-name> <managed-bean-class>app.managedbean.GrupoManagedBean</managed-bean-class> 
-		<managed-bean-scope>request</managed-bean-scope> </managed-bean> -->
+	<managed-bean>
+		<managed-bean-name>grupoBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.GrupoManagedBean</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 
 	<!-- REGRAS GLOBAIS -->
 	<navigation-rule>

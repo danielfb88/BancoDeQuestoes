@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+//import javax.faces.bean.ManagedBean;
+//import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import app.controller.Grupo;
@@ -18,8 +18,6 @@ import app.controller.Grupo;
  * @since 03-08-2012
  * 
  */
-@ManagedBean(name="grupoBean")
-@RequestScoped
 public class GrupoManagedBean {
 	private Grupo grupo = new Grupo();
 	private List<Grupo> grupos = new LinkedList<Grupo>();
@@ -35,7 +33,6 @@ public class GrupoManagedBean {
 
 	public String adicionar() {
 		if (grupo.adicionar()) {
-			// removendo o grupo atual para montar a query limpa
 			this.grupo = new Grupo();
 			return "adicionadoComSucesso";
 			
@@ -52,7 +49,6 @@ public class GrupoManagedBean {
 
 	public String excluir() {
 		if (grupo.excluir()) {
-			// removendo o grupo atual para montar a query limpa
 			this.grupo = new Grupo();
 			return "excluidoComSucesso";
 			
@@ -68,7 +64,6 @@ public class GrupoManagedBean {
 
 	public String editar() {
 		if (grupo.editar()) {
-			// removendo o grupo atual para montar a query limpa
 			this.grupo = new Grupo();
 			return "editadoComSucesso";
 			
