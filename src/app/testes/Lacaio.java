@@ -73,8 +73,8 @@ public class Lacaio {
 	private static void adicionarGrupo() {
 		List<Grupo> listGrupo = new ArrayList<Grupo>();
 
-		listGrupo.add(new Grupo(null, "Admin", 'A'));
-		listGrupo.add(new Grupo(null, "Coord", 'C'));
+		listGrupo.add(new Grupo(null, "Admin", "A"));
+		listGrupo.add(new Grupo(null, "Coord", "C"));
 
 		for (Grupo grupo : listGrupo) {
 			if (grupo.adicionar())

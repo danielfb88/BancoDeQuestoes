@@ -24,9 +24,9 @@ public class GrupoManagedBean {
 	 * 
 	 * @return
 	 */
-	public String novo() {
+	public String formularioAdicionar() {
 		this.grupo = new Grupo();
-		return "novo";
+		return "formularioAdicionar";
 	}
 
 	/**
