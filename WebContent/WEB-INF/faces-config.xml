@@ -70,7 +70,7 @@
 		<from-view-id>/publico/grupo/*</from-view-id>
 
 		<navigation-case>
-			<from-outcome>listar</from-outcome>
+			<from-outcome>paginaListar</from-outcome>
 			<to-view-id>/publico/grupo/listar.xhtml</to-view-id>
 		</navigation-case>
 		
