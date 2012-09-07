@@ -29,10 +29,18 @@
 			<h:outputText value="Login:" for="otx_login" />
 			<h:outputText id="otx_login" value="#{usuarioBean.usuario.login}" />
 
-			<h:outputText value="Senha:" for="tx_senha" />
-			<h:inputSecret id="tx_senha" label="Senha"
-				value="#{usuarioBean.usuario.senha}" size="20" maxlength="6"
-				required="true" requiredMessage="Informe a senha." />
+			<h:outputText value="Senha Atual" for="tx_senhaAtual" />
+			<h:inputSecret id="tx_senhaAtual" label="Senha Atual"
+				value="#{usuarioBean.senhaAtual}" size="20" maxlength="6"
+				required="true" requiredMessage="Informe a senha Atual." />
+
+			<h:outputText value="Nova Senha:" for="tx_senhaNova" />
+			<h:inputSecret id="tx_senhaNova" label="Nova Senha"
+				value="#{usuarioBean.senhaNova}" size="20" maxlength="6" />
+
+			<h:outputText value="Confirme a Senha:" for="tx_confirmaSenha" />
+			<h:inputSecret id="tx_confirmaSenha" label="Confirme a Senha"
+				value="#{usuarioBean.confirmaSenha}" size="20" maxlength="6" />
 
 		</h:panelGrid>
 

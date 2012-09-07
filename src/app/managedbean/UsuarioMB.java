@@ -17,9 +17,10 @@ import app.controller.Usuario;
 public class UsuarioMB {
 	private Usuario usuario = new Usuario();
 	private List<Usuario> usuarios;
-	
-	private String senhaAntiga;
-	private String novaSenha;
+
+	// TODO: Desenvolver lógica das senhas
+	private String senhaAtual;
+	private String senhaNova;
 	private String confirmaSenha;
 
 	/**
@@ -144,6 +145,51 @@ public class UsuarioMB {
 	 */
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
+	}
+
+	/**
+	 * @return the senhaAtual
+	 */
+	public String getSenhaAtual() {
+		return senhaAtual;
+	}
+
+	/**
+	 * @param senhaAtual
+	 *            the senhaAtual to set
+	 */
+	public void setSenhaAtual(String senhaAtual) {
+		this.senhaAtual = senhaAtual;
+	}
+
+	/**
+	 * @return the senhaNova
+	 */
+	public String getSenhaNova() {
+		return senhaNova;
+	}
+
+	/**
+	 * @param senhaNova
+	 *            the senhaNova to set
+	 */
+	public void setSenhaNova(String senhaNova) {
+		this.senhaNova = senhaNova;
+	}
+
+	/**
+	 * @return the confirmaSenha
+	 */
+	public String getConfirmaSenha() {
+		return confirmaSenha;
+	}
+
+	/**
+	 * @param confirmaSenha
+	 *            the confirmaSenha to set
+	 */
+	public void setConfirmaSenha(String confirmaSenha) {
+		this.confirmaSenha = confirmaSenha;
 	}
 
 }
