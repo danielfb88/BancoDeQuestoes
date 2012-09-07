@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cadastro de Ano/Semestre</title>
+</h:head>
+<h:body>
+	<h1>Adicionar Ano/Semestre</h1>
+	<h:form id="frm_adicionar">
+		<h:messages />
+		<h:inputHidden value="#{anoSemestreBean.anoSemestre.id_anoSemestre}" />
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Ano" for="tx_ano" />
+			<h:inputText id="tx_ano" label="Ano"
+				value="#{anoSemestreBean.anoSemestre.ano}" size="5" maxlength="4"
+				required="true" requiredMessage="Informe o ano." />
+
+			<h:outputLabel value="Semestre" for="tx_semestre" />
+			<h:inputText id="tx_semestre" label="Semestre"
+				value="#{anoSemestreBean.anoSemestre.semestre}" size="2"
+				maxlength="1" required="true" requiredMessage="Informe o Semestre." />
+
+		</h:panelGrid>
+
+		<h:commandButton action="#{anoSemestreBean.adicionar}" value="Salvar" />
+
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexAnoSemestre" value="Voltar" />
+	</h:form>
+</h:body>
+</html>

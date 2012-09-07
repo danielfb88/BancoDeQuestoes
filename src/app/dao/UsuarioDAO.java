@@ -35,8 +35,7 @@ public class UsuarioDAO extends AbstractDAO {
 		campoValor.put(campos[0], id_grupo);
 		campoValor.put(campos[1], nome);
 		campoValor.put(campos[2], login);
-		campoValor.put(campos[3], login);
-		campoValor.put(campos[4], senha);
+		campoValor.put(campos[3], senha);
 
 		return super._adicionar(campoValor);
 	}

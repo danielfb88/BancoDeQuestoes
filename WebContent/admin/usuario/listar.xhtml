@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Listar Usuarios</title>
+</h:head>
+<h:body>
+	<h1>Listar Usuarios</h1>
+	<hr />
+
+	<h:form>
+		<h:dataTable var="item" value="#{usuarioBean.usuarios}" rules="rows"
+			cellpadding="5">
+			<f:facet name="header">Listagem dos Usuarios</f:facet>
+			<h:column>
+				<f:facet name="header">CÓDIGO</f:facet>
+				#{item.id_usuario}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">GRUPO</f:facet>
+				#{item.grupo.descricao}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">NOME</f:facet>
+				#{item.nome}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">LOGIN</f:facet>
+				#{item.login}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">SENHA</f:facet>
+				<h:outputLabel value="#{item.senha}" />
+			</h:column>
+
+			<h:column>
+				<h:commandLink action="#{usuarioBean.excluir}"
+					onclick="if (!confirm('Você realmente deseja excluir o usuario #{item.nome}?')) return false;">
+					<h:graphicImage library="imagens/botoes" name="delete.gif"
+						style="border:0" />
+					<f:setPropertyActionListener value="#{item}"
+						target="#{usuarioBean.usuario}" />
+				</h:commandLink>
+			</h:column>
+
+			<h:column>
+				<h:commandLink action="#{usuarioBean.formularioEditar}">
+					<h:graphicImage library="imagens/botoes" name="edit.gif"
+						style="border:0" />
+					<f:setPropertyActionListener value="#{item}"
+						target="#{usuarioBean.usuario}" />
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexUsuario" value="Voltar" />
+	</h:form>
+
+</h:body>
+</html>

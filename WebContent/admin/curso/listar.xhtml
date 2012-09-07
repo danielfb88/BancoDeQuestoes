@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Listar Cursos</title>
+</h:head>
+<h:body>
+	<h1>Listar Cursos</h1>
+	<hr />
+
+	<h:form>
+		<h:dataTable var="item" value="#{cursoBean.cursos}" border="1">
+			<h:column>
+				<f:facet name="header">
+					<h:outputLabel value="CÓDIGO" />
+				</f:facet>
+				<h:outputLabel value="#{item.id_curso}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputLabel value="DESCRIÇÃO" />
+				</f:facet>
+				<h:outputLabel value="#{item.descricao}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputLabel value="SIGLA" />
+				</f:facet>
+				<h:outputLabel value="#{item.sigla}" />
+			</h:column>
+			
+			<h:column>
+				<f:facet name="header">
+					<h:outputLabel value="TIPO GRADUACAO" />
+				</f:facet>
+				<h:outputLabel value="#{item.tipo_graduacao}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">
+					<h:outputLabel value="AÇÕES" />
+				</f:facet>
+				<h:commandLink value="Apagar" action="#{cursoBean.excluir}">
+					<f:setPropertyActionListener value="#{item}"
+						target="#{cursoBean.curso}" />
+				</h:commandLink>
+
+				<h:outputLabel value=" - " />
+
+				<h:commandLink value="Editar" action="#{cursoBean.formularioEditar}">
+					<f:setPropertyActionListener value="#{item}"
+						target="#{cursoBean.curso}" />
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexCurso" value="Voltar" />
+	</h:form>
+
+</h:body>
+</html>

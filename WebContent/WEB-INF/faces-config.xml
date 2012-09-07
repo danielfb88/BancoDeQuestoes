@@ -16,6 +16,11 @@
 		<managed-bean-class>app.managedbean.AssuntoMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>usuarioBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.UsuarioMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 
 	<!-- REGRAS GLOBAIS -->
 	<navigation-rule>
@@ -108,6 +113,26 @@
 		<navigation-case>
 			<from-outcome>paginaListar</from-outcome>
 			<to-view-id>/admin/assunto/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO USUARIO -->
+	<navigation-rule>
+		<from-view-id>/admin/usuario/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/usuario/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/usuario/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/usuario/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 
