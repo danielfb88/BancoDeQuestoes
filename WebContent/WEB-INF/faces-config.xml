@@ -5,9 +5,15 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd"
 	version="2.1">
 
+	<!-- BENS GERENCIÁVEIS -->
 	<managed-bean>
 		<managed-bean-name>grupoBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.GrupoManagedBean</managed-bean-class>
+		<managed-bean-class>app.managedbean.GrupoMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>assuntoBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.AssuntoMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 
@@ -22,43 +28,43 @@
 		<!-- INDEX GRUPO -->
 		<navigation-case>
 			<from-outcome>indexGrupo</from-outcome>
-			<to-view-id>/publico/grupo/index.xhtml</to-view-id>
+			<to-view-id>/admin/grupo/index.xhtml</to-view-id>
 		</navigation-case>
 
 		<!-- INDEX USUARIO -->
 		<navigation-case>
 			<from-outcome>indexUsuario</from-outcome>
-			<to-view-id>/publico/usuario/index.xhtml</to-view-id>
+			<to-view-id>/admin/usuario/index.xhtml</to-view-id>
 		</navigation-case>
 
 		<!-- INDEX CURSO -->
 		<navigation-case>
 			<from-outcome>indexCurso</from-outcome>
-			<to-view-id>/publico/curso/index.xhtml</to-view-id>
+			<to-view-id>/admin/curso/index.xhtml</to-view-id>
 		</navigation-case>
 
 		<!-- INDEX DISCIPLINA -->
 		<navigation-case>
 			<from-outcome>indexDisciplina</from-outcome>
-			<to-view-id>/publico/disciplina/index.xhtml</to-view-id>
+			<to-view-id>/admin/disciplina/index.xhtml</to-view-id>
 		</navigation-case>
 
 		<!-- INDEX ASSUNTO -->
 		<navigation-case>
 			<from-outcome>indexAssunto</from-outcome>
-			<to-view-id>/publico/assunto/index.xhtml</to-view-id>
+			<to-view-id>/admin/assunto/index.xhtml</to-view-id>
 		</navigation-case>
 
 		<!-- INDEX ANO/SEMESTRE -->
 		<navigation-case>
 			<from-outcome>indexAnoSemestre</from-outcome>
-			<to-view-id>/publico/anoSemestre/index.xhtml</to-view-id>
+			<to-view-id>/admin/anoSemestre/index.xhtml</to-view-id>
 		</navigation-case>
 
 		<!-- INDEX PERGUNTA -->
 		<navigation-case>
 			<from-outcome>indexPergunta</from-outcome>
-			<to-view-id>/publico/pergunta/index.xhtml</to-view-id>
+			<to-view-id>/admin/pergunta/index.xhtml</to-view-id>
 		</navigation-case>
 
 	</navigation-rule>
@@ -67,23 +73,42 @@
 
 	<!-- MÓDULO GRUPO -->
 	<navigation-rule>
-		<from-view-id>/publico/grupo/*</from-view-id>		
-		
+		<from-view-id>/admin/grupo/*</from-view-id>
+
 		<navigation-case>
 			<from-outcome>formularioAdicionar</from-outcome>
-			<to-view-id>/publico/grupo/adicionar.xhtml</to-view-id>
+			<to-view-id>/admin/grupo/adicionar.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<navigation-case>
 			<from-outcome>formularioEditar</from-outcome>
-			<to-view-id>/publico/grupo/editar.xhtml</to-view-id>
+			<to-view-id>/admin/grupo/editar.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<navigation-case>
 			<from-outcome>paginaListar</from-outcome>
-			<to-view-id>/publico/grupo/listar.xhtml</to-view-id>
+			<to-view-id>/admin/grupo/listar.xhtml</to-view-id>
 		</navigation-case>
-		
+	</navigation-rule>
+
+	<!-- MÓDULO ASSUNTO -->
+	<navigation-rule>
+		<from-view-id>/admin/assunto/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/assunto/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/assunto/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/assunto/listar.xhtml</to-view-id>
+		</navigation-case>
 	</navigation-rule>
 
 </faces-config>
