@@ -17,6 +17,10 @@ import app.controller.Usuario;
 public class UsuarioMB {
 	private Usuario usuario = new Usuario();
 	private List<Usuario> usuarios;
+	
+	private String senhaAntiga;
+	private String novaSenha;
+	private String confirmaSenha;
 
 	/**
 	 * Direciona para a Página de Adicionar Novo

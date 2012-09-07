@@ -314,17 +314,21 @@ public abstract class AbstractDAO {
 				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it
 						.next();
 
-				// verificando se é igual a alguma PK
-				// ignorando a(s) primary key(s)
-				if (!this.is_campoIgualPrimaryKey((String) map.getKey())) {
-					// inserindo a virgula depois do primeiro elemento
-					if (i++ != 0)
-						builder.append(", ");
+				// Verificando se o valor é diferente de nulo
+				if (map.getValue() != null) {
 
-					builder.append((String) map.getKey() + " = ?");
+					// verificando se é igual a alguma PK
+					// ignorando a(s) primary key(s)
+					if (!this.is_campoIgualPrimaryKey((String) map.getKey())) {
+						// inserindo a virgula depois do primeiro elemento
+						if (i++ != 0)
+							builder.append(", ");
 
-					// inserindo os valores em um array
-					ordem.add(map.getValue());
+						builder.append((String) map.getKey() + " = ?");
+
+						// inserindo os valores em um array
+						ordem.add(map.getValue());
+					}
 				}
 			}
 
