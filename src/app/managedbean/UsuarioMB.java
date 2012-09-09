@@ -57,18 +57,30 @@ public class UsuarioMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (usuario.adicionar()) {
-			this.usuario = new Usuario();
-			return this.paginaListar();
+		// verifica se a senha e a confirmação sao iguais
+		if (this.confirmaSenha.equals(usuario.getSenha())) {
 
+			if (usuario.adicionar()) {
+				this.usuario = new Usuario();
+				return this.paginaListar();
+
+			} else {
+				// Adicionando uma mensagem ao contexto do JSF
+				FacesMessage facesMessage = new FacesMessage(
+						"Não foi possível adicionar o usuario");
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, facesMessage);
+				// Vai permanecer na mesma página
+				return null;
+			}
 		} else {
-			// Adicionando uma mensagem ao contexto do JSF
 			FacesMessage facesMessage = new FacesMessage(
-					"Não foi possível adicionar o usuario");
+					"Senha não confirmada corretamente");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
 			return null;
+
 		}
 	}
 
@@ -78,14 +90,43 @@ public class UsuarioMB {
 	 * @return
 	 */
 	public String editar() {
-		if (usuario.editar()) {
-			this.usuario = new Usuario();
-			return this.paginaListar();
+		// Aumentando a segurança. para editar. a pessoa deve saber a senha
+		if (this.senhaAtual.equals(usuario.getSenha())) {
+			// se ele solicitar mudar de senha.
+			if (this.senhaNova != null && !this.senhaNova.isEmpty()) {
+				// se a confirmaçao estiver ok
+				if (this.senhaNova.equals(this.confirmaSenha)) {
+					usuario.setSenha(this.senhaNova);
+
+				} else {
+					FacesMessage facesMessage = new FacesMessage(
+							"Senha não confirmada corretamente");
+					FacesContext context = FacesContext.getCurrentInstance();
+					context.addMessage(null, facesMessage);
+					// Vai permanecer na mesma página
+					return null;
+				}
+			}
+
+			// editando
+			if (usuario.editar()) {
+				this.usuario = new Usuario();
+				// sucesso!
+				return this.paginaListar();
+
+			} else {
+				FacesContext context = FacesContext.getCurrentInstance();
+				FacesMessage facesMessage = new FacesMessage(
+						"Não foi possível editar o usuario");
+				context.addMessage(null, facesMessage);
+				// Vai permanecer na mesma página
+				return null;
+			}
 
 		} else {
 			FacesContext context = FacesContext.getCurrentInstance();
 			FacesMessage facesMessage = new FacesMessage(
-					"Não foi possível editar o usuario");
+					"Você deve inserir a senha atual para que seja possível editar este usuário");
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
 			return null;

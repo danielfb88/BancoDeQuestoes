@@ -36,6 +36,10 @@
 				value="#{usuarioBean.usuario.senha}" size="20" maxlength="6"
 				required="true" requiredMessage="Informe a senha." />
 
+			<h:outputText value="Confirme a Senha:" for="tx_confirmaSenha" />
+			<h:inputSecret id="tx_confirmaSenha" label="Confirme a Senha"
+				value="#{usuarioBean.confirmaSenha}" size="20" maxlength="6" />
+
 		</h:panelGrid>
 
 		<h:commandButton action="#{usuarioBean.adicionar}" value="Salvar" />

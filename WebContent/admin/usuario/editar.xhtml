@@ -28,6 +28,9 @@
 
 			<h:outputText value="Login:" for="otx_login" />
 			<h:outputText id="otx_login" value="#{usuarioBean.usuario.login}" />
+			
+			<h:inputHidden value="#{usuarioBean.usuario.login}" />
+			<h:inputHidden value="#{usuarioBean.usuario.senha}" />
 
 			<h:outputText value="Senha Atual" for="tx_senhaAtual" />
 			<h:inputSecret id="tx_senhaAtual" label="Senha Atual"
