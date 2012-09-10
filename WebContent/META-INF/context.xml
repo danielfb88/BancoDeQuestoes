@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Data Source JNDI -->
+<Context reloadable="true">
+	<Resource name="jdbc/BancoDeQuestoes"
+		auth="Container"
+		type="javax.sql.DataSource"
+		maxActive="100"
+		maxIdle="30"
+		maxWait="10000"
+		username="postgres"
+		password="123456"
+		driverClassName="org.postgresql.Driver"
+		url="jdbc:postgresql://localhost:5432/banco_de_questoes?autoReconnect=true"/>
+</Context>
