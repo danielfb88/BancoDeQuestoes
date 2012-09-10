@@ -16,9 +16,8 @@ import app.controller.Usuario;
  */
 public class UsuarioMB {
 	private Usuario usuario = new Usuario();
-	private List<Usuario> usuarios;
+	private List<Usuario> lista;
 
-	// TODO: Desenvolver lógica das senhas
 	private String senhaAtual;
 	private String senhaNova;
 	private String confirmaSenha;
@@ -58,29 +57,27 @@ public class UsuarioMB {
 	 */
 	public String adicionar() {
 		// verifica se a senha e a confirmação sao iguais
-		if (this.confirmaSenha.equals(usuario.getSenha())) {
-
-			if (usuario.adicionar()) {
-				this.usuario = new Usuario();
-				return this.paginaListar();
-
-			} else {
-				// Adicionando uma mensagem ao contexto do JSF
-				FacesMessage facesMessage = new FacesMessage(
-						"Não foi possível adicionar o usuario");
-				FacesContext context = FacesContext.getCurrentInstance();
-				context.addMessage(null, facesMessage);
-				// Vai permanecer na mesma página
-				return null;
-			}
-		} else {
-			FacesMessage facesMessage = new FacesMessage(
-					"Senha não confirmada corretamente");
+		if (!this.confirmaSenha.equals(usuario.getSenha())) {
+			FacesMessage facesMessage = new FacesMessage("Senha não confirmada corretamente");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
 			return null;
+		}
 
+		if (usuario.adicionar()) {
+			this.usuario = new Usuario();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
+			return this.paginaListar();
+
+		} else {
+			// Adicionando uma mensagem ao contexto do JSF
+			FacesMessage facesMessage = new FacesMessage("Não foi possível adicionar o usuario");
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage(null, facesMessage);
+			// Vai permanecer na mesma página
+			return null;
 		}
 	}
 
@@ -99,8 +96,7 @@ public class UsuarioMB {
 					usuario.setSenha(this.senhaNova);
 
 				} else {
-					FacesMessage facesMessage = new FacesMessage(
-							"Senha não confirmada corretamente");
+					FacesMessage facesMessage = new FacesMessage("Senha não confirmada corretamente");
 					FacesContext context = FacesContext.getCurrentInstance();
 					context.addMessage(null, facesMessage);
 					// Vai permanecer na mesma página
@@ -111,13 +107,14 @@ public class UsuarioMB {
 			// editando
 			if (usuario.editar()) {
 				this.usuario = new Usuario();
+				// nulando a lista para obriga-lo a buscar novamente do banco
+				this.lista = null;
 				// sucesso!
 				return this.paginaListar();
 
 			} else {
 				FacesContext context = FacesContext.getCurrentInstance();
-				FacesMessage facesMessage = new FacesMessage(
-						"Não foi possível editar o usuario");
+				FacesMessage facesMessage = new FacesMessage("Não foi possível editar o usuario");
 				context.addMessage(null, facesMessage);
 				// Vai permanecer na mesma página
 				return null;
@@ -125,8 +122,7 @@ public class UsuarioMB {
 
 		} else {
 			FacesContext context = FacesContext.getCurrentInstance();
-			FacesMessage facesMessage = new FacesMessage(
-					"Você deve inserir a senha atual para que seja possível editar este usuário");
+			FacesMessage facesMessage = new FacesMessage("Você deve inserir a senha atual para que seja possível editar este usuário");
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
 			return null;
@@ -141,12 +137,13 @@ public class UsuarioMB {
 	public String excluir() {
 		if (usuario.excluir()) {
 			this.usuario = new Usuario();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
 			return this.paginaListar();
 
 		} else {
 			this.usuario = new Usuario();
-			FacesMessage facesMessage = new FacesMessage(
-					"Não é possível excluir o usuario");
+			FacesMessage facesMessage = new FacesMessage("Não é possível excluir o usuario");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
 			return null;
@@ -163,13 +160,15 @@ public class UsuarioMB {
 	}
 
 	/**
-	 * Retornar Usuarios
+	 * Retornar Lista de Usuarios
 	 * 
 	 * @return
 	 */
-	public List<Usuario> getUsuarios() {
-		this.usuarios = this.usuario.listar(true);
-		return this.usuarios;
+	public List<Usuario> getLista() {
+		if (this.lista == null)
+			this.lista = this.usuario.listar(true);
+
+		return this.lista;
 	}
 
 	/**
@@ -178,14 +177,6 @@ public class UsuarioMB {
 	 */
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	/**
-	 * @param usuarios
-	 *            the usuarios to set
-	 */
-	public void setUsuarios(List<Usuario> usuarios) {
-		this.usuarios = usuarios;
 	}
 
 	/**

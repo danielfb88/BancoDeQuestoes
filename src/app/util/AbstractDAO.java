@@ -19,6 +19,7 @@ import app.util.conexao.DAOUtil;
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 10-08-2012
+ * @version 1.0
  * 
  */
 public abstract class AbstractDAO {
@@ -47,33 +48,31 @@ public abstract class AbstractDAO {
 	 *            Lista com os valores inseridos na mesma ordem dos caracteres
 	 *            curinga na query do PreparedStatemet
 	 */
-	protected void prepareStatement(PreparedStatement ps,
-			List<Object> parametros, Boolean useLike) {
+	protected void prepareStatement(PreparedStatement ps, List<Object> parametros, Boolean useLike) {
 		try {
 			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
 				switch (parametros.get(i).getClass().getName()) {
-				case "java.lang.String":
-					if (useLike)
-						ps.setString(indexPS, "%" + (String) parametros.get(i)
-								+ "%");
-					else
-						ps.setString(indexPS, (String) parametros.get(i));
-					break;
-				case "java.lang.Integer":
-					ps.setInt(indexPS, (Integer) parametros.get(i));
-					break;
-				case "java.lang.Double":
-					ps.setDouble(indexPS, (Double) parametros.get(i));
-					break;
-				case "java.lang.Boolean":
-					ps.setBoolean(indexPS, (Boolean) parametros.get(i));
-					break;
-				case "java.lang.Date":
-					ps.setDate(indexPS, (Date) parametros.get(i));
-					break;
-				default:
-					throw new Exception("Tipo do parâmetro não especificado");
+					case "java.lang.String":
+						if (useLike)
+							ps.setString(indexPS, "%" + (String) parametros.get(i) + "%");
+						else
+							ps.setString(indexPS, (String) parametros.get(i));
+						break;
+					case "java.lang.Integer":
+						ps.setInt(indexPS, (Integer) parametros.get(i));
+						break;
+					case "java.lang.Double":
+						ps.setDouble(indexPS, (Double) parametros.get(i));
+						break;
+					case "java.lang.Boolean":
+						ps.setBoolean(indexPS, (Boolean) parametros.get(i));
+						break;
+					case "java.lang.Date":
+						ps.setDate(indexPS, (Date) parametros.get(i));
+						break;
+					default:
+						throw new Exception("Tipo do parâmetro não especificado");
 				}
 			}
 		} catch (SQLException e) {
@@ -90,8 +89,7 @@ public abstract class AbstractDAO {
 	private void verificaNomeTabela() {
 		if (this.nomeDaTabela == null || this.nomeDaTabela.isEmpty()) {
 			try {
-				throw new Exception(
-						"Nome da tabela não informado na sub-classe");
+				throw new Exception("Nome da tabela não informado na sub-classe");
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(0);
@@ -105,8 +103,7 @@ public abstract class AbstractDAO {
 	private void verificaPK() {
 		try {
 			if (this.primaryKey == null || this.primaryKey.length == 0) {
-				throw new Exception(
-						"Nome da coluna de ID não informado na sub-classe");
+				throw new Exception("Nome da coluna de ID não informado na sub-classe");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,8 +191,7 @@ public abstract class AbstractDAO {
 		StringBuilder builder = new StringBuilder();
 
 		for (int i = 0; i < this.primaryKey.length; i++) {
-			builder.append(this.primaryKey[i] + " = "
-					+ campoValor.get(this.primaryKey[i]));
+			builder.append(this.primaryKey[i] + " = " + campoValor.get(this.primaryKey[i]));
 			if (i != this.primaryKey.length - 1)
 				builder.append(", ");
 		}
@@ -229,12 +225,10 @@ public abstract class AbstractDAO {
 			builder.append("(");
 
 			// Iterando os objetos para pegar a chave
-			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet()
-					.iterator();
+			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
 
 			while (it.hasNext()) {
-				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it
-						.next();
+				Map.Entry<Object, Object> me = (Map.Entry<Object, Object>) it.next();
 
 				// inserindo os valores em um arraylist
 				ordem.add(me.getValue());
@@ -259,8 +253,7 @@ public abstract class AbstractDAO {
 			builder.append(")");
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
 
 			// preparando o statement
 			this.prepareStatement(preparedStatement, ordem, false);
@@ -307,12 +300,10 @@ public abstract class AbstractDAO {
 			builder.append("SET ");
 
 			// Iterando os objetos para pegar a chave
-			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet()
-					.iterator();
+			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
 
 			while (it.hasNext()) {
-				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it
-						.next();
+				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it.next();
 
 				// Verificando se o valor é diferente de nulo
 				if (map.getValue() != null) {
@@ -338,8 +329,7 @@ public abstract class AbstractDAO {
 			builder.append(this.montaParteQueryID(campoValor));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
 
 			// preparando o statement
 			this.prepareStatement(preparedStatement, ordem, false);
@@ -364,8 +354,7 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	protected int _excluir(Integer... primaryKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(
-				primaryKey.length);
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(primaryKey.length);
 
 		// mapeando id - valor
 		for (int i = 0; i < primaryKey.length; i++) {
@@ -389,8 +378,7 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	public int getValuePrimaryKey(Integer... foreignKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(
-				campos.length);
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(campos.length);
 
 		for (int i = 0; i < campos.length; i++) {
 			campoValor.put(this.campos[i], foreignKey[i]);
@@ -428,8 +416,7 @@ public abstract class AbstractDAO {
 			builder.append(this.montaParteQueryID(campoValor));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
 
 			// executando
 			linhasAfetadas = preparedStatement.executeUpdate();
@@ -450,8 +437,7 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	protected Map<String, Object> _buscarPorId(Integer... primaryKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(
-				primaryKey.length);
+		Map<Object, Object> campoValor = new HashMap<Object, Object>(primaryKey.length);
 
 		// mapeando id - valor
 		for (int i = 0; i < primaryKey.length; i++) {
@@ -490,8 +476,7 @@ public abstract class AbstractDAO {
 			builder.append(this.montaParteQueryID(campoValor));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
 
 			resultSet = preparedStatement.executeQuery();
 
@@ -521,8 +506,7 @@ public abstract class AbstractDAO {
 	 *            Primary Key)
 	 * @return
 	 */
-	protected List<Map<String, Object>> _listarPor(
-			Map<Object, Object> campoValor) {
+	protected List<Map<String, Object>> _listarPor(Map<Object, Object> campoValor) {
 		this.verificaNomeTabela();
 		this.verificaPK();
 
@@ -543,8 +527,7 @@ public abstract class AbstractDAO {
 
 					builder.append(" AND ");
 					// se for string use o LIKE
-					if (campoValor.get(campos[i]).getClass().getName()
-							.equals("java.lang.String")) {
+					if (campoValor.get(campos[i]).getClass().getName().equals("java.lang.String")) {
 						builder.append(campos[i] + " LIKE ?");
 					} else {
 						builder.append(campos[i] + " = ?");
@@ -554,8 +537,7 @@ public abstract class AbstractDAO {
 
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance()
-					.getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
 
 			// preparando o statement
 			this.prepareStatement(preparedStatement, ordem, true);
@@ -587,8 +569,7 @@ public abstract class AbstractDAO {
 	 * Preenche Map com os dados vindos do ResultSet, usando array como chave
 	 * para busca
 	 */
-	protected void preencherMap(Map<String, Object> map, ResultSet rs,
-			String[] chaves) {
+	protected void preencherMap(Map<String, Object> map, ResultSet rs, String[] chaves) {
 
 		try {
 			for (int i = 0; i < chaves.length; i++) {
@@ -610,8 +591,7 @@ public abstract class AbstractDAO {
 	 *            Map
 	 * @return
 	 */
-	protected List<Map<String, Object>> executarQuery(String query,
-			String[] atributos) {
+	protected List<Map<String, Object>> executarQuery(String query, String[] atributos) {
 
 		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
 
@@ -650,8 +630,8 @@ public abstract class AbstractDAO {
 		return this.executarQuery(query, this.getAtributos());
 	}
 
-	protected List<Map<String, Object>> executarQueryPreparada(String query,
-			Object[] ordem, String[] primaryKey, String[] campos) {
+	protected List<Map<String, Object>> executarQueryPreparada(String query, Object[] ordem,
+			String[] primaryKey, String[] campos) {
 		/**
 		 * TODO: DESENVOLVER = Executar query Preparada com caracters curingas,
 		 * recebendo um array com a ordem dos valores a serem inseridos e

@@ -16,7 +16,7 @@ import app.controller.Assunto;
  */
 public class AssuntoMB {
 	private Assunto assunto = new Assunto();
-	private List<Assunto> assuntos;
+	private List<Assunto> lista;
 
 	/**
 	 * Direciona para a Página de Adicionar Novo
@@ -54,6 +54,8 @@ public class AssuntoMB {
 	public String adicionar() {
 		if (assunto.adicionar()) {
 			this.assunto = new Assunto();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
 			return this.paginaListar();
 
 		} else {
@@ -75,6 +77,8 @@ public class AssuntoMB {
 	public String editar() {
 		if (assunto.editar()) {
 			this.assunto = new Assunto();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
 			return this.paginaListar();
 
 		} else {
@@ -95,6 +99,8 @@ public class AssuntoMB {
 	public String excluir() {
 		if (assunto.excluir()) {
 			this.assunto = new Assunto();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
 			return this.paginaListar();
 
 		} else {
@@ -117,13 +123,15 @@ public class AssuntoMB {
 	}
 
 	/**
-	 * Retornar Assuntos
+	 * Retornar Lista de Assuntos
 	 * 
 	 * @return
 	 */
-	public List<Assunto> getAssuntos() {
-		this.assuntos = this.assunto.listar();
-		return this.assuntos;
+	public List<Assunto> getLista() {
+		if (this.lista == null)
+			this.lista = this.assunto.listar();
+
+		return this.lista;
 	}
 
 	/**
@@ -132,14 +140,6 @@ public class AssuntoMB {
 	 */
 	public void setAssunto(Assunto assunto) {
 		this.assunto = assunto;
-	}
-
-	/**
-	 * @param assuntos
-	 *            the assuntos to set
-	 */
-	public void setAssuntos(List<Assunto> assuntos) {
-		this.assuntos = assuntos;
 	}
 
 }

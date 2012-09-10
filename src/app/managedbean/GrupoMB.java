@@ -16,7 +16,7 @@ import app.controller.Grupo;
  */
 public class GrupoMB {
 	private Grupo grupo = new Grupo();
-	private List<Grupo> grupos;
+	private List<Grupo> lista;
 
 	/**
 	 * Direciona para a Página de Adicionar Novo
@@ -54,6 +54,8 @@ public class GrupoMB {
 	public String adicionar() {
 		if (grupo.adicionar()) {
 			this.grupo = new Grupo();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
 			return this.paginaListar();
 
 		} else {
@@ -75,6 +77,8 @@ public class GrupoMB {
 	public String editar() {
 		if (grupo.editar()) {
 			this.grupo = new Grupo();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
 			return this.paginaListar();
 
 		} else {
@@ -95,6 +99,8 @@ public class GrupoMB {
 	public String excluir() {
 		if (grupo.excluir()) {
 			this.grupo = new Grupo();
+			// nulando a lista para obriga-lo a buscar novamente do banco
+			this.lista = null;
 			return this.paginaListar();
 
 		} else {
@@ -117,13 +123,15 @@ public class GrupoMB {
 	}
 
 	/**
-	 * Retornar Grupos
+	 * Retornar Lista de Grupos
 	 * 
 	 * @return
 	 */
-	public List<Grupo> getGrupos() {
-		this.grupos = this.grupo.listar();
-		return this.grupos;
+	public List<Grupo> getLista() {
+		if (this.lista == null)
+			this.lista = this.grupo.listar();
+
+		return this.lista;
 	}
 
 	/**
@@ -132,14 +140,6 @@ public class GrupoMB {
 	 */
 	public void setGrupo(Grupo grupo) {
 		this.grupo = grupo;
-	}
-
-	/**
-	 * @param grupos
-	 *            the grupos to set
-	 */
-	public void setGrupos(List<Grupo> grupos) {
-		this.grupos = grupos;
 	}
 
 }

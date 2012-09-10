@@ -12,11 +12,15 @@
 	<hr />
 
 	<h:form>
-		<h:commandLink action="#{grupoBean.formularioAdicionar}" value="Adicionar" />
+		<h:commandLink action="#{grupoBean.formularioAdicionar}"
+			value="Adicionar" />
 		<h:outputLabel value=" - " />
 		<h:commandLink action="#{grupoBean.paginaListar}" value="Listar" />
 	</h:form>
 	<hr />
+	<h:form>
+		<h:commandLink action="inicio" value="Voltar" />
+	</h:form>
 
 </h:body>
 </html>
