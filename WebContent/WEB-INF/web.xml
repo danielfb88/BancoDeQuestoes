@@ -28,12 +28,29 @@
 		<param-value>Development</param-value>
 	</context-param>
 
+
+	<!-- Este bloco avisa ao tomcat que o DataSource JNDI "jdbc/BancoDeQuestoesDB"
+		contido em: WebContent/META-INF/context.xml, deve estar disponível para
+		o aplicativo -->
+	<resource-ref>
+		<description>DataSource BancoDeQuestoesDB</description>
+		<res-ref-name>jdbc/BancoDeQuestoesDB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
+
 	<!-- Spring Security -->
+	<!-- Faz com que o Spring-Security possa interceptar todas as requisições
+		realizadas e avalie se quem está requisitando tem permissão de acesso ou
+		não. -->
 	<context-param>
+		<!-- Define quais são os arquivos de configuração disponíveis -->
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			<!-- Arquivos de configuraçao disponíveis -->
+			<!-- Arquivo que diz ao Spring-Security qual DataSource usar para a conexão  -->
 			/WEB-INF/applicationContext.xml
+			<!-- Arquivo com informações de permissão para pastas e permissões -->
 			/WEB-INF/applicationContext-security.xml
 		</param-value>
 	</context-param>
@@ -43,10 +60,9 @@
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter>
-
 	<filter-mapping>
 		<filter-name>springSecurityFilterChain</filter-name>
-		<!-- Todas as requisições serão avaliadas -->
+		<!-- Faz com que todas as requisições sejam avaliadas -->
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
