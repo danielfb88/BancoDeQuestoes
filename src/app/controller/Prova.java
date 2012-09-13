@@ -96,21 +96,27 @@ public class Prova {
 	 * 
 	 * @return
 	 */
-	public boolean adicionar() throws Exception {
+	public boolean adicionar() {
 		// primeiro busca o id_grade_periodo para inserir no DAO
 		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
 				.listarPor(this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
 
-		if (mapGradePeriodo != null) {
-			return this.provaDAO.adicionar(
-					(Integer) mapGradePeriodo.get("id_grade_periodo"),
-					this.anoSemestre.getId_anoSemestre(), descricao,
-					this.dataProva) > 0;
-		} else {
-			throw new Exception("A relação GradePeriodo id_grade="
-					+ this.grade.getId_grade() + " e id_periodo="
-					+ this.periodo.getId_periodo() + " não existe.");
+		try {
+			if (mapGradePeriodo == null) {
+				throw new Exception("A relação GradePeriodo id_grade="
+						+ this.grade.getId_grade() + " e id_periodo="
+						+ this.periodo.getId_periodo() + " não existe.");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
 		}
+
+		return this.provaDAO.adicionar(
+				(Integer) mapGradePeriodo.get("id_grade_periodo"),
+				this.anoSemestre.getId_anoSemestre(), descricao,
+				this.dataProva) > 0;
 	}
 
 	/**
@@ -146,21 +152,24 @@ public class Prova {
 	 * 
 	 * @return
 	 */
-	public boolean editar() throws Exception {
+	public boolean editar() {
 		// primeiro busca o id_grade_periodo para inserir no DAO
 		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
-				.listarPor(this.grade.getId_grade(),
-						this.periodo.getId_periodo()).get(0);
-
-		if (mapGradePeriodo != null) {
-			return this.provaDAO.editar(id_prova,
-					(Integer) mapGradePeriodo.get("id_grade_periodo"),
-					this.anoSemestre.getId_anoSemestre(), descricao, dataProva) > 0;
-		} else {
-			throw new Exception("A relação GradePeriodo id_grade="
-					+ this.grade.getId_grade() + " e id_periodo="
-					+ this.periodo.getId_periodo() + " não existe.");
+				.listarPor(this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
+		try {
+			if (mapGradePeriodo == null) {
+				throw new Exception("A relação GradePeriodo id_grade="
+						+ this.grade.getId_grade() + " e id_periodo="
+						+ this.periodo.getId_periodo() + " não existe.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
 		}
+
+		return this.provaDAO.editar(id_prova,
+				(Integer) mapGradePeriodo.get("id_grade_periodo"),
+				this.anoSemestre.getId_anoSemestre(), descricao, dataProva) > 0;
 	}
 
 	/**

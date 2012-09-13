@@ -21,6 +21,26 @@
 		<managed-bean-class>app.managedbean.UsuarioMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>perguntaBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.PerguntaMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>respostaBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.RespostaMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>periodoBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.PeriodoMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>provaBean</managed-bean-name>
+		<managed-bean-class>app.managedbean.ProvaMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 
 	<!-- REGRAS GLOBAIS -->
 	<navigation-rule>
@@ -71,6 +91,30 @@
 			<from-outcome>indexPergunta</from-outcome>
 			<to-view-id>/admin/pergunta/index.xhtml</to-view-id>
 		</navigation-case>
+		
+		<!-- INDEX RESPOSTA -->
+		<navigation-case>
+			<from-outcome>indexResposta</from-outcome>
+			<to-view-id>/admin/resposta/index.xhtml</to-view-id>
+		</navigation-case>
+
+		<!-- INDEX PERIODO -->
+		<navigation-case>
+			<from-outcome>indexPeriodo</from-outcome>
+			<to-view-id>/admin/periodo/index.xhtml</to-view-id>
+		</navigation-case>
+		
+		<!-- INDEX GRADE -->
+		<navigation-case>
+			<from-outcome>indexGrade</from-outcome>
+			<to-view-id>/admin/grade/index.xhtml</to-view-id>
+		</navigation-case>
+
+		<!-- INDEX PROVA -->
+		<navigation-case>
+			<from-outcome>indexProva</from-outcome>
+			<to-view-id>/admin/prova/index.xhtml</to-view-id>
+		</navigation-case>
 
 	</navigation-rule>
 
@@ -115,7 +159,7 @@
 			<to-view-id>/admin/assunto/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-	
+
 	<!-- MÓDULO USUARIO -->
 	<navigation-rule>
 		<from-view-id>/admin/usuario/*</from-view-id>
@@ -133,6 +177,106 @@
 		<navigation-case>
 			<from-outcome>paginaListar</from-outcome>
 			<to-view-id>/admin/usuario/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO PERGUNTA -->
+	<navigation-rule>
+		<from-view-id>/admin/pergunta/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/pergunta/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/pergunta/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/pergunta/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO RESPOSTA -->
+	<navigation-rule>
+		<from-view-id>/admin/resposta/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/resposta/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/resposta/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/resposta/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO PERIODO -->
+	<navigation-rule>
+		<from-view-id>/admin/periodo/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/periodo/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/periodo/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/periodo/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO PROVA -->
+	<navigation-rule>
+		<from-view-id>/admin/prova/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/prova/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/prova/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/prova/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO GRADE -->
+	<navigation-rule>
+		<from-view-id>/admin/grade/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/grade/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/grade/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/grade/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 
