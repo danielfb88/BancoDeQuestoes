@@ -88,6 +88,17 @@ public class Grupo {
 	}
 
 	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id) {
+		this.id_grupo = id;
+		return this.carregar();
+	}
+
+	/**
 	 * Editar
 	 * 
 	 * @return
@@ -112,16 +123,15 @@ public class Grupo {
 	 */
 	public List<Grupo> listar() {
 		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMap = this.grupoDAO.listarPor(descricao,
-				tipo);
+		List<Map<String, Object>> listMap = this.grupoDAO.listarPor(descricao, tipo);
 
-		List<Grupo> listGrupo = new ArrayList<Grupo>();
+		List<Grupo> list = new ArrayList<Grupo>();
 
 		for (Map<String, Object> map : listMap) {
-			listGrupo.add(new Grupo(map));
+			list.add(new Grupo(map));
 		}
 
-		return listGrupo;
+		return list;
 	}
 
 	/**

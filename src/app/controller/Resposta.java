@@ -63,8 +63,7 @@ public class Resposta {
 	 * @param map
 	 * @param carregarRelacionamentos
 	 */
-	private void carregarObjeto(Map<String, Object> map,
-			boolean carregarRelacionamentos) {
+	private void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
 
 		this.id_resposta = (Integer) map.get("id_resposta");
 		this.pergunta.setId_pergunta((Integer) map.get("id_pergunta"));
@@ -95,8 +94,7 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.respostaDAO
-				.buscarPorId(this.id_resposta);
+		Map<String, Object> map = this.respostaDAO.buscarPorId(this.id_resposta);
 
 		if (map != null) {
 			this.carregarObjeto(map, carregarRelacionamentos);
@@ -104,6 +102,17 @@ public class Resposta {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
+		this.id_resposta = id;
+		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -137,16 +146,15 @@ public class Resposta {
 		int respostaCorreta = (correta) ? 1 : 0;
 		// buscando a lista de Mapa recuperando pelos parametros
 		List<Map<String, Object>> listMap = this.respostaDAO.listarPor(
-				pergunta.getId_pergunta(), descricao, respostaCorreta,
-				observacao);
+				pergunta.getId_pergunta(), descricao, respostaCorreta, observacao);
 
-		List<Resposta> listResposta = new ArrayList<Resposta>();
+		List<Resposta> list = new ArrayList<Resposta>();
 
 		for (Map<String, Object> map : listMap) {
-			listResposta.add(new Resposta(map, carregarRelacionamentos));
+			list.add(new Resposta(map, carregarRelacionamentos));
 		}
 
-		return listResposta;
+		return list;
 	}
 
 	/**

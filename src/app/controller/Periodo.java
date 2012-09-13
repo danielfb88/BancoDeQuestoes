@@ -63,6 +63,17 @@ public class Periodo {
 	}
 
 	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id) {
+		this.id_periodo = id;
+		return this.carregar();
+	}
+
+	/**
 	 * Adicionar
 	 * 
 	 * @return
@@ -112,16 +123,15 @@ public class Periodo {
 	 */
 	public List<Periodo> listar() {
 		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.periodoDAO.listarPor(
-				descricao, numero);
+		List<Map<String, Object>> listMap = this.periodoDAO.listarPor(descricao, numero);
 
-		List<Periodo> listPeriodo = new ArrayList<Periodo>();
+		List<Periodo> list = new ArrayList<Periodo>();
 
 		for (Map<String, Object> map : listMap) {
-			listPeriodo.add(new Periodo(map));
+			list.add(new Periodo(map));
 		}
 
-		return listPeriodo;
+		return list;
 	}
 
 	/**

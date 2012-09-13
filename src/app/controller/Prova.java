@@ -99,8 +99,7 @@ public class Prova {
 	public boolean adicionar() throws Exception {
 		// primeiro busca o id_grade_periodo para inserir no DAO
 		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
-				.listarPor(this.grade.getId_grade(),
-						this.periodo.getId_periodo()).get(0);
+				.listarPor(this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
 
 		if (mapGradePeriodo != null) {
 			return this.provaDAO.adicionar(
@@ -129,6 +128,17 @@ public class Prova {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
+		this.id_prova = id;
+		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -171,7 +181,7 @@ public class Prova {
 		// primeiro busca o id_grade_periodo para inserir no DAO
 		Integer id_grade_periodo = this.rel_gradePeriodoDAO.getValuePrimaryKey(
 				grade.getId_grade(), periodo.getId_periodo());
-		
+
 		// buscando a lista de Mapa recuperando pelos parametros
 		List<Map<String, Object>> listMap = this.provaDAO.listarPor(
 				id_grade_periodo, anoSemestre.getId_anoSemestre(), descricao,

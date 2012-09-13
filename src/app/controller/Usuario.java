@@ -35,8 +35,7 @@ public class Usuario {
 	 * @param login
 	 * @param senha
 	 */
-	public Usuario(Integer id_usuario, Grupo grupo, String nome, String login,
-			String senha) {
+	public Usuario(Integer id_usuario, Grupo grupo, String nome, String login, String senha) {
 		super();
 		this.id_usuario = id_usuario;
 		this.grupo = grupo;
@@ -65,8 +64,7 @@ public class Usuario {
 	 * @param map
 	 * @param carregarRelacionamentos
 	 */
-	private void carregarObjeto(Map<String, Object> map,
-			boolean carregarRelacionamentos) {
+	private void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
 
 		this.id_usuario = (Integer) map.get("id_usuario");
 		this.grupo.setId_grupo((Integer) map.get("id_grupo"));
@@ -84,8 +82,7 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.usuarioDAO.adicionar(grupo.getId_grupo(), nome, login,
-				senha) > 0;
+		return this.usuarioDAO.adicionar(grupo.getId_grupo(), nome, login, senha) > 0;
 	}
 
 	/**
@@ -106,13 +103,23 @@ public class Usuario {
 	}
 
 	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
+		this.id_usuario = id;
+		return this.carregar(carregarRelacionamentos);
+	}
+
+	/**
 	 * Editar
 	 * 
 	 * @return
 	 */
 	public boolean editar() {
-		return this.usuarioDAO.editar(id_usuario, grupo.getId_grupo(), nome,
-				login, senha) > 0;
+		return this.usuarioDAO.editar(id_usuario, grupo.getId_grupo(), nome, login, senha) > 0;
 	}
 
 	/**
@@ -132,16 +139,15 @@ public class Usuario {
 	 */
 	public List<Usuario> listar(boolean carregarRelacionamentos) {
 		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.usuarioDAO.listarPor(
-				grupo.getId_grupo(), nome, login, senha);
+		List<Map<String, Object>> listMap = this.usuarioDAO.listarPor(grupo.getId_grupo(), nome, login, senha);
 
-		List<Usuario> listUsuario = new ArrayList<Usuario>();
+		List<Usuario> list = new ArrayList<Usuario>();
 
 		for (Map<String, Object> map : listMap) {
-			listUsuario.add(new Usuario(map, carregarRelacionamentos));
+			list.add(new Usuario(map, carregarRelacionamentos));
 		}
 
-		return listUsuario;
+		return list;
 	}
 
 	/**

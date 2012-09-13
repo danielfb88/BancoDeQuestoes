@@ -71,8 +71,7 @@ public class Pergunta {
 	 *            Map espelhando a tabela correspondente deste objeto
 	 * @param carregarRelacionamentos
 	 */
-	private void carregarObjeto(Map<String, Object> map,
-			boolean carregarRelacionamentos) {
+	private void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
 
 		this.id_pergunta = (Integer) map.get("id_pergunta");
 		this.usuario.setId_usuario((Integer) map.get("id_usuario"));
@@ -104,8 +103,7 @@ public class Pergunta {
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.perguntaDAO
-				.buscarPorId(this.id_pergunta);
+		Map<String, Object> map = this.perguntaDAO.buscarPorId(this.id_pergunta);
 
 		if (map != null) {
 			this.carregarObjeto(map, carregarRelacionamentos);
@@ -113,6 +111,17 @@ public class Pergunta {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
+		this.id_pergunta = id;
+		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -147,13 +156,13 @@ public class Pergunta {
 				usuario.getId_usuario(), descricao, tipo_pergunta.toString(),
 				nivel_pergunta.toString(), enunciado, comentario);
 
-		List<Pergunta> listPergunta = new ArrayList<Pergunta>();
+		List<Pergunta> list = new ArrayList<Pergunta>();
 
 		for (Map<String, Object> map : listMap) {
-			listPergunta.add(new Pergunta(map, carregarRelacionamentos));
+			list.add(new Pergunta(map, carregarRelacionamentos));
 		}
 
-		return listPergunta;
+		return list;
 	}
 
 	/**

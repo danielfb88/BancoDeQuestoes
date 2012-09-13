@@ -75,10 +75,8 @@ public class Grade {
 
 		this.id_grade = (Integer) map.get("id_grade");
 		this.curso.setId_curso((Integer) map.get("id_curso"));
-		this.anoSemestre_inicial.setId_anoSemestre((Integer) map
-				.get("id_anosemestre_inicial"));
-		this.anoSemestre_final.setId_anoSemestre((Integer) map
-				.get("id_anosemestre_final"));
+		this.anoSemestre_inicial.setId_anoSemestre((Integer) map.get("id_anosemestre_inicial"));
+		this.anoSemestre_final.setId_anoSemestre((Integer) map.get("id_anosemestre_final"));
 		this.descricao = (String) map.get("descricao");
 
 		if (carregarRelacionamentos) {
@@ -117,6 +115,17 @@ public class Grade {
 	}
 
 	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
+		this.id_grade = id;
+		return this.carregar(carregarRelacionamentos);
+	}
+
+	/**
 	 * Editar
 	 * 
 	 * @return
@@ -148,13 +157,13 @@ public class Grade {
 				curso.getId_curso(), anoSemestre_inicial.getId_anoSemestre(),
 				anoSemestre_final.getId_anoSemestre(), descricao);
 
-		List<Grade> listGrade = new ArrayList<Grade>();
+		List<Grade> list = new ArrayList<Grade>();
 
 		for (Map<String, Object> map : listMap) {
-			listGrade.add(new Grade(map, carregarRelacionamentos));
+			list.add(new Grade(map, carregarRelacionamentos));
 		}
 
-		return listGrade;
+		return list;
 	}
 
 	/**
@@ -164,8 +173,7 @@ public class Grade {
 	 * @return
 	 */
 	public boolean inserirPeriodo(Periodo periodo) {
-		return this.rel_gradePeriodoDAO.adicionar(id_grade,
-				periodo.getId_periodo()) > 0;
+		return this.rel_gradePeriodoDAO.adicionar(id_grade, periodo.getId_periodo()) > 0;
 	}
 
 	/**
@@ -176,8 +184,7 @@ public class Grade {
 	 */
 	public boolean removerPeriodo(Periodo periodo) {
 		// verificando se a relação existe
-		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade,
-				periodo.getId_periodo()).get(0);
+		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade, periodo.getId_periodo()).get(0);
 
 		if (map != null) {
 			int id = (Integer) map.get("id_grade_periodo");
@@ -196,12 +203,12 @@ public class Grade {
 		List<Map<String, Object>> listMap = this.rel_gradePeriodoDAO
 				.listarPeriodosPorGrade(id_grade);
 
-		List<Periodo> periodos = new ArrayList<Periodo>();
+		List<Periodo> list = new ArrayList<Periodo>();
 
 		for (Map<String, Object> map : listMap) {
-			periodos.add(new Periodo(map));
+			list.add(new Periodo(map));
 		}
-		return periodos;
+		return list;
 	}
 
 	/**
@@ -213,13 +220,12 @@ public class Grade {
 	 */
 	public boolean inserirDisciplina(Disciplina disciplina, Periodo periodo) {
 		// pegando o Id_grade_periodo
-		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade,
-				periodo.getId_periodo()).get(0);
+		Map<String, Object> map = this.rel_gradePeriodoDAO.listarPor(id_grade, periodo.getId_periodo()).get(0);
 
 		if (map != null) {
 			int id_gradePeriodo = (Integer) map.get("id_grade_periodo");
-			return this.rel_gradePeriodo_disciplinaDAO.adicionar(
-					id_gradePeriodo, disciplina.getId_disciplina()) > 0;
+			return this.rel_gradePeriodo_disciplinaDAO
+					.adicionar(id_gradePeriodo, disciplina.getId_disciplina()) > 0;
 		}
 
 		return false;
@@ -233,8 +239,8 @@ public class Grade {
 	 * @return
 	 */
 	public boolean removerDisciplina(Disciplina disciplina, Periodo periodo) {
-		return this.rel_gradePeriodo_disciplinaDAO.removerDisciplina(id_grade,
-				periodo.getId_periodo(), disciplina.getId_disciplina());
+		return this.rel_gradePeriodo_disciplinaDAO
+				.removerDisciplina(id_grade, periodo.getId_periodo(), disciplina.getId_disciplina());
 	}
 
 	/**
@@ -243,20 +249,18 @@ public class Grade {
 	 * @param periodo
 	 * @return
 	 */
-	public List<Disciplina> listarDisciplinas(Periodo periodo,
-			boolean carregarRelacionamentos) {
+	public List<Disciplina> listarDisciplinas(Periodo periodo, boolean carregarRelacionamentos) {
 
 		List<Map<String, Object>> listMap = this.rel_gradePeriodo_disciplinaDAO
-				.listarDisciplinasPorGradePeriodo(id_grade,
-						periodo.getId_periodo());
+				.listarDisciplinasPorGradePeriodo(id_grade, periodo.getId_periodo());
 
-		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+		List<Disciplina> list = new ArrayList<Disciplina>();
 
 		for (Map<String, Object> map : listMap) {
-			disciplinas.add(new Disciplina(map, carregarRelacionamentos));
+			list.add(new Disciplina(map, carregarRelacionamentos));
 		}
 
-		return disciplinas;
+		return list;
 	}
 
 	/**
@@ -264,19 +268,18 @@ public class Grade {
 	 * 
 	 * @return
 	 */
-	public List<Disciplina> listarTodasAsDisciplinas(
-			boolean carregarRelacionamentos) {
+	public List<Disciplina> listarTodasAsDisciplinas(boolean carregarRelacionamentos) {
 
 		List<Map<String, Object>> listMap = this.rel_gradePeriodo_disciplinaDAO
 				.listarDisciplinasPorGrade(id_grade);
 
-		List<Disciplina> disciplinas = new ArrayList<Disciplina>();
+		List<Disciplina> list = new ArrayList<Disciplina>();
 
 		for (Map<String, Object> map : listMap) {
-			disciplinas.add(new Disciplina(map, carregarRelacionamentos));
+			list.add(new Disciplina(map, carregarRelacionamentos));
 		}
 
-		return disciplinas;
+		return list;
 	}
 
 	/**

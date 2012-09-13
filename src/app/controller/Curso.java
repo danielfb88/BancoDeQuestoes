@@ -33,8 +33,7 @@ public class Curso {
 	 * @param sigla
 	 * @param tipo_graduacao
 	 */
-	public Curso(Integer id_curso, String descricao, String sigla,
-			String tipo_graduacao) {
+	public Curso(Integer id_curso, String descricao, String sigla, String tipo_graduacao) {
 		super();
 		this.id_curso = id_curso;
 		this.descricao = descricao;
@@ -93,6 +92,17 @@ public class Curso {
 	}
 
 	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id) {
+		this.id_curso = id;
+		return this.carregar();
+	}
+
+	/**
 	 * Editar
 	 * 
 	 * @return
@@ -117,8 +127,7 @@ public class Curso {
 	 */
 	public List<Curso> listar() {
 		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMap = this.cursoDAO.listarPor(descricao,
-				sigla, tipo_graduacao);
+		List<Map<String, Object>> listMap = this.cursoDAO.listarPor(descricao, sigla, tipo_graduacao);
 
 		List<Curso> listCurso = new ArrayList<Curso>();
 

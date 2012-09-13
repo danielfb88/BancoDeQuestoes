@@ -86,6 +86,17 @@ public class Assunto {
 	}
 
 	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id) {
+		this.id_assunto = id;
+		return this.carregar();
+	}
+
+	/**
 	 * Editar
 	 * 
 	 * @return
@@ -110,16 +121,15 @@ public class Assunto {
 	 */
 	public List<Assunto> listar() {
 		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMap = this.assuntoDAO
-				.listarPor(descricao);
+		List<Map<String, Object>> listMap = this.assuntoDAO.listarPor(descricao);
 
-		List<Assunto> listAssunto = new ArrayList<Assunto>();
+		List<Assunto> list = new ArrayList<Assunto>();
 
 		for (Map<String, Object> map : listMap) {
-			listAssunto.add(new Assunto(map));
+			list.add(new Assunto(map));
 		}
 
-		return listAssunto;
+		return list;
 	}
 
 	/**
@@ -144,9 +154,8 @@ public class Assunto {
 				this.id_assunto, pergunta.getId_pergunta()).get(0);
 
 		if (map != null) {
-			// pegando o id
+			// pegando o id e excluindo
 			Integer id = (Integer) map.get("id_assunto_pergunta");
-			// excluindo
 			return this.rel_assuntoPerguntaDAO.excluir(id) > 0;
 		}
 		return false;
@@ -161,12 +170,12 @@ public class Assunto {
 		List<Map<String, Object>> listMap = this.rel_assuntoPerguntaDAO
 				.listarPerguntasPorAssunto(id_assunto);
 
-		List<Pergunta> perguntas = new ArrayList<Pergunta>();
+		List<Pergunta> list = new ArrayList<Pergunta>();
 
 		for (Map<String, Object> map : listMap) {
-			perguntas.add(new Pergunta(map, carregarRelacionamentos));
+			list.add(new Pergunta(map, carregarRelacionamentos));
 		}
-		return perguntas;
+		return list;
 	}
 
 	/**

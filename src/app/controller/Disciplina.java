@@ -95,8 +95,7 @@ public class Disciplina {
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.disciplinaDAO
-				.buscarPorId(this.id_disciplina);
+		Map<String, Object> map = this.disciplinaDAO.buscarPorId(this.id_disciplina);
 
 		if (map != null) {
 			this.carregarObjeto(map, carregarRelacionamentos);
@@ -104,6 +103,17 @@ public class Disciplina {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
+		this.id_disciplina = id;
+		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -133,16 +143,15 @@ public class Disciplina {
 	 */
 	public List<Disciplina> listar(boolean carregarRelacionamentos) {
 		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.disciplinaDAO.listarPor(
-				curso.getId_curso(), descricao, sigla);
+		List<Map<String, Object>> listMap = this.disciplinaDAO.listarPor(curso.getId_curso(), descricao, sigla);
 
-		List<Disciplina> listDisciplina = new ArrayList<Disciplina>();
+		List<Disciplina> list = new ArrayList<Disciplina>();
 
 		for (Map<String, Object> map : listMap) {
-			listDisciplina.add(new Disciplina(map, carregarRelacionamentos));
+			list.add(new Disciplina(map, carregarRelacionamentos));
 		}
 
-		return listDisciplina;
+		return list;
 	}
 
 	/**
@@ -152,8 +161,7 @@ public class Disciplina {
 	 * @return
 	 */
 	public boolean inserirAssunto(Assunto assunto) {
-		return this.rel_disciplinaAssunto.adicionar(id_disciplina,
-				assunto.getId_assunto()) > 0;
+		return this.rel_disciplinaAssunto.adicionar(id_disciplina, assunto.getId_assunto()) > 0;
 	}
 
 	/**
@@ -164,8 +172,8 @@ public class Disciplina {
 	 */
 	public boolean removerAssunto(Assunto assunto) {
 		// verificando se a relação existe
-		Map<String, Object> map = this.rel_disciplinaAssunto.listarPor(
-				id_disciplina, assunto.getId_assunto()).get(0);
+		Map<String, Object> map = this.rel_disciplinaAssunto
+				.listarPor(id_disciplina, assunto.getId_assunto()).get(0);
 
 		if (map != null) {
 			int id = (Integer) map.get("id_disciplina_assunto");
@@ -181,8 +189,7 @@ public class Disciplina {
 	 * @return
 	 */
 	public List<Assunto> listarAssuntos() {
-		List<Map<String, Object>> listMap = rel_disciplinaAssunto
-				.listarAssuntosPorDisciplina(id_disciplina);
+		List<Map<String, Object>> listMap = rel_disciplinaAssunto.listarAssuntosPorDisciplina(id_disciplina);
 
 		List<Assunto> listAssunto = new ArrayList<Assunto>();
 

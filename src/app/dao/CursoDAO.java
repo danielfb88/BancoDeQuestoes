@@ -75,7 +75,7 @@ public class CursoDAO extends AbstractDAO {
 	 * @param id
 	 * @return
 	 */
-	public Map<String, Object> buscarPorId(Integer id) {
+	public Map<String, Object> buscarPorId(int id) {
 		return super._buscarPorId(id);
 	}
 

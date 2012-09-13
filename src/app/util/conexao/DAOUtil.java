@@ -1,5 +1,5 @@
 package app.util.conexao;
-
+//TODO: Excluir singleton
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

@@ -353,7 +353,7 @@ public abstract class AbstractDAO {
 	 *            Primary Key
 	 * @return
 	 */
-	protected int _excluir(Integer... primaryKey) {
+	protected int _excluir(int... primaryKey) {
 		Map<Object, Object> campoValor = new HashMap<Object, Object>(primaryKey.length);
 
 		// mapeando id - valor
@@ -377,7 +377,7 @@ public abstract class AbstractDAO {
 	 *            os ids do relacionamento
 	 * @return
 	 */
-	public int getValuePrimaryKey(Integer... foreignKey) {
+	public int getValuePrimaryKey(int... foreignKey) {
 		Map<Object, Object> campoValor = new HashMap<Object, Object>(campos.length);
 
 		for (int i = 0; i < campos.length; i++) {
@@ -436,7 +436,7 @@ public abstract class AbstractDAO {
 	 * @param primaryKey
 	 * @return
 	 */
-	protected Map<String, Object> _buscarPorId(Integer... primaryKey) {
+	protected Map<String, Object> _buscarPorId(int... primaryKey) {
 		Map<Object, Object> campoValor = new HashMap<Object, Object>(primaryKey.length);
 
 		// mapeando id - valor

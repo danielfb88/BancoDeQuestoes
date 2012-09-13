@@ -41,6 +41,7 @@ public class AnoSemestre {
 	/**
 	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
 	 * nomes das colunas do banco, referente a este objeto
+	 * 
 	 * @param map
 	 */
 	public AnoSemestre(Map<String, Object> map) {
@@ -87,6 +88,17 @@ public class AnoSemestre {
 	}
 
 	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id) {
+		this.id_anoSemestre = id;
+		return this.carregar();
+	}
+
+	/**
 	 * Editar
 	 * 
 	 * @return
@@ -114,13 +126,13 @@ public class AnoSemestre {
 		List<Map<String, Object>> listMap = this.anoSemestreDAO.listarPor(
 				this.ano, this.semestre);
 
-		List<AnoSemestre> listAnoSemestre = new ArrayList<AnoSemestre>();
+		List<AnoSemestre> list = new ArrayList<AnoSemestre>();
 
 		for (Map<String, Object> map : listMap) {
-			listAnoSemestre.add(new AnoSemestre(map));
+			list.add(new AnoSemestre(map));
 		}
 
-		return listAnoSemestre;
+		return list;
 	}
 
 	/**

@@ -17,7 +17,14 @@ import app.util.conexao.DAOUtil;
 public class Lacaio {
 
 	public static void main(String[] args) {
-		id();
+		// id();
+
+		Curso curso = new Curso();
+		curso.carregarPorId(28);
+		
+		System.out.println(curso.getId_curso());
+		System.out.println(curso.getDescricao());
+		System.out.println(curso.getSigla());
 	}
 
 	public static void id() {

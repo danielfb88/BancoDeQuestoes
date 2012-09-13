@@ -53,8 +53,7 @@ public class CoordenadorCurso {
 	 * @param map
 	 * @param carregarRelacionamentos
 	 */
-	public CoordenadorCurso(Map<String, Object> map,
-			boolean carregarRelacionamentos) {
+	public CoordenadorCurso(Map<String, Object> map, boolean carregarRelacionamentos) {
 		this.carregarObjeto(map, carregarRelacionamentos);
 	}
 
@@ -99,8 +98,7 @@ public class CoordenadorCurso {
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.coordCursoDAO
-				.buscarPorId(this.id_coordenadorCurso);
+		Map<String, Object> map = this.coordCursoDAO.buscarPorId(this.id_coordenadorCurso);
 
 		if (map != null) {
 			this.carregarObjeto(map, carregarRelacionamentos);
@@ -108,6 +106,17 @@ public class CoordenadorCurso {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Carregar por Id
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
+		this.id_coordenadorCurso = id;
+		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -142,14 +151,13 @@ public class CoordenadorCurso {
 				coordenador.getId_usuario(), curso.getId_curso(), dataEntrada,
 				dataSaida);
 
-		List<CoordenadorCurso> listCoordenadorCurso = new ArrayList<CoordenadorCurso>();
+		List<CoordenadorCurso> list = new ArrayList<CoordenadorCurso>();
 
 		for (Map<String, Object> map : listMap) {
-			listCoordenadorCurso.add(new CoordenadorCurso(map,
-					carregarRelacionamentos));
+			list.add(new CoordenadorCurso(map, carregarRelacionamentos));
 		}
 
-		return listCoordenadorCurso;
+		return list;
 	}
 
 	/**
