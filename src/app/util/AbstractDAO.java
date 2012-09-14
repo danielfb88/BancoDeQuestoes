@@ -1,5 +1,6 @@
 package app.util;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import app.util.conexao.DAOUtil;
 
 /**
  * Classe abstrata que efetua as operações básicas de uma DAO: - Adicionar,
@@ -19,10 +19,19 @@ import app.util.conexao.DAOUtil;
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 10-08-2012
- * @version 1.0
+ * 
+ *        Ultima atualização 14-09-2012 - Substituído Singleton de conexão por
+ *        objeto estático.
+ * 
+ * @version 1.1
  * 
  */
 public abstract class AbstractDAO {
+
+	/**
+	 * Objeto de Conexão
+	 */
+	protected static Connection conn;
 
 	/**
 	 * Nome da tabela
@@ -38,6 +47,11 @@ public abstract class AbstractDAO {
 	 * Nome do(s) campo(s) da tabela
 	 */
 	protected String[] campos;
+
+	public AbstractDAO() {
+		if (AbstractDAO.conn == null)
+			AbstractDAO.conn = ConnectionFactory.getConnection();
+	}
 
 	/**
 	 * Prepara os dados contra SQL Injection.
@@ -253,7 +267,7 @@ public abstract class AbstractDAO {
 			builder.append(")");
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
 
 			// preparando o statement
 			this.prepareStatement(preparedStatement, ordem, false);
@@ -329,7 +343,7 @@ public abstract class AbstractDAO {
 			builder.append(this.montaParteQueryID(campoValor));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
 
 			// preparando o statement
 			this.prepareStatement(preparedStatement, ordem, false);
@@ -416,7 +430,7 @@ public abstract class AbstractDAO {
 			builder.append(this.montaParteQueryID(campoValor));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
 
 			// executando
 			linhasAfetadas = preparedStatement.executeUpdate();
@@ -476,7 +490,7 @@ public abstract class AbstractDAO {
 			builder.append(this.montaParteQueryID(campoValor));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
 
 			resultSet = preparedStatement.executeQuery();
 
@@ -537,7 +551,7 @@ public abstract class AbstractDAO {
 
 			builder.append(";");
 
-			PreparedStatement preparedStatement = DAOUtil.getInstance().getPreparedStatement(builder.toString());
+			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
 
 			// preparando o statement
 			this.prepareStatement(preparedStatement, ordem, true);
@@ -596,7 +610,7 @@ public abstract class AbstractDAO {
 		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
 
 		try {
-			Statement s = DAOUtil.getInstance().getStatement();
+			Statement s = AbstractDAO.conn.createStatement();
 			ResultSet rs = s.executeQuery(query);
 
 			while (rs.next()) {
@@ -651,7 +665,7 @@ public abstract class AbstractDAO {
 	protected int executarUpdate(String query) {
 		int linhasAfetadas = 0;
 		try {
-			Statement s = DAOUtil.getInstance().getStatement();
+			Statement s = AbstractDAO.conn.createStatement();
 			linhasAfetadas = s.executeUpdate(query);
 			s.close();
 

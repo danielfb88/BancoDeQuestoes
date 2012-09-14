@@ -12,7 +12,7 @@ import app.controller.Grupo;
 import app.controller.Periodo;
 import app.dao.CursoDAO;
 import app.dao.Rel_AssuntoPerguntaDAO;
-import app.util.conexao.DAOUtil;
+import app.util.ConnectionFactory;
 
 public class Lacaio {
 
@@ -44,7 +44,8 @@ public class Lacaio {
 		listPeriodo.add(new Periodo(null, "Sétimo", 7));
 		listPeriodo.add(new Periodo(null, "Oitavo", 8));
 
-		DAOUtil.getInstance().iniciarTransacao();
+		/*
+		ConnectionFactory.getInstance().iniciarTransacao();
 		for (Periodo periodo : listPeriodo) {
 			if (periodo.adicionar())
 				System.out.println(periodo.getDescricao() + ", "
@@ -53,8 +54,9 @@ public class Lacaio {
 				System.out.println(periodo.getDescricao() + ", "
 						+ periodo.getNumero() + " Não foi possivel adicionar");
 		}
-		DAOUtil.getInstance().commit();
-		DAOUtil.getInstance().finalizarTransacao();
+		ConnectionFactory.getInstance().commit();
+		ConnectionFactory.getInstance().finalizarTransacao();
+		*/
 	}
 
 	private static void adicionarAnoSemestre() {
