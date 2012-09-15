@@ -8,37 +8,37 @@
 	<!-- BENS GERENCIÁVEIS -->
 	<managed-bean>
 		<managed-bean-name>grupoBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.GrupoMB</managed-bean-class>
+		<managed-bean-class>managedbean.GrupoMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>assuntoBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.AssuntoMB</managed-bean-class>
+		<managed-bean-class>managedbean.AssuntoMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>usuarioBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.UsuarioMB</managed-bean-class>
+		<managed-bean-class>managedbean.UsuarioMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>perguntaBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.PerguntaMB</managed-bean-class>
+		<managed-bean-class>managedbean.PerguntaMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>respostaBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.RespostaMB</managed-bean-class>
+		<managed-bean-class>managedbean.RespostaMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>periodoBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.PeriodoMB</managed-bean-class>
+		<managed-bean-class>managedbean.PeriodoMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
 		<managed-bean-name>provaBean</managed-bean-name>
-		<managed-bean-class>app.managedbean.ProvaMB</managed-bean-class>
+		<managed-bean-class>managedbean.ProvaMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 
