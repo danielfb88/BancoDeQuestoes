@@ -31,7 +31,7 @@ public abstract class AbstractDAO {
 	/**
 	 * Objeto de Conexão
 	 */
-	protected static Connection conn;
+	private static Connection conn;
 
 	/**
 	 * Nome da tabela
@@ -91,9 +91,11 @@ public abstract class AbstractDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 
 		} catch (Exception e2) {
 			e2.printStackTrace();
+			System.exit(0);
 		}
 	}
 
