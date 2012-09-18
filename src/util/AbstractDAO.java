@@ -19,11 +19,9 @@ import java.util.Map;
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 10-08-2012
  * 
- *        Ultima atualização 14-09-2012. - 
- *        1 - Não insere valores nulos na query de _adicionar
- *        2 - substituido o WHERE true por WHERE 1=1 em _listarPor
+ *        Ultima atualização 18-09-2012.
  * 
- * @version 1.2
+ * @version 1.3
  * 
  */
 public abstract class AbstractDAO {
@@ -246,8 +244,8 @@ public abstract class AbstractDAO {
 			while (it.hasNext()) {
 				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it.next();
 
-				// Verificando se o valor é diferente de nulo
-				if (map.getValue() != null) {
+				// Verificando se o valor é diferente de nulo e vazio
+				if (map.getValue() != null && !map.getValue().toString().isEmpty()) {
 
 					// inserindo os valores em um arraylist
 					ordem.add(map.getValue());
@@ -325,8 +323,8 @@ public abstract class AbstractDAO {
 			while (it.hasNext()) {
 				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it.next();
 
-				// Verificando se o valor é diferente de nulo
-				if (map.getValue() != null) {
+				// Verificando se o valor é diferente de nulo e vazio
+				if (map.getValue() != null && !map.getValue().toString().isEmpty()) {
 
 					// verificando se é igual a alguma PK
 					// ignorando a(s) primary key(s)

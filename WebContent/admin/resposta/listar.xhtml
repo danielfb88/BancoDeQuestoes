@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Listar Respostas</title>
+</h:head>
+<h:body>
+	<h1>Listar Respostas</h1>
+	<hr />
+
+	<h:form>
+		<h:dataTable var="item" value="#{respostaBean.lista}" rules="rows"
+			cellpadding="5">
+			<f:facet name="header">Listagem das Respostas</f:facet>
+			<h:column>
+				<f:facet name="header">CÓDIGO</f:facet>
+				#{item.id_resposta}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">ID PERGUNTA</f:facet>
+				#{item.pergunta.id_pergunta}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">DESCRICAO</f:facet>
+				#{item.descricao}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">CORRETA</f:facet>
+				#{item.correta}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">OBSERVACAO</f:facet>
+				#{item.observacao}
+			</h:column>
+			<h:column>
+				<h:commandLink action="#{respostaBean.excluir}"
+					onclick="if (!confirm('Você realmente deseja excluir o resposta #{item.descricao}?')) return false;">
+					<h:graphicImage library="imagens/botoes" name="delete.gif"
+						style="border:0" />
+					<f:setPropertyActionListener value="#{item}"
+						target="#{respostaBean.resposta}" />
+				</h:commandLink>
+			</h:column>
+
+			<h:column>
+				<h:commandLink action="#{respostaBean.formularioEditar}">
+					<h:graphicImage library="imagens/botoes" name="edit.gif"
+						style="border:0" />
+					<f:setPropertyActionListener value="#{item}"
+						target="#{respostaBean.resposta}" />
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexResposta" value="Voltar" />
+	</h:form>
+
+</h:body>
+</html>

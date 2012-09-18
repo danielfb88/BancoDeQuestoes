@@ -5,18 +5,20 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>INDEX</title>
+	<title>Modulo de Respostas</title>
 </h:head>
 <h:body>
-	<h1>Módulos</h1>
+	<h1>Resposta Menu</h1>
+	<hr />
+
 	<h:form>
-		<h:panelGrid columns="1">
-			<h:commandLink action="indexAssunto">Assunto</h:commandLink>
-			<h:commandLink action="indexGrupo">Grupo</h:commandLink>
-			<h:commandLink action="indexUsuario">Usuario</h:commandLink>
-			<h:commandLink action="indexPergunta">Pergunta</h:commandLink>
-			<h:commandLink action="indexResposta">Resposta</h:commandLink>
-		</h:panelGrid>
+		<h:commandLink action="#{respostaBean.formularioAdicionar}" value="Adicionar" />
+		<h:outputLabel value=" - " />
+		<h:commandLink action="#{respostaBean.paginaListar}" value="Listar" />
+	</h:form>
+	<hr />
+	<h:form>
+		<h:commandLink action="inicio" value="Voltar" />
 	</h:form>
 
 </h:body>

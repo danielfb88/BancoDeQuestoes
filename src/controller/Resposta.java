@@ -69,7 +69,7 @@ public class Resposta {
 		this.id_resposta = (Integer) map.get("id_resposta");
 		this.pergunta.setId_pergunta((Integer) map.get("id_pergunta"));
 		this.descricao = (String) map.get("descricao");
-		this.correta = (Boolean) map.get("correta");
+		this.correta = (((Integer) map.get("correta")) == 1) ? true : false;
 		this.observacao = (String) map.get("observacao");
 
 		if (carregarRelacionamentos)
@@ -82,7 +82,7 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean adicionar() {
-		int respostaCorreta = (correta) ? 1 : 0;
+		int respostaCorreta = (correta != null && correta) ? 1 : 0;
 
 		return this.respostaDAO.adicionar(pergunta.getId_pergunta(), descricao,
 				respostaCorreta, observacao) > 0;
@@ -122,7 +122,7 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean editar() {
-		int respostaCorreta = (correta) ? 1 : 0;
+		int respostaCorreta = (correta != null && correta) ? 1 : 0;
 
 		return this.respostaDAO.editar(id_resposta, pergunta.getId_pergunta(),
 				descricao, respostaCorreta, observacao) > 0;
@@ -144,7 +144,9 @@ public class Resposta {
 	 * @return
 	 */
 	public List<Resposta> listar(boolean carregarRelacionamentos) {
-		int respostaCorreta = (correta) ? 1 : 0;
+		// TODO: ISSO NAO DEVE SER FEITO AQUI. DEVE SER FEITO NO DAO!!!! ESSE É O MOTIVO DO ERRO
+		int respostaCorreta = (correta != null && correta) ? 1 : 0;
+		
 		// buscando a lista de Mapa recuperando pelos parametros
 		List<Map<String, Object>> listMap = this.respostaDAO.listarPor(
 				pergunta.getId_pergunta(), descricao, respostaCorreta, observacao);
