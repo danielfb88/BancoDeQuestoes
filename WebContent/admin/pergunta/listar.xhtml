@@ -12,66 +12,56 @@
 	<hr />
 
 	<h:form>
-		<h:dataTable var="item" value="#{perguntaBean.perguntas}" border="1">
+		<h:dataTable var="item" value="#{perguntaBean.lista}" rules="rows"
+			cellpadding="5">
+			<f:facet name="header">Listagem das Perguntas</f:facet>
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="CÓDIGO" />
-				</f:facet>
-				<h:outputLabel value="#{item.id_pergunta}" />
+				<f:facet name="header">CÓDIGO</f:facet>
+				#{item.id_pergunta}
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="USUARIO" />
-				</f:facet>
-				<h:outputLabel value="#{item.usuario.nome}" />
+				<f:facet name="header">USUARIO</f:facet>
+				#{item.usuario.nome}
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="DESCRICAO" />
-				</f:facet>
-				<h:outputLabel value="#{item.descricao}" />
+				<f:facet name="header">DESCRICAO</f:facet>
+				#{item.descricao}
 			</h:column>
-			
+
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="TIPO" />
-				</f:facet>
-				<h:outputLabel value="#{item.tipo_pergunta}" />
+				<f:facet name="header">TIPO</f:facet>
+				#{item.tipo_pergunta}
 			</h:column>
-	
+
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="NIVEL" />
-				</f:facet>
-				<h:outputLabel value="#{item.nivel_pergunta}" />
+				<f:facet name="header">NIVEL</f:facet>
+				#{item.nivel_pergunta}
 			</h:column>
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="ENUNCIADO" />
-				</f:facet>
-				<h:outputLabel value="#{item.enunciado}" />
+				<f:facet name="header">ENUNCIADO</f:facet>
+				#{item.enunciado}
 			</h:column>
-		
+
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="COMENTARIO" />
-				</f:facet>
-				<h:outputLabel value="#{item.comentario}" />
+				<f:facet name="header">COMENTARIO</f:facet>
+				#{item.comentario}
 			</h:column>
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="AÇÕES" />
-				</f:facet>
-				<h:commandLink value="Apagar" action="#{perguntaBean.excluir}">
+				<h:commandLink action="#{perguntaBean.excluir}"
+					onclick="if (!confirm('Você realmente deseja excluir o pergunta #{item.descricao}?')) return false;">
+					<h:graphicImage library="imagens/botoes" name="delete.gif"
+						style="border:0" />
 					<f:setPropertyActionListener value="#{item}"
 						target="#{perguntaBean.pergunta}" />
 				</h:commandLink>
+			</h:column>
 
-				<h:outputLabel value=" - " />
-
-				<h:commandLink value="Editar" action="#{perguntaBean.formularioEditar}">
+			<h:column>
+				<h:commandLink action="#{perguntaBean.formularioEditar}">
+					<h:graphicImage library="imagens/botoes" name="edit.gif"
+						style="border:0" />
 					<f:setPropertyActionListener value="#{item}"
 						target="#{perguntaBean.pergunta}" />
 				</h:commandLink>
