@@ -47,14 +47,14 @@
 				value="#{perguntaBean.pergunta.comentario}" size="50"
 				maxlength="200" required="true"
 				requiredMessage="Informe o comentario da pergunta." />
-				
+
 		</h:panelGrid>
 
 		<h:commandButton action="#{perguntaBean.editar}" value="Salvar" />
 
 	</h:form>
 	<h:form>
-		<h:commandLink action="indexPergunta" value="Voltar" />
+		<h:commandLink action="#{perguntaBean.paginaListar}" value="Voltar" />
 	</h:form>
 </h:body>
 </html>

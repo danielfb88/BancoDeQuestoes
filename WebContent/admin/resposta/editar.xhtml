@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Editar de Resposta</title>
+</h:head>
+<h:body>
+	<h1>Editar Resposta</h1>
+	<h:form id="frm_editar">
+		<h:messages />
+		<h:inputHidden value="#{respostaBean.resposta.id_resposta}" />
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Id Pergunta" for="tx_idPergunta" />
+			<h:inputText id="tx_idPergunta" label="Id Pergunta"
+				value="#{respostaBean.resposta.pergunta.id_pergunta}" size="50"
+				maxlength="50" required="true"
+				requiredMessage="Informe o id da pergunta." />
+
+			<h:outputText value="Descricão:" for="tx_descricao" />
+			<h:inputText id="tx_descricao" label="Descricao"
+				value="#{respostaBean.resposta.descricao}" size="50" maxlength="50"
+				required="true" requiredMessage="Informe a descricao." />
+
+			<h:outputText value="Correta:" for="chx_correta" />
+			<h:selectBooleanCheckbox id="chx_correta" label="Correta"
+				value="#{respostaBean.resposta.correta}" />
+
+			<h:outputText value="Observação:" for="tx_observacao" />
+			<h:inputTextarea id="txa_observacao" label="Observacao"
+				value="#{respostaBean.resposta.observacao}" size="5" />
+
+		</h:panelGrid>
+
+		<h:commandButton action="#{respostaBean.editar}" value="Salvar" />
+
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexResposta" value="Voltar" />
+	</h:form>
+</h:body>
+</html>
