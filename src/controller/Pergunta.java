@@ -6,7 +6,6 @@ import java.util.Map;
 
 import dao.PerguntaDAO;
 
-
 /**
  * Pergunta
  * 
@@ -18,8 +17,8 @@ public class Pergunta {
 	private Integer id_pergunta;
 	private Usuario usuario = new Usuario();
 	private String descricao;
-	private Character tipo_pergunta;
-	private Character nivel_pergunta;
+	private String tipo_pergunta;
+	private String nivel_pergunta;
 	private String enunciado;
 	private String comentario;
 
@@ -41,7 +40,7 @@ public class Pergunta {
 	 * @param comentario
 	 */
 	public Pergunta(Integer id_pergunta, Usuario usuario, String descricao,
-			Character tipo_pergunta, Character nivel_pergunta,
+			String tipo_pergunta, String nivel_pergunta,
 			String enunciado, String comentario) {
 		super();
 		this.id_pergunta = id_pergunta;
@@ -77,8 +76,8 @@ public class Pergunta {
 		this.id_pergunta = (Integer) map.get("id_pergunta");
 		this.usuario.setId_usuario((Integer) map.get("id_usuario"));
 		this.descricao = (String) map.get("descricao");
-		this.tipo_pergunta = map.get("tipo_pergunta").toString().charAt(0);
-		this.nivel_pergunta = map.get("nivel_pergunta").toString().charAt(0);
+		this.tipo_pergunta = (String) map.get("tipo_pergunta");
+		this.nivel_pergunta = (String) map.get("nivel_pergunta");
 		this.enunciado = (String) map.get("enunciado");
 		this.comentario = (String) map.get("comentario");
 
@@ -93,7 +92,7 @@ public class Pergunta {
 	 */
 	public boolean adicionar() {
 		return this.perguntaDAO.adicionar(usuario.getId_usuario(), descricao,
-				tipo_pergunta.toString(), nivel_pergunta.toString(), enunciado,
+				tipo_pergunta, nivel_pergunta, enunciado,
 				comentario) > 0;
 	}
 
@@ -132,7 +131,7 @@ public class Pergunta {
 	 */
 	public boolean editar() {
 		return this.perguntaDAO.editar(id_pergunta, usuario.getId_usuario(),
-				descricao, tipo_pergunta.toString(), nivel_pergunta.toString(),
+				descricao, tipo_pergunta, nivel_pergunta,
 				enunciado, comentario) > 0;
 	}
 
@@ -154,8 +153,8 @@ public class Pergunta {
 	public List<Pergunta> listar(boolean carregarRelacionamentos) {
 		// buscando a lista de Mapa recuperando pelos parametros
 		List<Map<String, Object>> listMap = this.perguntaDAO.listarPor(
-				usuario.getId_usuario(), descricao, tipo_pergunta.toString(),
-				nivel_pergunta.toString(), enunciado, comentario);
+				usuario.getId_usuario(), descricao, tipo_pergunta,
+				nivel_pergunta, enunciado, comentario);
 
 		List<Pergunta> list = new ArrayList<Pergunta>();
 
@@ -214,7 +213,7 @@ public class Pergunta {
 	/**
 	 * @return the tipo_pergunta
 	 */
-	public Character getTipo_pergunta() {
+	public String getTipo_pergunta() {
 		return tipo_pergunta;
 	}
 
@@ -222,14 +221,14 @@ public class Pergunta {
 	 * @param tipo_pergunta
 	 *            the tipo_pergunta to set
 	 */
-	public void setTipo_pergunta(Character tipo_pergunta) {
+	public void setTipo_pergunta(String tipo_pergunta) {
 		this.tipo_pergunta = tipo_pergunta;
 	}
 
 	/**
 	 * @return the nivel_pergunta
 	 */
-	public Character getNivel_pergunta() {
+	public String getNivel_pergunta() {
 		return nivel_pergunta;
 	}
 
@@ -237,7 +236,7 @@ public class Pergunta {
 	 * @param nivel_pergunta
 	 *            the nivel_pergunta to set
 	 */
-	public void setNivel_pergunta(Character nivel_pergunta) {
+	public void setNivel_pergunta(String nivel_pergunta) {
 		this.nivel_pergunta = nivel_pergunta;
 	}
 
@@ -271,26 +270,30 @@ public class Pergunta {
 		this.comentario = comentario;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((comentario == null) ? 0 : comentario.hashCode());
-		result = prime * result
-				+ ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result
-				+ ((enunciado == null) ? 0 : enunciado.hashCode());
-		result = prime * result
-				+ ((id_pergunta == null) ? 0 : id_pergunta.hashCode());
-		result = prime * result
-				+ ((nivel_pergunta == null) ? 0 : nivel_pergunta.hashCode());
-		result = prime * result
-				+ ((tipo_pergunta == null) ? 0 : tipo_pergunta.hashCode());
+		result = prime * result + ((comentario == null) ? 0 : comentario.hashCode());
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((enunciado == null) ? 0 : enunciado.hashCode());
+		result = prime * result + ((id_pergunta == null) ? 0 : id_pergunta.hashCode());
+		result = prime * result + ((nivel_pergunta == null) ? 0 : nivel_pergunta.hashCode());
+		result = prime * result + ((tipo_pergunta == null) ? 0 : tipo_pergunta.hashCode());
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
