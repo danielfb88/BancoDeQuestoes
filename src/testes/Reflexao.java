@@ -24,8 +24,17 @@ public class Reflexao {
 	public static void main(String args[]) {
 		try {
 			PerguntaDAO p = new PerguntaDAO();
+			//p.id_pergunta = 12;
 			p.id_usuario = 5;
+			p.tipo_pergunta = 'A';
+			p.nivel_pergunta = 'D';
+			p.enunciado = "Uhuussadsuuu!!";
+			p.descricao = "sadsadsadsa 2";
 			p.adicionar();
+			
+			
+			
+			
 			System.exit(0);
 			
 			

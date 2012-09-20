@@ -255,39 +255,29 @@ public abstract class AbstractDAO {
 	 * Verifica se a string de entrada é igual ao nome do campo de alguma
 	 * primary key
 	 * 
-	 * @deprecated
-	 * 
 	 * @param campo
 	 * @return
 	 */
 	private boolean is_campoIgualPrimaryKey(String campo) {
-		boolean igualAlgumaPK = false;
 		for (int npk = 0; npk < this.primaryKey.length; npk++) {
 			if (campo.equalsIgnoreCase(this.primaryKey[npk])) {
-				igualAlgumaPK = true;
-				break;
+				return true;
 			}
 		}
-		return igualAlgumaPK;
+		return false;
 	}
 
 	/**
-	 * Monta pedaço da query onde é inserido os IDs. Ex:
-	 * 
-	 * UPDATE tabela SET campo1 = 'valor1', campo2 = 'valor2' WHERE id = 5;
-	 * 
-	 * A parte da query "id = 5" é o que será retornado por este método.
-	 * 
-	 * @param campoValor
-	 *            Map contendo a(s) primary key(s) como chave
-	 * @return String da parte da query relacionada aos IDs
+	 * Monta uma string com os valores da primeira lista relacinando-se com os
+	 * valores da segunda lista através do sinal "=". Exemplo:
+	 * "campoDaLista1 = valorDaLista1, campoDaLista2 = ValorDaLista2, campoDaLista3 = valorDaLista3"
 	 */
-	private String montaParteQueryID(Map<Object, Object> campoValor) {
+	private String montaStringCampoEqualValor(List<String> listNomeCampo, List<Object> listValorCampo) {
 		StringBuilder builder = new StringBuilder();
 
-		for (int i = 0; i < this.primaryKey.length; i++) {
-			builder.append(this.primaryKey[i] + " = " + campoValor.get(this.primaryKey[i]));
-			if (i != this.primaryKey.length - 1)
+		for (int i = 0; i < listNomeCampo.size(); i++) {
+			builder.append(listNomeCampo.get(i) + " = " + listValorCampo.get(i));
+			if (i != listNomeCampo.size() - 1)
 				builder.append(", ");
 		}
 		return builder.toString();
@@ -305,11 +295,11 @@ public abstract class AbstractDAO {
 		int linhasAfetadas = 0;
 		StringBuilder builder = new StringBuilder();
 
-		List<String> atributosNome_NotNull = new ArrayList<String>();
-		List<Object> atributosValor_NotNull = new ArrayList<Object>();
-
 		String[] atributosNome = getNomeDosAtributosDaSubClasse();
 		Object[] atributosValor = getValorDosAtributosDaSubClasse();
+
+		List<String> atributosNome_NotNull = new ArrayList<String>();
+		List<Object> atributosValor_NotNull = new ArrayList<Object>();
 
 		try {
 			// Verificando se o array dos valores não é vazio
@@ -383,59 +373,77 @@ public abstract class AbstractDAO {
 	 *            Map com a primary key e os campos alterados
 	 * @return Retorno do executeUpdate
 	 */
-	protected int _editar(Map<Object, Object> campoValor) {
-		this.verificaNomeTabela();
-		this.verificaPK();
-
+	public int editar() {
 		int linhasAfetadas = 0;
-		int i = 0;
-
-		/*
-		 * O tamanho do array a ser criado será o tamanho do hashmap -1
-		 * excluindo a primary key
-		 */
-		ArrayList<Object> ordem = new ArrayList<Object>();
 		StringBuilder builder = new StringBuilder();
 
+		// todos os atributos
+		String[] atributosNome = getNomeDosAtributosDaSubClasse();
+		Object[] atributosValor = getValorDosAtributosDaSubClasse();
+
+		// atributos NAO NULOS e NAO PRIMARY KEY
+		List<String> atributosNome_NotNull_NotPK = new ArrayList<String>();
+		List<Object> atributosValor_NotNull_NotPK = new ArrayList<Object>();
+
+		// atributos PRIMARY KEYS NAO NULOS
+		List<String> atributosNome_PK_NotNull = new ArrayList<String>();
+		List<Object> atributosValor_PK_NotNull = new ArrayList<Object>();
+
 		try {
+			// Verificando se o array dos valores não é vazio
+			if (is_todosValoresNulos(atributosValor))
+				throw new Exception("Nenhum valor para Edição foi preenchido.");
+
 			builder.append("UPDATE ");
-			builder.append(this.nomeDaTabela + " ");
-			builder.append("SET ");
+			builder.append(this.nomeDaTabela);
+			builder.append(" SET ");
 
-			// Iterando os objetos para pegar a chave
-			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
+			int countVirgula = 0;
 
-			while (it.hasNext()) {
-				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it.next();
-
+			for (int i = 0; i < atributosNome.length; i++) {
 				// Verificando se o valor é diferente de nulo e vazio
-				if (map.getValue() != null && !map.getValue().toString().isEmpty()) {
+				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
 
-					// verificando se é igual a alguma PK
-					// ignorando a(s) primary key(s)
-					if (!this.is_campoIgualPrimaryKey((String) map.getKey())) {
+					// atributos NAO PRIMARY KEYS
+					if (!this.is_campoIgualPrimaryKey(atributosNome[i])) {
+
+						// inserindo nomes e valores NAO NULOS e NAO PRIMARY KEY
+						// em arraylist
+						atributosNome_NotNull_NotPK.add(atributosNome[i]);
+						atributosValor_NotNull_NotPK.add(atributosValor[i]);
+
 						// inserindo a virgula depois do primeiro elemento
-						if (i++ != 0)
+						if (countVirgula++ != 0)
 							builder.append(", ");
 
-						builder.append((String) map.getKey() + " = ?");
+						builder.append(atributosNome[i] + " = ?");
 
-						// inserindo os valores em um array
-						ordem.add(map.getValue());
+					} else {
+						// atributos PRIMARY KEYS
+						atributosNome_PK_NotNull.add(atributosNome[i]);
+						atributosValor_PK_NotNull.add(atributosValor[i]);
 					}
 				}
 			}
 
+			// Verificando se o array dos valores das PK não é vazio
+			if (is_todosValoresNulos(atributosValor_PK_NotNull.toArray()))
+				throw new Exception("Nenhum valor para Primary Key foi preenchido.");
+
 			builder.append(" WHERE ");
 
 			// Inserindo os Ids
-			builder.append(this.montaParteQueryID(campoValor));
+			builder.append(montaStringCampoEqualValor(atributosNome_PK_NotNull, atributosValor_PK_NotNull));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
+			// TODO: Continue.... vou..
+			System.out.println(builder.toString());
+			System.exit(0);
 
 			// preparando o statement
-			this.prepareStatement(preparedStatement, ordem, false);
+			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
+			this.prepareStatement(preparedStatement,
+					mergeArray(atributosValor_NotNull_NotPK.toArray(), atributosValor_PK_NotNull.toArray()), false);
 
 			// executando
 			linhasAfetadas = preparedStatement.executeUpdate();
@@ -444,8 +452,31 @@ public abstract class AbstractDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.exit(0);
+
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(0);
 		}
 		return linhasAfetadas;
+	}
+
+	/**
+	 * Une vários arrays em um array list, preservando a ordem de inserção dos
+	 * parâmetros
+	 * 
+	 * TODO: ANALIZE ESTES WARNINGS
+	 * 
+	 * @param arrayObj
+	 * @return
+	 */
+	private ArrayList<Object> mergeArray(Object[]... arrayObj) {
+		ArrayList<Object> list = new ArrayList<Object>();
+		for (int nArrays = 0; nArrays < arrayObj.length; nArrays++) {
+			for (int i = 0; i < arrayObj[nArrays].length; i++) {
+				list.add(arrayObj[nArrays][i]);
+			}
+		}
+		return list;
 	}
 
 	/**
