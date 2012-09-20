@@ -1,5 +1,6 @@
 package util;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -42,13 +43,71 @@ public abstract class AbstractDAO {
 	protected String[] primaryKey;
 
 	/**
-	 * Nome do(s) campo(s) da tabela
+	 * SubClasse
+	 */
+	private Class subClasse;
+
+	/**
+	 * Atributos da Subclasse
+	 */
+	private Field[] atributosDaSubClasse;
+
+	/**
+	 * Nome do(s) campo(s) definidos na sub-classe
 	 */
 	protected String[] campos;
 
 	public AbstractDAO() {
 		if (AbstractDAO.conn == null)
 			AbstractDAO.conn = ConnectionFactory.getConnection();
+
+		// Recebendo as configuraçõe da subclasse
+		this.config();
+		this.verificaNomeTabela();
+		this.verificaPK();
+		this.prepararParaReflexao();
+	}
+
+	/**
+	 * A subclasse deve sobrecarregar este método para setar as suas
+	 * configurações
+	 */
+	protected abstract void config();
+
+	/**
+	 * Verifica se o nome da tabela foi informado na subclasse
+	 */
+	private void verificaNomeTabela() {
+		if (this.nomeDaTabela == null || this.nomeDaTabela.isEmpty()) {
+			try {
+				throw new Exception("Nome da tabela não informado na sub-classe");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(0);
+			}
+		}
+	}
+
+	/**
+	 * Verifica se o nome da(s) Primary Key(s) foi informado na subclasse
+	 */
+	private void verificaPK() {
+		try {
+			if (this.primaryKey == null || this.primaryKey.length == 0) {
+				throw new Exception("Nome da coluna de ID não informado na sub-classe");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+
+	/**
+	 * Prepara atributos para que possa ser realizada reflexão da subclasse
+	 */
+	private void prepararParaReflexao() {
+		subClasse = this.getClass();
+		atributosDaSubClasse = subClasse.getDeclaredFields();
 	}
 
 	/**
@@ -98,34 +157,6 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Verifica se o nome da tabela foi informado na subclasse
-	 */
-	private void verificaNomeTabela() {
-		if (this.nomeDaTabela == null || this.nomeDaTabela.isEmpty()) {
-			try {
-				throw new Exception("Nome da tabela não informado na sub-classe");
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(0);
-			}
-		}
-	}
-
-	/**
-	 * Verifica se o nome da(s) Primary Key(s) foi informado na subclasse
-	 */
-	private void verificaPK() {
-		try {
-			if (this.primaryKey == null || this.primaryKey.length == 0) {
-				throw new Exception("Nome da coluna de ID não informado na sub-classe");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-	}
-
-	/**
 	 * Verifica se a string de entrada é igual ao nome do campo de alguma
 	 * primary key
 	 * 
@@ -162,32 +193,13 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Retorna o nome dos campos da Tabela
+	 * Recupera os atributos da subclasse
 	 * 
 	 * @return
 	 */
-	public String[] getCampos() {
-		return campos;
-	}
-
-	/**
-	 * Retorna os atributos da Tabela. PrimaryKey + Campos
-	 * 
-	 * @return
-	 */
-	public String[] getAtributos() {
-		String[] pk = this.getPrimaryKey();
-		String[] campos = this.getCampos();
-
-		String[] atributos = new String[pk.length + campos.length];
-		for (int i = 0; i < pk.length; i++) {
-			atributos[i] = pk[i];
-		}
-		int indiceCampos = 0;
-		for (int i = pk.length; i < pk.length + campos.length; i++) {
-			atributos[i] = campos[indiceCampos++];
-		}
-		return atributos;
+	private String[] getAtributos() {
+		// TODO: Utilizar reflexão para pegar atributos da classe filha
+		return null;
 	}
 
 	/**

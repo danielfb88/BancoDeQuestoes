@@ -3,6 +3,16 @@ package testes;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import dao.PerguntaDAO;
+
+class Teste1 {
+	private String att1;
+}
+
+class Teste2 extends Teste1 {
+	private String att2;
+}
+
 public class Reflexao {
 
 	private int funcao1(Object p, int x) throws NullPointerException {
@@ -13,7 +23,11 @@ public class Reflexao {
 
 	public static void main(String args[]) {
 		try {
-			Class cls = Class.forName("app.util.AbstractDAO");
+			PerguntaDAO perguntaDAO = new PerguntaDAO();
+			
+			
+			
+			Class cls = Class.forName("util.AbstractDAO");
 			Method methlist[] = cls.getDeclaredMethods();
 
 			for (int i = 0; i < methlist.length; i++) {
