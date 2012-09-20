@@ -20,9 +20,9 @@ import java.util.Map;
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 10-08-2012
  * 
- *        Ultima atualização 18-09-2012.
+ *        Ultima atualização ---
  * 
- * @version 1.3
+ * @version 2.0
  * 
  */
 public abstract class AbstractDAO {
@@ -111,6 +111,63 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Retorna o nome da Tabela
+	 * 
+	 * @return
+	 */
+	public String getNomeDaTabela() {
+		return nomeDaTabela;
+	}
+
+	/**
+	 * Retorna o nome das primary keys
+	 * 
+	 * @return
+	 */
+	public String[] getPrimaryKey() {
+		return primaryKey;
+	}
+
+	/**
+	 * Retorna array com nome dos atributos da subclasse
+	 * 
+	 * @return
+	 */
+	private String[] getNomeDosAtributosDaSubClasse() {
+		String[] atributos = new String[atributosDaSubClasse.length];
+		for (int i = 0; i < atributosDaSubClasse.length; i++) {
+			atributos[i] = atributosDaSubClasse[i].getName();
+		}
+		return atributos;
+	}
+
+	/**
+	 * Retorna lista com valores dos atributos da subclasse
+	 * 
+	 * @return
+	 */
+	private Object[] getValorDosAtributosDaSubClasse() {
+		String[] atributosNome = getNomeDosAtributosDaSubClasse();
+		Object[] arrayValores = new Object[atributosNome.length];
+
+		try {
+			for (int i = 0; i < atributosDaSubClasse.length; i++) {
+				// get(objeto que possui o atributo)
+				arrayValores[i] = atributosDaSubClasse[i].get(this);
+			}
+
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+
+		}
+
+		return arrayValores;
+	}
+
+	/**
 	 * Prepara os dados contra SQL Injection.
 	 * 
 	 * @param ps
@@ -160,6 +217,8 @@ public abstract class AbstractDAO {
 	 * Verifica se a string de entrada é igual ao nome do campo de alguma
 	 * primary key
 	 * 
+	 * @deprecated
+	 * 
 	 * @param campo
 	 * @return
 	 */
@@ -172,34 +231,6 @@ public abstract class AbstractDAO {
 			}
 		}
 		return igualAlgumaPK;
-	}
-
-	/**
-	 * Retorna o nome da Tabela
-	 * 
-	 * @return
-	 */
-	public String getNomeDaTabela() {
-		return nomeDaTabela;
-	}
-
-	/**
-	 * Retorna o nome das primary keys
-	 * 
-	 * @return
-	 */
-	public String[] getPrimaryKey() {
-		return primaryKey;
-	}
-
-	/**
-	 * Recupera os atributos da subclasse
-	 * 
-	 * @return
-	 */
-	private String[] getAtributos() {
-		// TODO: Utilizar reflexão para pegar atributos da classe filha
-		return null;
 	}
 
 	/**
@@ -227,45 +258,44 @@ public abstract class AbstractDAO {
 	/**
 	 * Efetua um:
 	 * 
-	 * "INSERT INTO 'tabela' (campos) VALUES (valores) WHERE (filtros)"
+	 * "INSERT INTO 'tabela' (campos) VALUES (valores);"
 	 * 
 	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
 	 * parâmetro.
-	 * 
-	 * @param campoValor
-	 *            HashMap com o nome do campo e o valor relacionado.
-	 * @return Retorno do executeUpdate
 	 */
-	protected int _adicionar(Map<Object, Object> campoValor) {
-		this.verificaNomeTabela();
-
+	public int adicionar() {
 		int linhasAfetadas = 0;
-		int i = 0;
+		int countVirgula = 0;
 
-		ArrayList<Object> ordem = new ArrayList<Object>();
 		StringBuilder builder = new StringBuilder();
 
 		try {
 			builder.append("INSERT INTO ");
-			builder.append(this.nomeDaTabela + " ");
-			builder.append("(");
+			builder.append(this.nomeDaTabela);
+			builder.append(" (");
 
 			// Iterando os objetos para pegar a chave
-			Iterator<Map.Entry<Object, Object>> it = campoValor.entrySet().iterator();
+			// Iterator<Map.Entry<Object, Object>> it =
+			// campoValor.entrySet().iterator();
 
-			while (it.hasNext()) {
-				Map.Entry<Object, Object> map = (Map.Entry<Object, Object>) it.next();
+			String[] atributosNome = getNomeDosAtributosDaSubClasse();
+			Object[] atributosValor = getValorDosAtributosDaSubClasse();
 
+			List<String> atributosNome_NotNull = new ArrayList<String>();
+			List<Object> atributosValor_NotNull = new ArrayList<Object>();
+
+			for (int i = 0; i < atributosNome.length; i++) {
 				// Verificando se o valor é diferente de nulo e vazio
-				if (map.getValue() != null && !map.getValue().toString().isEmpty()) {
+				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
 
-					// inserindo os valores em um arraylist
-					ordem.add(map.getValue());
+					// inserindo nomes e valores NAO NULOS em arraylist
+					atributosNome_NotNull.add(atributosNome[i]);
+					atributosValor_NotNull.add(atributosValor[i]);
 
 					// inserindo a virgula depois do primeiro elemento
-					if (i++ != 0)
+					if (countVirgula++ != 0)
 						builder.append(",");
-					builder.append((String) map.getKey());
+					builder.append(atributosNome[i]);
 				}
 			}
 
@@ -273,24 +303,29 @@ public abstract class AbstractDAO {
 			builder.append("VALUES ");
 			builder.append("(");
 
-			i--;
-			for (; i >= 0; i--) {
+			countVirgula--;
+			for (; countVirgula >= 0; countVirgula--) {
 				builder.append("?");
-				if (i != 0)
+				if (countVirgula != 0)
 					builder.append(",");
 			}
 
 			builder.append(")");
 			builder.append(";");
 
-			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
+			// TODO: A primary key não pode entrar aqui. Continue amanhã.
+			// vou dormir...
+			System.out.println(builder.toString());
+			System.exit(0);
+
+			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
 
 			// preparando o statement
-			this.prepareStatement(preparedStatement, ordem, false);
+			this.prepareStatement(ps, atributosValor_NotNull, false);
 
 			// executando
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
+			linhasAfetadas = ps.executeUpdate();
+			ps.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -517,7 +552,7 @@ public abstract class AbstractDAO {
 			}
 
 			// inserindo atributos no hashMap
-			this.preencherMap(map, resultSet, this.getAtributos());
+			this.preencherMap(map, resultSet, this.getNomeDosAtributosDaSubClasse());
 
 			resultSet.close();
 			preparedStatement.close();
@@ -579,7 +614,7 @@ public abstract class AbstractDAO {
 				Map<String, Object> map = new HashMap<String, Object>();
 
 				// inserindo atributos no Map
-				this.preencherMap(map, resultSet, this.getAtributos());
+				this.preencherMap(map, resultSet, this.getNomeDosAtributosDaSubClasse());
 
 				// inserindo o hashMap no arrayList
 				listMap.add(map);
@@ -657,7 +692,7 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	protected List<Map<String, Object>> executarQuery(String query) {
-		return this.executarQuery(query, this.getAtributos());
+		return this.executarQuery(query, this.getNomeDosAtributosDaSubClasse());
 	}
 
 	protected List<Map<String, Object>> executarQueryPreparada(String query, Object[] ordem,

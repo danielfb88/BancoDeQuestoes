@@ -23,7 +23,12 @@ public class Reflexao {
 
 	public static void main(String args[]) {
 		try {
-			PerguntaDAO perguntaDAO = new PerguntaDAO();
+			PerguntaDAO p = new PerguntaDAO();
+			p.id_pergunta = 1;
+			p.descricao = "lalala";
+			p.adicionar();
+			
+			System.exit(0);
 			
 			
 			
