@@ -45,6 +45,7 @@ public abstract class AbstractDAO {
 	/**
 	 * SubClasse
 	 */
+	@SuppressWarnings("rawtypes")
 	private Class subClasse;
 
 	/**
@@ -147,8 +148,7 @@ public abstract class AbstractDAO {
 	 * @return
 	 */
 	private Object[] getValorDosAtributosDaSubClasse() {
-		String[] atributosNome = getNomeDosAtributosDaSubClasse();
-		Object[] arrayValores = new Object[atributosNome.length];
+		Object[] arrayValores = new Object[atributosDaSubClasse.length];
 
 		try {
 			for (int i = 0; i < atributosDaSubClasse.length; i++) {
@@ -158,13 +158,48 @@ public abstract class AbstractDAO {
 
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
+			System.exit(0);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-
+			System.exit(0);
 		}
 
 		return arrayValores;
+	}
+
+	/**
+	 * Seta os atributos como null, para fazer uma nova operação
+	 */
+	public void limparDAO() {
+		try {
+			for (int i = 0; i < atributosDaSubClasse.length; i++) {
+				// set(objeto que possui o atributo, valor);
+				atributosDaSubClasse[i].set(this, null);
+			}
+
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+
+	/**
+	 * Verifica se todos os valores no array são nulos.
+	 * 
+	 * @param arrayObj
+	 * @return
+	 */
+	private boolean is_todosValoresNulos(Object[] arrayObj) {
+		for (int i = 0; i < arrayObj.length; i++) {
+			if (arrayObj[i] != null)
+				return false;
+		}
+		return true;
 	}
 
 	/**
@@ -187,6 +222,9 @@ public abstract class AbstractDAO {
 						else
 							ps.setString(indexPS, (String) parametros.get(i));
 						break;
+					case "java.lang.Character":
+						ps.setString(indexPS, parametros.get(i).toString());
+						break;
 					case "java.lang.Integer":
 						ps.setInt(indexPS, (Integer) parametros.get(i));
 						break;
@@ -200,7 +238,7 @@ public abstract class AbstractDAO {
 						ps.setDate(indexPS, (Date) parametros.get(i));
 						break;
 					default:
-						throw new Exception("Tipo do parâmetro não especificado");
+						throw new Exception("Tipo do parâmetro não reconhecido");
 				}
 			}
 		} catch (SQLException e) {
@@ -265,24 +303,24 @@ public abstract class AbstractDAO {
 	 */
 	public int adicionar() {
 		int linhasAfetadas = 0;
-		int countVirgula = 0;
-
 		StringBuilder builder = new StringBuilder();
 
+		List<String> atributosNome_NotNull = new ArrayList<String>();
+		List<Object> atributosValor_NotNull = new ArrayList<Object>();
+
+		String[] atributosNome = getNomeDosAtributosDaSubClasse();
+		Object[] atributosValor = getValorDosAtributosDaSubClasse();
+
 		try {
+			// Verificando se o array dos valores não é vazio
+			if (is_todosValoresNulos(atributosValor))
+				throw new Exception("Nenhum valor para os atributos do DAO foi preenchido.");
+
 			builder.append("INSERT INTO ");
 			builder.append(this.nomeDaTabela);
 			builder.append(" (");
 
-			// Iterando os objetos para pegar a chave
-			// Iterator<Map.Entry<Object, Object>> it =
-			// campoValor.entrySet().iterator();
-
-			String[] atributosNome = getNomeDosAtributosDaSubClasse();
-			Object[] atributosValor = getValorDosAtributosDaSubClasse();
-
-			List<String> atributosNome_NotNull = new ArrayList<String>();
-			List<Object> atributosValor_NotNull = new ArrayList<Object>();
+			int countVirgula = 0;
 
 			for (int i = 0; i < atributosNome.length; i++) {
 				// Verificando se o valor é diferente de nulo e vazio
@@ -313,14 +351,8 @@ public abstract class AbstractDAO {
 			builder.append(")");
 			builder.append(";");
 
-			// TODO: A primary key não pode entrar aqui. Continue amanhã.
-			// vou dormir...
-			System.out.println(builder.toString());
-			System.exit(0);
-
-			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
-
 			// preparando o statement
+			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
 			this.prepareStatement(ps, atributosValor_NotNull, false);
 
 			// executando
@@ -329,10 +361,16 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
+
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(0);
 		}
 		return linhasAfetadas;
 	}
 
+	// TODO: Continue. Siga o modelo do adicionar.
 	/**
 	 * Efetua um:
 	 * 
@@ -405,6 +443,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 		return linhasAfetadas;
 	}
@@ -489,6 +528,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 		return linhasAfetadas;
 	}
@@ -559,6 +599,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 		return map;
 	}
@@ -625,6 +666,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 
 		return listMap;
@@ -643,6 +685,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 
@@ -677,6 +720,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 
 		// lista
@@ -722,6 +766,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 
 		return linhasAfetadas;

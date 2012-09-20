@@ -24,14 +24,21 @@ public class Reflexao {
 	public static void main(String args[]) {
 		try {
 			PerguntaDAO p = new PerguntaDAO();
-			p.id_pergunta = 1;
-			p.descricao = "lalala";
+			p.id_usuario = 5;
 			p.adicionar();
-			
 			System.exit(0);
 			
 			
+			p.id_usuario = 5;
+			p.tipo_pergunta = 'A';
+			p.nivel_pergunta = 'D';
+			p.enunciado = "Uhuuuuu!!";
+			p.descricao = "Eta porra! 2.0!!! 2";
 			
+			p.adicionar();
+			System.exit(0);
+
+
 			Class cls = Class.forName("util.AbstractDAO");
 			Method methlist[] = cls.getDeclaredMethods();
 
