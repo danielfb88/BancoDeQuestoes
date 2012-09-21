@@ -25,6 +25,7 @@ public class Reflexao {
 		try {
 			PerguntaDAO p = new PerguntaDAO();
 			p.id_pergunta = 16;
+			p.descricao = "dsadsa";
 			if(p.excluir() > 0)
 				System.out.println("OK");
 			else

@@ -88,7 +88,7 @@ public abstract class AbstractDAO {
 	private void verificaNomeTabela() {
 		if (this.nomeDaTabela == null || this.nomeDaTabela.isEmpty()) {
 			try {
-				throw new Exception("Nome da tabela não informado na sub-classe");
+				throw new Exception("Nome da tabela não informado na classe " + this.subClasse.getSimpleName());
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.exit(0);
@@ -102,7 +102,7 @@ public abstract class AbstractDAO {
 	private void verificaPK() {
 		try {
 			if (this.primaryKey == null || this.primaryKey.length == 0) {
-				throw new Exception("Nome da coluna de ID não informado na sub-classe");
+				throw new Exception("Nome da coluna de ID não informado na classe " + this.subClasse.getSimpleName());
 			}
 
 			/*
@@ -123,7 +123,8 @@ public abstract class AbstractDAO {
 			 * PrimaryKeys encontradas
 			 */
 			if (primaryKey.length != nPrimaryKeyEncontrada)
-				throw new Exception("Primary key informada não consta nos atributos da classe.");
+				throw new Exception("Primary key informada não consta nos atributos da classe "
+						+ this.subClasse.getSimpleName());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -258,7 +259,8 @@ public abstract class AbstractDAO {
 						ps.setDate(indexPS, (Date) parametros.get(i));
 						break;
 					default:
-						throw new Exception("Tipo do parâmetro não reconhecido");
+						throw new Exception("Tipo do parâmetro não reconhecido na classe " +
+								this.subClasse.getSimpleName());
 				}
 			}
 		} catch (SQLException e) {
@@ -358,7 +360,8 @@ public abstract class AbstractDAO {
 		try {
 			// Verificando se o array dos valores não é vazio
 			if (is_todosValoresNulos(atributosValor))
-				throw new Exception("Nenhum valor para os atributos do DAO foi preenchido.");
+				throw new Exception("Nenhum valor para os atributos do objeto da classe " +
+						this.subClasse.getSimpleName() + " foi preenchido.");
 
 			builder.append("INSERT INTO ");
 			builder.append(this.nomeDaTabela);
@@ -440,7 +443,8 @@ public abstract class AbstractDAO {
 		try {
 			// Verificando se o array dos valores não é vazio
 			if (is_todosValoresNulos(atributosValor))
-				throw new Exception("Nenhum valor para Edição foi preenchido.");
+				throw new Exception("Nenhum valor para Edição foi preenchido no objeto da classe "
+						+ this.subClasse.getSimpleName());
 
 			builder.append("UPDATE ");
 			builder.append(this.nomeDaTabela);
@@ -476,7 +480,8 @@ public abstract class AbstractDAO {
 
 			// Verificando se o array dos valores das PK não é vazio
 			if (is_todosValoresNulos(atributosValor_PK_NotNull.toArray()))
-				throw new Exception("Nenhum valor para Primary Key foi preenchido.");
+				throw new Exception("Nenhum valor para Primary Key do objeto na classe "
+						+ this.subClasse.getSimpleName() + "foi preenchido.");
 
 			builder.append(" WHERE ");
 
@@ -519,7 +524,7 @@ public abstract class AbstractDAO {
 		// pegando somente as PK
 		for (int nPK = 0; nPK < primaryKey.length; nPK++) {
 			for (int nAtributo = 0; nAtributo < atributosNome.length; nAtributo++) {
-				if (primaryKey[nPK].equals(atributosNome[nAtributo])) {
+				if (primaryKey[nPK].equals(atributosNome[nAtributo]) && atributosValor[nAtributo] != null) {
 					atributosNome_PK_NotNull.add(atributosNome[nAtributo]);
 					atributosValor_PK_NotNull.add(atributosValor[nAtributo]);
 					break;
@@ -528,6 +533,13 @@ public abstract class AbstractDAO {
 		}
 
 		try {
+			// Verificando se o array dos valores não_nulos não é vazio
+			if (atributosValor_PK_NotNull.size() == 0)
+				throw new Exception(
+						"Nenhum valor para os atributos PrimaryKey no objeto da classe "
+								+ this.subClasse.getSimpleName()
+								+ " foi preenchido.");
+
 			builder.append("DELETE FROM ");
 			builder.append(this.nomeDaTabela);
 			builder.append(" WHERE ");
@@ -545,20 +557,13 @@ public abstract class AbstractDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.exit(0);
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(0);
 		}
 		return linhasAfetadas;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	// TODO: CONTINUAR....
 
 	/**
