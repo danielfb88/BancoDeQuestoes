@@ -62,11 +62,18 @@ public abstract class AbstractDAO {
 		if (AbstractDAO.conn == null)
 			AbstractDAO.conn = ConnectionFactory.getConnection();
 
-		// Recebendo as configuraçõe da subclasse
+		this.prepararParaReflexao();
 		this.config();
 		this.verificaNomeTabela();
 		this.verificaPK();
-		this.prepararParaReflexao();
+	}
+
+	/**
+	 * Prepara atributos para que possa ser realizada reflexão da subclasse
+	 */
+	private void prepararParaReflexao() {
+		subClasse = this.getClass();
+		atributosDaSubClasse = subClasse.getDeclaredFields();
 	}
 
 	/**
@@ -97,18 +104,31 @@ public abstract class AbstractDAO {
 			if (this.primaryKey == null || this.primaryKey.length == 0) {
 				throw new Exception("Nome da coluna de ID não informado na sub-classe");
 			}
+
+			/*
+			 * Verificando se o nome da primary key informada está em algum dos
+			 * atributos da classe
+			 */
+			int nPrimaryKeyEncontrada = 0;
+			for (int nPK = 0; nPK < primaryKey.length; nPK++) {
+				for (int nAtributo = 0; nAtributo < atributosDaSubClasse.length; nAtributo++) {
+					if (primaryKey[nPK].equalsIgnoreCase(atributosDaSubClasse[nAtributo].getName())) {
+						nPrimaryKeyEncontrada++;
+						break;
+					}
+				}
+			}
+			/*
+			 * Comparando o numero das PrimaryKeys informadas com o numero das
+			 * PrimaryKeys encontradas
+			 */
+			if (primaryKey.length != nPrimaryKeyEncontrada)
+				throw new Exception("Primary key informada não consta nos atributos da classe.");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
-	}
-
-	/**
-	 * Prepara atributos para que possa ser realizada reflexão da subclasse
-	 */
-	private void prepararParaReflexao() {
-		subClasse = this.getClass();
-		atributosDaSubClasse = subClasse.getDeclaredFields();
 	}
 
 	/**
@@ -466,6 +486,45 @@ public abstract class AbstractDAO {
 		return linhasAfetadas;
 	}
 
+	public int excluir() {
+		int linhasAfetadas = 0;
+		StringBuilder builder = new StringBuilder();
+
+		// todos os atributos
+		String[] atributosNome = getNomeDosAtributosDaSubClasse();
+		Object[] atributosValor = getValorDosAtributosDaSubClasse();
+
+		// atributos PRIMARY KEYS NAO NULOS
+		List<String> atributosNome_PK_NotNull = new ArrayList<String>();
+		List<Object> atributosValor_PK_NotNull = new ArrayList<Object>();
+
+		// pegando somente as PK
+		for (int i = 0; i < atributosNome.length; i++) {
+
+		}
+
+		try {
+			builder.append("DELETE FROM ");
+			builder.append(this.nomeDaTabela);
+			builder.append(" WHERE ");
+
+			// Inserindo os Ids
+			builder.append(this.montaParteQueryID(campoValor));
+			builder.append(";");
+
+			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
+
+			// executando
+			linhasAfetadas = preparedStatement.executeUpdate();
+			preparedStatement.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		return linhasAfetadas;
+	}
+
 	/**
 	 * Une vários arrays em um array list, preservando a ordem de inserção dos
 	 * parâmetros
@@ -484,25 +543,14 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * TODO: TRABALHAR AQUI....
-	 * Método de exclusão que recebe um ou vários parâmetros PrimaryKey para
-	 * serem inseridos ao filtro. A ordem dos parâmetros é a mesma do array
-	 * informado na subclasse.
+	 * TODO: TRABALHAR AQUI.... Método de exclusão que recebe um ou vários
+	 * parâmetros PrimaryKey para serem inseridos ao filtro. A ordem dos
+	 * parâmetros é a mesma do array informado na subclasse.
 	 * 
 	 * @param id
 	 *            Primary Key
 	 * @return
 	 */
-	protected int _excluir(int... primaryKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(primaryKey.length);
-
-		// mapeando id - valor
-		for (int i = 0; i < primaryKey.length; i++) {
-			campoValor.put(this.primaryKey[i], primaryKey[i]);
-		}
-
-		return this.__excluir(campoValor);
-	}
 
 	/**
 	 * Recupera o valor da Primary Key (Quando unitária) inserindo as
@@ -541,32 +589,7 @@ public abstract class AbstractDAO {
 	 * @return Retorno do executeUpdate
 	 */
 	private int __excluir(Map<Object, Object> campoValor) {
-		this.verificaNomeTabela();
-		this.verificaPK();
 
-		int linhasAfetadas = 0;
-		StringBuilder builder = new StringBuilder();
-
-		try {
-			builder.append("DELETE FROM ");
-			builder.append(this.nomeDaTabela);
-			builder.append(" WHERE ");
-
-			// Inserindo os Ids
-			builder.append(this.montaParteQueryID(campoValor));
-			builder.append(";");
-
-			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
-
-			// executando
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
-		return linhasAfetadas;
 	}
 
 	/**
