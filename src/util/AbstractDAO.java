@@ -284,12 +284,28 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Monta uma string com os valores da primeira lista relacinando-se com
+	 * caractere coringa '?'
+	 * 
+	 * @param listNomeCampo
+	 * @return
+	 */
+	private String montaStringCampoEqualCoringa(List<String> listNomeCampo) {
+		StringBuilder builder = new StringBuilder();
+
+		for (int i = 0; i < listNomeCampo.size(); i++) {
+			builder.append(listNomeCampo.get(i) + " = ?");
+			if (i != listNomeCampo.size() - 1)
+				builder.append(", ");
+		}
+		return builder.toString();
+	}
+
+	/**
 	 * Efetua um:
 	 * 
 	 * "INSERT INTO 'tabela' (campos) VALUES (valores);"
 	 * 
-	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
-	 * parâmetro.
 	 */
 	public int adicionar() {
 		int linhasAfetadas = 0;
@@ -360,17 +376,11 @@ public abstract class AbstractDAO {
 		return linhasAfetadas;
 	}
 
-	// TODO: Continue. Siga o modelo do adicionar.
 	/**
 	 * Efetua um:
 	 * 
 	 * "UPDATE 'tabela' SET 'campos/valores' WHERE filtros"
 	 * 
-	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
-	 * parâmetro.
-	 * 
-	 * @param campoValor
-	 *            Map com a primary key e os campos alterados
 	 * @return Retorno do executeUpdate
 	 */
 	public int editar() {
@@ -433,21 +443,17 @@ public abstract class AbstractDAO {
 			builder.append(" WHERE ");
 
 			// Inserindo os Ids
-			builder.append(montaStringCampoEqualValor(atributosNome_PK_NotNull, atributosValor_PK_NotNull));
+			builder.append(montaStringCampoEqualCoringa(atributosNome_PK_NotNull));
 			builder.append(";");
 
-			// TODO: Continue.... vou..
-			System.out.println(builder.toString());
-			System.exit(0);
-
 			// preparando o statement
-			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
-			this.prepareStatement(preparedStatement,
+			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
+			this.prepareStatement(ps,
 					mergeArray(atributosValor_NotNull_NotPK.toArray(), atributosValor_PK_NotNull.toArray()), false);
 
 			// executando
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
+			linhasAfetadas = ps.executeUpdate();
+			ps.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -464,8 +470,6 @@ public abstract class AbstractDAO {
 	 * Une vários arrays em um array list, preservando a ordem de inserção dos
 	 * parâmetros
 	 * 
-	 * TODO: ANALIZE ESTES WARNINGS
-	 * 
 	 * @param arrayObj
 	 * @return
 	 */
@@ -480,6 +484,7 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * TODO: TRABALHAR AQUI....
 	 * Método de exclusão que recebe um ou vários parâmetros PrimaryKey para
 	 * serem inseridos ao filtro. A ordem dos parâmetros é a mesma do array
 	 * informado na subclasse.
