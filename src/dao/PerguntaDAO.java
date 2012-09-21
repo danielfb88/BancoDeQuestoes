@@ -19,6 +19,6 @@ public class PerguntaDAO extends AbstractDAO {
 	@Override
 	protected void config() {
 		nomeDaTabela = "pergunta";
-		primaryKey = new String[] { "id_pergunta" };
+		primaryKey = new String[] { "id_pergunta"};
 	}
 }

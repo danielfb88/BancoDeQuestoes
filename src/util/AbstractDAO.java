@@ -8,10 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Classe abstrata que efetua as operações básicas de uma DAO: - Adicionar,
@@ -52,11 +49,6 @@ public abstract class AbstractDAO {
 	 * Atributos da Subclasse
 	 */
 	private Field[] atributosDaSubClasse;
-
-	/**
-	 * Nome do(s) campo(s) definidos na sub-classe
-	 */
-	protected String[] campos;
 
 	public AbstractDAO() {
 		if (AbstractDAO.conn == null)
@@ -133,24 +125,6 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Retorna o nome da Tabela
-	 * 
-	 * @return
-	 */
-	public String getNomeDaTabela() {
-		return nomeDaTabela;
-	}
-
-	/**
-	 * Retorna o nome das primary keys
-	 * 
-	 * @return
-	 */
-	public String[] getPrimaryKey() {
-		return primaryKey;
-	}
-
-	/**
 	 * Retorna array com nome dos atributos da subclasse
 	 * 
 	 * @return
@@ -190,9 +164,10 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Seta os atributos como null, para fazer uma nova operação
+	 * Reseta os atributos do Objeto. Seta os atributos como null, para fazer
+	 * uma nova operação.
 	 */
-	public void limparDAO() {
+	public void reset() {
 		try {
 			for (int i = 0; i < atributosDaSubClasse.length; i++) {
 				// set(objeto que possui o atributo, valor);
@@ -274,6 +249,62 @@ public abstract class AbstractDAO {
 	}
 
 	/**
+	 * Carrega os atributos da subclasse baseado nos resultados vindos do
+	 * resultSet
+	 * 
+	 * @param rs
+	 */
+	private void carregarSubClasse(ResultSet rs) {
+
+		try {
+			for (Field field : atributosDaSubClasse) {
+				String tipoDaClasseDoField = field.getType().getName();
+
+				// Fazendo o cast para inserir o valor no atributo da subclasse
+				switch (tipoDaClasseDoField) {
+					case "java.lang.String":
+						field.set(this, rs.getString(field.getName()));
+						break;
+					case "java.lang.Character":
+						field.set(this, rs.getString(field.getName()).charAt(0));
+						break;
+					case "java.lang.Integer":
+						field.set(this, rs.getInt(field.getName()));
+						break;
+					case "java.lang.Double":
+						field.set(this, rs.getDouble(field.getName()));
+						break;
+					case "java.lang.Boolean":
+						field.set(this, rs.getBoolean(field.getName()));
+						break;
+					case "java.lang.Date":
+						field.set(this, rs.getDate(field.getName()));
+						break;
+					default:
+						throw new Exception("Tipo do parâmetro não reconhecido na classe " +
+								this.subClasse.getSimpleName());
+				}
+			}
+
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
+
+	/**
 	 * Verifica se a string de entrada é igual ao nome do campo de alguma
 	 * primary key
 	 * 
@@ -293,14 +324,31 @@ public abstract class AbstractDAO {
 	 * Monta uma string com os valores da primeira lista relacinando-se com os
 	 * valores da segunda lista através do sinal "=". Exemplo:
 	 * "campoDaLista1 = valorDaLista1, campoDaLista2 = ValorDaLista2, campoDaLista3 = valorDaLista3"
+	 * 
+	 * @param listNomeCampo
+	 *            List com o nome dos campos.
+	 * @param listValorCampo
+	 *            List com o valor dos campos.
+	 * @param useLike
+	 *            Flag usada quando o valor for uma String.
+	 * @param separador
+	 *            Separador. Pode ser "," ou "AND". EX com virgula: campo1 =
+	 *            valor1, campo2 = valor2. EX com AND: campo1 = valor1 AND
+	 *            campo2 = valor2
+	 * @return
 	 */
-	private String montaStringCampoEqualValor(List<String> listNomeCampo, List<Object> listValorCampo) {
+	private String montaStringCampoEqualValor(List<String> listNomeCampo, List<Object> listValorCampo,
+			boolean useLike, String separador) {
 		StringBuilder builder = new StringBuilder();
 
 		for (int i = 0; i < listNomeCampo.size(); i++) {
-			builder.append(listNomeCampo.get(i) + " = " + listValorCampo.get(i));
+			if (listValorCampo.get(i).getClass().getName() == "java.lang.String" && useLike)
+				builder.append(listNomeCampo.get(i) + " LIKE " + listValorCampo.get(i));
+			else
+				builder.append(listNomeCampo.get(i) + " = " + listValorCampo.get(i));
+
 			if (i != listNomeCampo.size() - 1)
-				builder.append(", ");
+				builder.append(" " + separador + " ");
 		}
 		return builder.toString();
 	}
@@ -311,15 +359,31 @@ public abstract class AbstractDAO {
 	 * "campoDaLista1 = ?, campoDaLista2 = ?, campoDaLista3 = ?"
 	 * 
 	 * @param listNomeCampo
+	 *            List com o nome dos campos.
+	 * @param listValorCampo
+	 *            List com o valor dos campos. É necessário para saber se pode
+	 *            usar o LIKE ou não. (LIKE's são usados apenas ao lidar com
+	 *            Strings).
+	 * @param useLike
+	 *            Flag usada quando o valor for uma String.
+	 * @param separador
+	 *            Separador. Pode ser "," ou "AND". EX com virgula: campo1 =
+	 *            valor1, campo2 = valor2. EX com AND: campo1 = valor1 AND
+	 *            campo2 = valor2
 	 * @return
 	 */
-	private String montaStringCampoEqualCoringa(List<String> listNomeCampo) {
+	private String montaStringCampoEqualCoringa(List<String> listNomeCampo, List<Object> listValorCampo,
+			boolean useLike, String separador) {
 		StringBuilder builder = new StringBuilder();
 
 		for (int i = 0; i < listNomeCampo.size(); i++) {
-			builder.append(listNomeCampo.get(i) + " = ?");
+			if (listValorCampo.get(i).getClass().getName() == "java.lang.String" && useLike)
+				builder.append(listNomeCampo.get(i) + " LIKE ?");
+			else
+				builder.append(listNomeCampo.get(i) + " = ?");
+
 			if (i != listNomeCampo.size() - 1)
-				builder.append(", ");
+				builder.append(" " + separador + " ");
 		}
 		return builder.toString();
 	}
@@ -329,10 +393,11 @@ public abstract class AbstractDAO {
 	 * parâmetros
 	 * 
 	 * @param arrayObj
+	 *            varargs dos arrays a serem unidos
 	 * @return
 	 */
-	private ArrayList<Object> mergeArray(Object[]... arrayObj) {
-		ArrayList<Object> list = new ArrayList<Object>();
+	private List<Object> unirArrays(Object[]... arrayObj) {
+		List<Object> list = new ArrayList<Object>();
 		for (int nArrays = 0; nArrays < arrayObj.length; nArrays++) {
 			for (int i = 0; i < arrayObj[nArrays].length; i++) {
 				list.add(arrayObj[nArrays][i]);
@@ -450,8 +515,6 @@ public abstract class AbstractDAO {
 			builder.append(this.nomeDaTabela);
 			builder.append(" SET ");
 
-			int countVirgula = 0;
-
 			for (int i = 0; i < atributosNome.length; i++) {
 				// Verificando se o valor é diferente de nulo e vazio
 				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
@@ -463,12 +526,6 @@ public abstract class AbstractDAO {
 						// em arraylist
 						atributosNome_NotNull_NotPK.add(atributosNome[i]);
 						atributosValor_NotNull_NotPK.add(atributosValor[i]);
-
-						// inserindo a virgula depois do primeiro elemento
-						if (countVirgula++ != 0)
-							builder.append(", ");
-
-						builder.append(atributosNome[i] + " = ?");
 
 					} else {
 						// atributos PRIMARY KEYS
@@ -483,16 +540,21 @@ public abstract class AbstractDAO {
 				throw new Exception("Nenhum valor para Primary Key do objeto na classe "
 						+ this.subClasse.getSimpleName() + "foi preenchido.");
 
+			// Inserindo os Campos
+			builder.append(montaStringCampoEqualCoringa(atributosNome_NotNull_NotPK, atributosValor_NotNull_NotPK,
+					false, ","));
+
 			builder.append(" WHERE ");
 
 			// Inserindo os Ids
-			builder.append(montaStringCampoEqualCoringa(atributosNome_PK_NotNull));
+			builder.append(montaStringCampoEqualCoringa(atributosNome_PK_NotNull, atributosValor_PK_NotNull,
+					false, "AND"));
 			builder.append(";");
 
 			// preparando o statement
 			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
 			this.prepareStatement(ps,
-					mergeArray(atributosValor_NotNull_NotPK.toArray(), atributosValor_PK_NotNull.toArray()), false);
+					unirArrays(atributosValor_NotNull_NotPK.toArray(), atributosValor_PK_NotNull.toArray()), false);
 
 			// executando
 			linhasAfetadas = ps.executeUpdate();
@@ -509,6 +571,13 @@ public abstract class AbstractDAO {
 		return linhasAfetadas;
 	}
 
+	/**
+	 * Efetua um:
+	 * 
+	 * "DELETE FROM 'tabela' WHERE pk"
+	 * 
+	 * @return Retorno do executeUpdate
+	 */
 	public int excluir() {
 		int linhasAfetadas = 0;
 		StringBuilder builder = new StringBuilder();
@@ -545,7 +614,7 @@ public abstract class AbstractDAO {
 			builder.append(" WHERE ");
 
 			// Inserindo os Ids
-			builder.append(montaStringCampoEqualValor(atributosNome_PK_NotNull, atributosValor_PK_NotNull));
+			builder.append(montaStringCampoEqualValor(atributosNome_PK_NotNull, atributosValor_PK_NotNull, false, "AND"));
 			builder.append(";");
 
 			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
@@ -564,105 +633,83 @@ public abstract class AbstractDAO {
 		return linhasAfetadas;
 	}
 
-	// TODO: CONTINUAR....
-
 	/**
-	 * Recupera o valor da Primary Key (Quando unitária) inserindo as
-	 * foreignkeys.
+	 * Retorna os dados da pesquisa no próprio objeto. Este método retorna
+	 * apenas um registro. O método carregar() usa o tipo de pesquisa where
+	 * "like" para string e "=" para os demais.
 	 * 
-	 * Este método deve ser usado APENAS em classes que representem tabelas de
-	 * relacionamentos *muitos para muitos*.
-	 * 
-	 * A ordem dos parâmetros deve ser a mesma definida no array 'campos' do DAO
-	 * 
-	 * @param foreignKey
-	 *            os ids do relacionamento
 	 * @return
 	 */
-	public int getValuePrimaryKey(int... foreignKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(campos.length);
-
-		for (int i = 0; i < campos.length; i++) {
-			campoValor.put(this.campos[i], foreignKey[i]);
-		}
-
-		Map<String, Object> map = this._listarPor(campoValor).get(0);
-		return (Integer) map.get(this.primaryKey[0]);
-	}
-
-	/**
-	 * Método de busca que recebe um ou vários parâmetros PrimaryKey para serem
-	 * inseridos ao filtro. A ordem dos parâmetros é a mesma do array informado
-	 * na subclasse.
-	 * 
-	 * @param primaryKey
-	 * @return
-	 */
-	protected Map<String, Object> _buscarPorId(int... primaryKey) {
-		Map<Object, Object> campoValor = new HashMap<Object, Object>(primaryKey.length);
-
-		// mapeando id - valor
-		for (int i = 0; i < primaryKey.length; i++) {
-			campoValor.put(this.primaryKey[i], primaryKey[i]);
-		}
-
-		return this.__buscarPorId(campoValor);
-	}
-
-	/**
-	 * Efetua uma busca por ID
-	 * 
-	 * "SELECT * FROM WHERE primaryKey(s)"
-	 * 
-	 * utilizando o(s) Id(s) informados na subclasse e o HashMap enviado como
-	 * parâmetro.
-	 * 
-	 * @param campoValor
-	 *            HashMap com o nome da primary key e o valor do id
-	 * @return Map com os valores vindos do ResultSet
-	 */
-	private Map<String, Object> __buscarPorId(Map<Object, Object> campoValor) {
-		this.verificaNomeTabela();
-		this.verificaPK();
-
-		ResultSet resultSet = null;
+	public boolean carregar() {
 		StringBuilder builder = new StringBuilder();
-		Map<String, Object> map = new HashMap<String, Object>();
+
+		// todos os atributos
+		String[] atributosNome = getNomeDosAtributosDaSubClasse();
+		Object[] atributosValor = getValorDosAtributosDaSubClasse();
+
+		// atributos NAO NULOS
+		List<String> atributosNome_NotNull = new ArrayList<String>();
+		List<Object> atributosValor_NotNull = new ArrayList<Object>();
+
+		ResultSet rs = null;
 
 		try {
+			// Verificando se o array dos valores não é vazio
+			if (is_todosValoresNulos(atributosValor))
+				throw new Exception("Nenhum valor para os atributos no objeto da classe "
+						+ this.subClasse.getSimpleName() + " foi preenchido.");
+
 			builder.append("SELECT * FROM ");
 			builder.append(this.nomeDaTabela);
 			builder.append(" WHERE ");
 
-			// Inserindo os Ids
-			builder.append(this.montaParteQueryID(campoValor));
-			builder.append(";");
+			for (int i = 0; i < atributosNome.length; i++) {
+				// Verificando se o valor é diferente de nulo e vazio
+				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
 
-			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
-
-			resultSet = preparedStatement.executeQuery();
-
-			if (!resultSet.next()) {
-				resultSet.close();
-				preparedStatement.close();
-				return null;
+					atributosNome_NotNull.add(atributosNome[i]);
+					atributosValor_NotNull.add(atributosValor[i]);
+				}
 			}
 
-			// inserindo atributos no hashMap
-			this.preencherMap(map, resultSet, this.getNomeDosAtributosDaSubClasse());
+			builder.append(montaStringCampoEqualCoringa(atributosNome_NotNull, atributosValor_NotNull,
+					true, "AND"));
 
-			resultSet.close();
-			preparedStatement.close();
+			builder.append(" LIMIT 1");
+			builder.append(";");
+
+			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
+			this.prepareStatement(ps, atributosValor_NotNull, true);
+
+			rs = ps.executeQuery();
+
+			if (!rs.next()) {
+				rs.close();
+				ps.close();
+				return false;
+			}
+
+			// inserindo valores do resultSet na subclasse
+			this.carregarSubClasse(rs);
+
+			rs.close();
+			ps.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.exit(0);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
 		}
-		return map;
+
+		return true;
 	}
 
+	// TODO: Continuar. vou descançar um pouco........... flw
 	/**
-	 * Retorna uma Lista de Map de cada registro
+	 * TODO: VAI RETORNAR UM ARRAY [][] VAI SER MUITO MELHOR QUE UM HASHMAP
 	 * 
 	 * @param campoValor
 	 *            Map com os campos e seus respectivos valores (Não insira a
@@ -712,7 +759,7 @@ public abstract class AbstractDAO {
 				Map<String, Object> map = new HashMap<String, Object>();
 
 				// inserindo atributos no Map
-				this.preencherMap(map, resultSet, this.getNomeDosAtributosDaSubClasse());
+				this.carregarSubClasse(map, resultSet, this.getNomeDosAtributosDaSubClasse());
 
 				// inserindo o hashMap no arrayList
 				listMap.add(map);
@@ -727,23 +774,6 @@ public abstract class AbstractDAO {
 		}
 
 		return listMap;
-	}
-
-	/**
-	 * Preenche Map com os dados vindos do ResultSet, usando array como chave
-	 * para busca
-	 */
-	protected void preencherMap(Map<String, Object> map, ResultSet rs, String[] chaves) {
-
-		try {
-			for (int i = 0; i < chaves.length; i++) {
-				map.put(chaves[i], rs.getObject(chaves[i]));
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.exit(0);
-		}
 	}
 
 	/**
@@ -767,7 +797,7 @@ public abstract class AbstractDAO {
 			while (rs.next()) {
 				// preencher map com primary key e campos vindos do resultSet
 				Map<String, Object> map = new HashMap<String, Object>();
-				this.preencherMap(map, rs, atributos);
+				this.carregarSubClasse(map, rs, atributos);
 
 				listMap.add(map);
 			}
