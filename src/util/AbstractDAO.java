@@ -112,7 +112,7 @@ public abstract class AbstractDAO {
 			int nPrimaryKeyEncontrada = 0;
 			for (int nPK = 0; nPK < primaryKey.length; nPK++) {
 				for (int nAtributo = 0; nAtributo < atributosDaSubClasse.length; nAtributo++) {
-					if (primaryKey[nPK].equalsIgnoreCase(atributosDaSubClasse[nAtributo].getName())) {
+					if (primaryKey[nPK].equals(atributosDaSubClasse[nAtributo].getName())) {
 						nPrimaryKeyEncontrada++;
 						break;
 					}
@@ -305,7 +305,8 @@ public abstract class AbstractDAO {
 
 	/**
 	 * Monta uma string com os valores da primeira lista relacinando-se com
-	 * caractere coringa '?'
+	 * caractere coringa '?' Exemplo:
+	 * "campoDaLista1 = ?, campoDaLista2 = ?, campoDaLista3 = ?"
 	 * 
 	 * @param listNomeCampo
 	 * @return
@@ -319,6 +320,23 @@ public abstract class AbstractDAO {
 				builder.append(", ");
 		}
 		return builder.toString();
+	}
+
+	/**
+	 * Une vários arrays em um array list, preservando a ordem de inserção dos
+	 * parâmetros
+	 * 
+	 * @param arrayObj
+	 * @return
+	 */
+	private ArrayList<Object> mergeArray(Object[]... arrayObj) {
+		ArrayList<Object> list = new ArrayList<Object>();
+		for (int nArrays = 0; nArrays < arrayObj.length; nArrays++) {
+			for (int i = 0; i < arrayObj[nArrays].length; i++) {
+				list.add(arrayObj[nArrays][i]);
+			}
+		}
+		return list;
 	}
 
 	/**
@@ -499,8 +517,14 @@ public abstract class AbstractDAO {
 		List<Object> atributosValor_PK_NotNull = new ArrayList<Object>();
 
 		// pegando somente as PK
-		for (int i = 0; i < atributosNome.length; i++) {
-
+		for (int nPK = 0; nPK < primaryKey.length; nPK++) {
+			for (int nAtributo = 0; nAtributo < atributosNome.length; nAtributo++) {
+				if (primaryKey[nPK].equals(atributosNome[nAtributo])) {
+					atributosNome_PK_NotNull.add(atributosNome[nAtributo]);
+					atributosValor_PK_NotNull.add(atributosValor[nAtributo]);
+					break;
+				}
+			}
 		}
 
 		try {
@@ -509,14 +533,14 @@ public abstract class AbstractDAO {
 			builder.append(" WHERE ");
 
 			// Inserindo os Ids
-			builder.append(this.montaParteQueryID(campoValor));
+			builder.append(montaStringCampoEqualValor(atributosNome_PK_NotNull, atributosValor_PK_NotNull));
 			builder.append(";");
 
-			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
+			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
 
 			// executando
-			linhasAfetadas = preparedStatement.executeUpdate();
-			preparedStatement.close();
+			linhasAfetadas = ps.executeUpdate();
+			ps.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -524,33 +548,18 @@ public abstract class AbstractDAO {
 		}
 		return linhasAfetadas;
 	}
-
-	/**
-	 * Une vários arrays em um array list, preservando a ordem de inserção dos
-	 * parâmetros
-	 * 
-	 * @param arrayObj
-	 * @return
-	 */
-	private ArrayList<Object> mergeArray(Object[]... arrayObj) {
-		ArrayList<Object> list = new ArrayList<Object>();
-		for (int nArrays = 0; nArrays < arrayObj.length; nArrays++) {
-			for (int i = 0; i < arrayObj[nArrays].length; i++) {
-				list.add(arrayObj[nArrays][i]);
-			}
-		}
-		return list;
-	}
-
-	/**
-	 * TODO: TRABALHAR AQUI.... Método de exclusão que recebe um ou vários
-	 * parâmetros PrimaryKey para serem inseridos ao filtro. A ordem dos
-	 * parâmetros é a mesma do array informado na subclasse.
-	 * 
-	 * @param id
-	 *            Primary Key
-	 * @return
-	 */
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	// TODO: CONTINUAR....
 
 	/**
 	 * Recupera o valor da Primary Key (Quando unitária) inserindo as
@@ -574,22 +583,6 @@ public abstract class AbstractDAO {
 
 		Map<String, Object> map = this._listarPor(campoValor).get(0);
 		return (Integer) map.get(this.primaryKey[0]);
-	}
-
-	/**
-	 * Efetua um:
-	 * 
-	 * "DELETE FROM 'tabela' WHERE filtros"
-	 * 
-	 * utilizando o(s) Ids informados na subclasse e o HashMap enviado como
-	 * parâmetro.
-	 * 
-	 * @param campoValor
-	 *            Map apenas com a(s) Primary key(s)
-	 * @return Retorno do executeUpdate
-	 */
-	private int __excluir(Map<Object, Object> campoValor) {
-
 	}
 
 	/**
