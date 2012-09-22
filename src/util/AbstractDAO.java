@@ -763,14 +763,11 @@ public abstract class AbstractDAO {
 		ResultSet rs = null;
 
 		try {
-			// Verificando se o array dos valores não é vazio
-			if (is_todosValoresNulos(atributosValor))
-				throw new Exception("Nenhum valor para os atributos no objeto da classe "
-						+ this.subClasse.getSimpleName() + " foi preenchido.");
-
+			
 			builder.append("SELECT * FROM ");
 			builder.append(this.nomeDaTabela);
 			builder.append(" WHERE ");
+			builder.append(" 1 = 1 ");
 
 			for (int i = 0; i < atributosNome.length; i++) {
 				// Verificando se o valor é diferente de nulo e vazio

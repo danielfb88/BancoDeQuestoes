@@ -2,10 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.AnoSemestreDAO;
-
 
 /**
  * AnoSemestre
@@ -40,35 +38,17 @@ public class AnoSemestre {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
-	 */
-	public AnoSemestre(Map<String, Object> map) {
-		this.carregarObjeto(map);
-	}
-
-	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 */
-	private void carregarObjeto(Map<String, Object> map) {
-
-		this.id_anoSemestre = (Integer) map.get("id_anosemestre");
-		this.ano = (Integer) map.get("ano");
-		this.semestre = (Integer) map.get("semestre");
-	}
-
-	/**
 	 * Adicionar
 	 * 
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.anoSemestreDAO.adicionar(ano, semestre) > 0;
+		anoSemestreDAO.ano = ano;
+		anoSemestreDAO.semestre = semestre;
+		boolean retornoOk = anoSemestreDAO.adicionar() > 0;
+		anoSemestreDAO.reset();
+
+		return retornoOk;
 	}
 
 	/**
@@ -77,26 +57,14 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean carregar() {
-		Map<String, Object> map = this.anoSemestreDAO
-				.buscarPorId(this.id_anoSemestre);
+		anoSemestreDAO.id_anosemestre = id_anoSemestre;
+		anoSemestreDAO.ano = ano;
+		anoSemestreDAO.semestre = semestre;
 
-		if (map != null) {
-			this.carregarObjeto(map);
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id) {
-		this.id_anoSemestre = id;
-		return this.carregar();
+		boolean retornoOk = anoSemestreDAO.carregar();
+		
+		anoSemestreDAO.reset();
+		return retornoOk;
 	}
 
 	/**
@@ -105,7 +73,14 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.anoSemestreDAO.editar(id_anoSemestre, ano, id_anoSemestre) > 0;
+		anoSemestreDAO.id_anosemestre = id_anoSemestre;
+		anoSemestreDAO.ano = ano;
+		anoSemestreDAO.semestre = semestre;
+		
+		boolean retornoOk = anoSemestreDAO.editar() > 0;
+		anoSemestreDAO.reset();
+		
+		return retornoOk;
 	}
 
 	/**
@@ -114,7 +89,12 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.anoSemestreDAO.editar(id_anoSemestre, ano, id_anoSemestre) > 0;
+		anoSemestreDAO.id_anosemestre = id_anoSemestre;
+				
+		boolean retornoOk = anoSemestreDAO.excluir() > 0;
+		anoSemestreDAO.reset();
+		
+		return retornoOk;
 	}
 
 	/**
@@ -123,17 +103,20 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public List<AnoSemestre> listar() {
-		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMap = this.anoSemestreDAO.listarPor(
-				this.ano, this.semestre);
-
-		List<AnoSemestre> list = new ArrayList<AnoSemestre>();
-
-		for (Map<String, Object> map : listMap) {
-			list.add(new AnoSemestre(map));
+		List<AnoSemestre> listAnoSemestre = new ArrayList<AnoSemestre>();
+		
+		anoSemestreDAO.id_anosemestre = id_anoSemestre;
+		anoSemestreDAO.ano = ano;
+		anoSemestreDAO.semestre = semestre;
+		
+		@SuppressWarnings("unchecked")
+		List<AnoSemestreDAO> listASDAO = anoSemestreDAO.listar();
+		for(AnoSemestreDAO asDAO : listASDAO) {
+			listAnoSemestre.add(new AnoSemestre(asDAO.id_anosemestre, asDAO.ano, asDAO.semestre));
 		}
-
-		return list;
+		
+		anoSemestreDAO.reset();
+		return listAnoSemestre;
 	}
 
 	/**
