@@ -25,11 +25,21 @@ public class Reflexao {
 	public static void main(String args[]) {
 		try {
 			PerguntaDAO p = new PerguntaDAO();
-			//p.id_pergunta = 15;
-			p.descricao = "bi";
-			List<PerguntaDAO> pDAO = p.listar_();
+			// p.id_pergunta = 15;
+			p.descricao = "Et";
+			@SuppressWarnings("unchecked")
+			List<PerguntaDAO> list = p.listar();
+
+			for (PerguntaDAO pDAO : list) {
+				System.out.println("id usuario: " + pDAO.id_usuario);
+				System.out.println("descricao: " + pDAO.descricao);
+				System.out.println("enunciado: " + pDAO.enunciado);
+				System.out.println("comentario: " + pDAO.comentario);
+				System.out.println();
+			}
+
 			System.exit(0);
-			
+
 			if (p.carregar()) {
 
 				System.out.println("id usuario" + p.id_usuario);

@@ -1,8 +1,5 @@
 package dao;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import util.AbstractDAO;
 
 /**
@@ -23,15 +20,5 @@ public class PerguntaDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "pergunta";
 		primaryKey = new String[] { "id_pergunta" };
-	}
-
-	public List<PerguntaDAO> listar_() {
-		List<AbstractDAO> list = super.listar();
-		List<PerguntaDAO> listPerguntaDAO = new ArrayList<PerguntaDAO>();
-
-		for (AbstractDAO obj : list) {
-			listPerguntaDAO.add((PerguntaDAO) obj);
-		}
-		return listPerguntaDAO;
 	}
 }

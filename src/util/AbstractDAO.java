@@ -714,16 +714,14 @@ public abstract class AbstractDAO {
 		return true;
 	}
 
-	// TODO: Continuar. vou descançar um pouco........... flw
 	/**
-	 * TODO: VAI RETORNAR UM ARRAY [][] VAI SER MUITO MELHOR QUE UM HASHMAP
+	 * Lista os registros que atendam aos filtros. Este método retorna uma lista
+	 * de DAOs.
 	 * 
-	 * @param campoValor
-	 *            Map com os campos e seus respectivos valores (Não insira a
-	 *            Primary Key)
-	 * @return
+	 * @return Lista de Objetos da Sub-classe (Lista de DAO's).
 	 */
-	protected List<AbstractDAO> listar() {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public List listar() {
 		StringBuilder builder = new StringBuilder();
 
 		// todos os atributos
@@ -734,7 +732,7 @@ public abstract class AbstractDAO {
 		List<String> atributosNome_NotNull = new ArrayList<String>();
 		List<Object> atributosValor_NotNull = new ArrayList<Object>();
 
-		List<AbstractDAO> list = new ArrayList<AbstractDAO>();
+		List list = new ArrayList();
 		ResultSet rs = null;
 
 		try {
@@ -767,9 +765,9 @@ public abstract class AbstractDAO {
 			rs = ps.executeQuery();
 
 			while (rs.next()) {
-				AbstractDAO obj = (AbstractDAO) subClasse.newInstance();
+				Object obj = subClasse.newInstance();
 				this.setaValoresComReflexao(obj, atributosDaSubClasse, rs);
-				list.add(obj);
+				list.add(subClasse.cast(obj));
 			}
 
 			rs.close();
