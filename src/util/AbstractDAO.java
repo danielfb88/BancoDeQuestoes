@@ -16,9 +16,9 @@ import java.util.List;
  * 
  * Para utiliza-la, crie uma classe especializada e insira atributos públicos
  * com nomes exatamente iguais aos nomes dos campos da tabela. Em seguida,
- * implemente
- * o método abstrato config(), informando dentro dele o nome da tabela com o
- * atributo "nomeDaTabela", e a(s) primary key(s) no array "primaryKey".
+ * implemente o método abstrato 'config()', informando dentro dele o nome da
+ * tabela com o atributo 'nomeDaTabela', e a(s) primary key(s) no array
+ * 'primaryKey'.
  * </br></br>
  * 
  * Exemplo de uma especialização da AbstractDAO: </br>
@@ -188,10 +188,10 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Reseta os atributos do Objeto. Seta os atributos como null, para fazer
-	 * uma nova operação.
+	 * Limpa os atributos do Objeto.
+	 * Seta os atributos como null para fazer uma nova operação.
 	 */
-	public void reset() {
+	public void limparAtributos() {
 		try {
 			for (int i = 0; i < atributosDaSubClasse.length; i++) {
 				// set(objeto que possui o atributo, valor);

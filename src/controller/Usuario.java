@@ -1,5 +1,5 @@
 package controller;
-
+dsadasdsa
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +51,8 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean adicionar() {
+		usuarioDAO.reset();
+
 		usuarioDAO.id_usuario = this.id_usuario;
 		usuarioDAO.id_grupo = this.grupo.getId_grupo();
 		usuarioDAO.nome = this.nome;
@@ -58,7 +60,6 @@ public class Usuario {
 		usuarioDAO.senha = this.senha;
 
 		boolean retornoOk = usuarioDAO.adicionar() > 0;
-		usuarioDAO.reset();
 
 		return retornoOk;
 	}
@@ -66,20 +67,29 @@ public class Usuario {
 	/**
 	 * Carregar
 	 * 
+	 * @param carregarRelacionamentos
 	 * @return
 	 */
-	public boolean carregar() {
-		usuarioDAO.id_usuario = this.usuarioDAO;
+	public boolean carregar(boolean carregarRelacionamentos) {
+		usuarioDAO.reset();
+
+		usuarioDAO.id_usuario = this.id_usuario;
 		usuarioDAO.id_grupo = this.grupo.getId_grupo();
-		
+		usuarioDAO.nome = this.nome;
+		usuarioDAO.login = this.login;
+		usuarioDAO.senha = this.senha;
 
-		boolean retornoOk = grupoDAO.carregar();
+		boolean retornoOk = usuarioDAO.carregar();
 
-		this.id_grupo = grupoDAO.id_grupo;
-		this.descricao = grupoDAO.descricao;
-		this.tipo = grupoDAO.tipo;
+		this.id_usuario = usuarioDAO.id_usuario;
+		this.grupo.setId_grupo(usuarioDAO.id_grupo);
+		this.nome = usuarioDAO.nome;
+		this.login = usuarioDAO.login;
+		this.senha = usuarioDAO.senha;
 
-		grupoDAO.reset();
+		if (carregarRelacionamentos)
+			this.grupo.carregar();
+
 		return retornoOk;
 	}
 
@@ -89,12 +99,15 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean editar() {
-		grupoDAO.id_grupo = this.id_grupo;
-		grupoDAO.descricao = this.descricao;
-		grupoDAO.tipo = this.tipo;
+		usuarioDAO.reset();
 
-		boolean retornoOk = grupoDAO.editar() > 0;
-		grupoDAO.reset();
+		usuarioDAO.id_usuario = this.id_usuario;
+		usuarioDAO.id_grupo = this.grupo.getId_grupo();
+		usuarioDAO.nome = this.nome;
+		usuarioDAO.login = this.login;
+		usuarioDAO.senha = this.senha;
+
+		boolean retornoOk = usuarioDAO.editar() > 0;
 
 		return retornoOk;
 
@@ -106,9 +119,11 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean excluir() {
-		grupoDAO.id_grupo = this.id_grupo;
-		boolean retornoOk = grupoDAO.excluir() > 0;
-		grupoDAO.reset();
+		usuarioDAO.reset();
+		
+		usuarioDAO.id_usuario = this.id_usuario;
+
+		boolean retornoOk = usuarioDAO.excluir() > 0;
 		return retornoOk;
 	}
 

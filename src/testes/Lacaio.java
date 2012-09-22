@@ -10,7 +10,8 @@ public class Lacaio {
 
 	public static void main(String[] args) {
 		PerguntaDAO pDAO = new PerguntaDAO();
-		pDAO.id_pergunta = 19;
+		pDAO.id_usuario = 5;
+		pDAO.descricao = "b";
 
 		if (pDAO.carregar()) {
 			System.out.println("ID: " + pDAO.id_pergunta);
@@ -20,6 +21,7 @@ public class Lacaio {
 			System.out.println("ENUNCIADO: " + pDAO.enunciado);
 			System.out.println("COMENTARIO: " + pDAO.comentario);
 
+			System.exit(0);
 			// editando
 			pDAO.id_pergunta = pDAO.id_pergunta;
 			pDAO.id_usuario = pDAO.id_usuario;

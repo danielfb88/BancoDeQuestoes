@@ -42,14 +42,13 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean adicionar() {
+		grupoDAO.limparAtributos();
+
 		grupoDAO.id_grupo = id_grupo;
 		grupoDAO.descricao = descricao;
 		grupoDAO.tipo = tipo;
 
-		boolean retornoOk = grupoDAO.adicionar() > 0;
-		grupoDAO.reset();
-
-		return retornoOk;
+		return grupoDAO.adicionar() > 0;
 	}
 
 	/**
@@ -58,6 +57,8 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean carregar() {
+		grupoDAO.limparAtributos();
+
 		grupoDAO.id_grupo = this.id_grupo;
 		grupoDAO.descricao = this.descricao;
 		grupoDAO.tipo = this.tipo;
@@ -68,7 +69,6 @@ public class Grupo {
 		this.descricao = grupoDAO.descricao;
 		this.tipo = grupoDAO.tipo;
 
-		grupoDAO.reset();
 		return retornoOk;
 	}
 
@@ -78,14 +78,13 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean editar() {
+		grupoDAO.limparAtributos();
+
 		grupoDAO.id_grupo = this.id_grupo;
 		grupoDAO.descricao = this.descricao;
 		grupoDAO.tipo = this.tipo;
 
-		boolean retornoOk = grupoDAO.editar() > 0;
-		grupoDAO.reset();
-
-		return retornoOk;
+		return grupoDAO.editar() > 0;
 
 	}
 
@@ -95,10 +94,10 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean excluir() {
+		grupoDAO.limparAtributos();
+		
 		grupoDAO.id_grupo = this.id_grupo;
-		boolean retornoOk = grupoDAO.excluir() > 0;
-		grupoDAO.reset();
-		return retornoOk;
+		return grupoDAO.excluir() > 0;
 	}
 
 	/**
@@ -108,6 +107,8 @@ public class Grupo {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Grupo> listar() {
+		grupoDAO.limparAtributos();
+		
 		List<Grupo> listGrupo = new ArrayList<Grupo>();
 
 		grupoDAO.id_grupo = this.id_grupo;
@@ -119,7 +120,6 @@ public class Grupo {
 			listGrupo.add(new Grupo(g.id_grupo, g.descricao, g.tipo));
 		}
 
-		grupoDAO.reset();
 		return listGrupo;
 	}
 
