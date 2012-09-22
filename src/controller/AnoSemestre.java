@@ -63,6 +63,10 @@ public class AnoSemestre {
 
 		boolean retornoOk = anoSemestreDAO.carregar();
 		
+		this.id_anoSemestre = anoSemestreDAO.id_anosemestre;
+		this.ano = anoSemestreDAO.ano;
+		this.semestre = anoSemestreDAO.semestre;
+		
 		anoSemestreDAO.reset();
 		return retornoOk;
 	}
@@ -110,8 +114,8 @@ public class AnoSemestre {
 		anoSemestreDAO.semestre = semestre;
 		
 		@SuppressWarnings("unchecked")
-		List<AnoSemestreDAO> listASDAO = anoSemestreDAO.listar();
-		for(AnoSemestreDAO asDAO : listASDAO) {
+		List<AnoSemestreDAO> listDAO = anoSemestreDAO.listar();
+		for(AnoSemestreDAO asDAO : listDAO) {
 			listAnoSemestre.add(new AnoSemestre(asDAO.id_anosemestre, asDAO.ano, asDAO.semestre));
 		}
 		

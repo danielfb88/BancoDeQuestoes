@@ -11,13 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe abstrata que efetua as operações básicas de uma DAO: 
- * Adicionar, Editar, Excluir, Buscar e Listar. </br> 
+ * Classe abstrata que efetua as operações básicas de uma DAO:
+ * Adicionar, Editar, Excluir, Buscar e Listar. </br>
  * 
- * Para utiliza-la, crie uma classe especializada e insira atributos públicos 
- * com nomes exatamente iguais aos nomes dos campos da tabela. Em seguida implemente 
- * o método abstrato config(), informando dentro dele, o nome da tabela, com o 
- * atributo "nomeDaTabela" e a(s) primary key(s), no array "primaryKey". </br></br>
+ * Para utiliza-la, crie uma classe especializada e insira atributos públicos
+ * com nomes exatamente iguais aos nomes dos campos da tabela. Em seguida,
+ * implemente
+ * o método abstrato config(), informando dentro dele o nome da tabela com o
+ * atributo "nomeDaTabela", e a(s) primary key(s) no array "primaryKey".
+ * </br></br>
  * 
  * Exemplo de uma especialização da AbstractDAO: </br>
  * 
@@ -28,8 +30,8 @@ import java.util.List;
  * 		public Integer campo2_numero;
  * 
  * 		protected void config() {
- * 			nomeDaTabela = "anosemestre";
- * 			primaryKey = new String[] { "id_anosemestre" };
+ * 			nomeDaTabela = "tb_teste";
+ * 			primaryKey = new String[] { "id_campoPk" };
  * 		}
  * 	}
  * </pre>
@@ -233,31 +235,35 @@ public abstract class AbstractDAO {
 		try {
 			for (int i = 0; i < parametros.size(); i++) {
 				int indexPS = i + 1;
-				switch (parametros.get(i).getClass().getName()) {
-					case "java.lang.String":
-						if (useLike)
-							ps.setString(indexPS, "%" + (String) parametros.get(i) + "%");
-						else
-							ps.setString(indexPS, (String) parametros.get(i));
-						break;
-					case "java.lang.Character":
-						ps.setString(indexPS, parametros.get(i).toString());
-						break;
-					case "java.lang.Integer":
-						ps.setInt(indexPS, (Integer) parametros.get(i));
-						break;
-					case "java.lang.Double":
-						ps.setDouble(indexPS, (Double) parametros.get(i));
-						break;
-					case "java.lang.Boolean":
-						ps.setBoolean(indexPS, (Boolean) parametros.get(i));
-						break;
-					case "java.lang.Date":
-						ps.setDate(indexPS, (Date) parametros.get(i));
-						break;
-					default:
-						throw new Exception("Tipo do parâmetro não reconhecido na classe " +
-								this.subClasse.getSimpleName());
+				if (parametros.get(i) != null) {
+					switch (parametros.get(i).getClass().getName()) {
+						case "java.lang.String":
+							if (useLike)
+								ps.setString(indexPS, "%" + (String) parametros.get(i) + "%");
+							else
+								ps.setString(indexPS, (String) parametros.get(i));
+							break;
+						case "java.lang.Character":
+							ps.setString(indexPS, parametros.get(i).toString());
+							break;
+						case "java.lang.Integer":
+							ps.setInt(indexPS, (Integer) parametros.get(i));
+							break;
+						case "java.lang.Double":
+							ps.setDouble(indexPS, (Double) parametros.get(i));
+							break;
+						case "java.lang.Boolean":
+							ps.setBoolean(indexPS, (Boolean) parametros.get(i));
+							break;
+						case "java.lang.Date":
+							ps.setDate(indexPS, (Date) parametros.get(i));
+							break;
+						default:
+							throw new Exception("Tipo do parâmetro não reconhecido na classe " +
+									this.subClasse.getSimpleName());
+					}
+				} else {
+					ps.setObject(indexPS, parametros.get(i));
 				}
 			}
 		} catch (SQLException e) {
@@ -271,7 +277,7 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Seta valores para os Fields baseado nos valores do ResultSet. 
+	 * Seta valores para os Fields baseado nos valores do ResultSet.
 	 * O objeto passado no parâmetro #1 deve obrigatoriamente conter todos os
 	 * Fields(atributos) passados no parâmetro #2. Será utilizado Reflexão para
 	 * preencher esses fields com os valores do ResultSet.
@@ -351,7 +357,7 @@ public abstract class AbstractDAO {
 
 	/**
 	 * Monta uma string com os valores da primeira lista relacinando-se com os
-	 * valores da segunda lista através do sinal "=". 
+	 * valores da segunda lista através do sinal "=".
 	 * 
 	 * Exemplo:
 	 * "campoDaLista1 = valorDaLista1, campoDaLista2 = ValorDaLista2, campoDaLista3 = valorDaLista3"
@@ -373,10 +379,14 @@ public abstract class AbstractDAO {
 		StringBuilder builder = new StringBuilder();
 
 		for (int i = 0; i < listNomeCampo.size(); i++) {
-			if (listValorCampo.get(i).getClass().getName() == "java.lang.String" && useLike)
-				builder.append(listNomeCampo.get(i) + " LIKE " + listValorCampo.get(i));
-			else
+			if (listValorCampo.get(i) != null) {
+				if (listValorCampo.get(i).getClass().getName() == "java.lang.String" && useLike)
+					builder.append(listNomeCampo.get(i) + " LIKE " + listValorCampo.get(i));
+				else
+					builder.append(listNomeCampo.get(i) + " = " + listValorCampo.get(i));
+			} else {
 				builder.append(listNomeCampo.get(i) + " = " + listValorCampo.get(i));
+			}
 
 			if (i != listNomeCampo.size() - 1)
 				builder.append(" " + separador + " ");
@@ -386,7 +396,7 @@ public abstract class AbstractDAO {
 
 	/**
 	 * Monta uma string com os valores da primeira lista relacinando-se com
-	 * caractere coringa '?' 
+	 * caractere coringa '?'
 	 * 
 	 * Exemplo:
 	 * "campoDaLista1 = ?, campoDaLista2 = ?, campoDaLista3 = ?"
@@ -410,10 +420,14 @@ public abstract class AbstractDAO {
 		StringBuilder builder = new StringBuilder();
 
 		for (int i = 0; i < listNomeCampo.size(); i++) {
-			if (listValorCampo.get(i).getClass().getName() == "java.lang.String" && useLike)
-				builder.append(listNomeCampo.get(i) + " LIKE ?");
-			else
+			if (listValorCampo.get(i) != null) {
+				if (listValorCampo.get(i).getClass().getName() == "java.lang.String" && useLike)
+					builder.append(listNomeCampo.get(i) + " LIKE ?");
+				else
+					builder.append(listNomeCampo.get(i) + " = ?");
+			} else {
 				builder.append(listNomeCampo.get(i) + " = ?");
+			}
 
 			if (i != listNomeCampo.size() - 1)
 				builder.append(" " + separador + " ");
@@ -530,9 +544,9 @@ public abstract class AbstractDAO {
 		String[] atributosNome = getNomeDosAtributosDaSubClasse();
 		Object[] atributosValor = getValorDosAtributosDaSubClasse();
 
-		// atributos NAO NULOS e NAO PRIMARY KEY
-		List<String> atributosNome_NotNull_NotPK = new ArrayList<String>();
-		List<Object> atributosValor_NotNull_NotPK = new ArrayList<Object>();
+		// atributos NAO PRIMARY KEY
+		List<String> atributosNome_NotPK = new ArrayList<String>();
+		List<Object> atributosValor_NotPK = new ArrayList<Object>();
 
 		// atributos PRIMARY KEYS NAO NULOS
 		List<String> atributosNome_PK_NotNull = new ArrayList<String>();
@@ -549,22 +563,26 @@ public abstract class AbstractDAO {
 			builder.append(" SET ");
 
 			for (int i = 0; i < atributosNome.length; i++) {
-				// Verificando se o valor é diferente de nulo e vazio
-				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
 
-					// atributos NAO PRIMARY KEYS
-					if (!this.is_campoIgualPrimaryKey(atributosNome[i])) {
+				/*
+				 * Inserindo nomes e valores NAO PRIMARY KEY em arraylist.
+				 * Estes valores PODEM ser nulos.
+				 */
+				if (!is_campoIgualPrimaryKey(atributosNome[i])) {
+					atributosNome_NotPK.add(atributosNome[i]);
+					atributosValor_NotPK.add(atributosValor[i]);
+				}
 
-						// inserindo nomes e valores NAO NULOS e NAO PRIMARY KEY
-						// em arraylist
-						atributosNome_NotNull_NotPK.add(atributosNome[i]);
-						atributosValor_NotNull_NotPK.add(atributosValor[i]);
+				/*
+				 * Inserindo nomes e valores PRIMARY KEY em arraylist.
+				 * Estes valores NÃO PODEM ser nulos.
+				 */
+				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()
+						&& is_campoIgualPrimaryKey(atributosNome[i])) {
 
-					} else {
-						// atributos PRIMARY KEYS
-						atributosNome_PK_NotNull.add(atributosNome[i]);
-						atributosValor_PK_NotNull.add(atributosValor[i]);
-					}
+					// atributos PRIMARY KEYS
+					atributosNome_PK_NotNull.add(atributosNome[i]);
+					atributosValor_PK_NotNull.add(atributosValor[i]);
 				}
 			}
 
@@ -574,7 +592,7 @@ public abstract class AbstractDAO {
 						+ this.subClasse.getSimpleName() + "foi preenchido.");
 
 			// Inserindo os Campos
-			builder.append(montaStringCampoEqualCoringa(atributosNome_NotNull_NotPK, atributosValor_NotNull_NotPK,
+			builder.append(montaStringCampoEqualCoringa(atributosNome_NotPK, atributosValor_NotPK,
 					false, ","));
 
 			builder.append(" WHERE ");
@@ -587,7 +605,7 @@ public abstract class AbstractDAO {
 			// preparando o statement
 			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
 			this.prepareStatement(ps,
-					unirArrays(atributosValor_NotNull_NotPK.toArray(), atributosValor_PK_NotNull.toArray()), false);
+					unirArrays(atributosValor_NotPK.toArray(), atributosValor_PK_NotNull.toArray()), false);
 
 			// executando
 			linhasAfetadas = ps.executeUpdate();
@@ -763,11 +781,16 @@ public abstract class AbstractDAO {
 		ResultSet rs = null;
 
 		try {
-			
+
 			builder.append("SELECT * FROM ");
 			builder.append(this.nomeDaTabela);
 			builder.append(" WHERE ");
-			builder.append(" 1 = 1 ");
+
+			// Verificando se o array dos valores não é vazio
+			if (is_todosValoresNulos(atributosValor)) {
+				builder.append(" 1=1 ");
+				builder.append(" AND ");
+			}
 
 			for (int i = 0; i < atributosNome.length; i++) {
 				// Verificando se o valor é diferente de nulo e vazio

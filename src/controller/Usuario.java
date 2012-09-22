@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import dao.GrupoDAO;
 import dao.UsuarioDAO;
-
 
 /**
  * Usuario
@@ -45,73 +45,42 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	/***
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
-	 * @param carregarRelacionamentos
-	 */
-	public Usuario(Map<String, Object> map, boolean carregarRelacionamentos) {
-		this.carregarObjeto(map, carregarRelacionamentos);
-	}
-
-	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
-	 * @param map
-	 * @param carregarRelacionamentos
-	 */
-	private void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
-
-		this.id_usuario = (Integer) map.get("id_usuario");
-		this.grupo.setId_grupo((Integer) map.get("id_grupo"));
-		this.nome = (String) map.get("nome");
-		this.login = (String) map.get("login");
-		this.senha = (String) map.get("senha");
-
-		if (carregarRelacionamentos)
-			this.grupo.carregar();
-	}
-
 	/**
 	 * Adicionar
 	 * 
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.usuarioDAO.adicionar(grupo.getId_grupo(), nome, login, senha) > 0;
+		usuarioDAO.id_usuario = this.id_usuario;
+		usuarioDAO.id_grupo = this.grupo.getId_grupo();
+		usuarioDAO.nome = this.nome;
+		usuarioDAO.login = this.login;
+		usuarioDAO.senha = this.senha;
+
+		boolean retornoOk = usuarioDAO.adicionar() > 0;
+		usuarioDAO.reset();
+
+		return retornoOk;
 	}
 
 	/**
 	 * Carregar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
-	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.usuarioDAO.buscarPorId(this.id_usuario);
+	public boolean carregar() {
+		usuarioDAO.id_usuario = this.usuarioDAO;
+		usuarioDAO.id_grupo = this.grupo.getId_grupo();
+		
 
-		if (map != null) {
-			this.carregarObjeto(map, carregarRelacionamentos);
+		boolean retornoOk = grupoDAO.carregar();
 
-			return true;
-		}
-		return false;
-	}
+		this.id_grupo = grupoDAO.id_grupo;
+		this.descricao = grupoDAO.descricao;
+		this.tipo = grupoDAO.tipo;
 
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
-		this.id_usuario = id;
-		return this.carregar(carregarRelacionamentos);
+		grupoDAO.reset();
+		return retornoOk;
 	}
 
 	/**
@@ -120,7 +89,15 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.usuarioDAO.editar(id_usuario, grupo.getId_grupo(), nome, login, senha) > 0;
+		grupoDAO.id_grupo = this.id_grupo;
+		grupoDAO.descricao = this.descricao;
+		grupoDAO.tipo = this.tipo;
+
+		boolean retornoOk = grupoDAO.editar() > 0;
+		grupoDAO.reset();
+
+		return retornoOk;
+
 	}
 
 	/**
@@ -129,33 +106,32 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.usuarioDAO.excluir(id_usuario) > 0;
+		grupoDAO.id_grupo = this.id_grupo;
+		boolean retornoOk = grupoDAO.excluir() > 0;
+		grupoDAO.reset();
+		return retornoOk;
 	}
 
 	/**
 	 * Listar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
-	public List<Usuario> listar(boolean carregarRelacionamentos) {
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.usuarioDAO.listarPor(grupo.getId_grupo(), nome, login, senha);
+	@SuppressWarnings("unchecked")
+	public List<Grupo> listar() {
+		List<Grupo> listGrupo = new ArrayList<Grupo>();
 
-		List<Usuario> list = new ArrayList<Usuario>();
+		grupoDAO.id_grupo = this.id_grupo;
+		grupoDAO.descricao = this.descricao;
+		grupoDAO.tipo = this.tipo;
 
-		for (Map<String, Object> map : listMap) {
-			list.add(new Usuario(map, carregarRelacionamentos));
+		List<GrupoDAO> listDAO = grupoDAO.listar();
+		for (GrupoDAO g : listDAO) {
+			listGrupo.add(new Grupo(g.id_grupo, g.descricao, g.tipo));
 		}
 
-		return list;
-	}
-
-	/**
-	 * 
-	 */
-	public void autenticar() {
-		// TODO: Transferir esta responsabilidade para o ManagedBean de Usuario
+		grupoDAO.reset();
+		return listGrupo;
 	}
 
 	/**
