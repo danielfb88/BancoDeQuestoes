@@ -1,102 +1,22 @@
 package dao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import util.AbstractDAO;
 
-
-/**
- * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 29-08-2012
- * 
- */
 public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
-	private Map<Object, Object> campoValor;
-	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
+	public Integer id_grade_periodo__disciplina;
+	public Integer id_grade_periodo;
+	public Integer id_disciplina;
 
-	public Rel_GradePeriodo_DisciplinaDAO() {
+	@Override
+	protected void config() {
 		nomeDaTabela = "grade_periodo__disciplina";
 		primaryKey = new String[] { "id_grade_periodo__disciplina" };
-		campos = new String[] { "id_grade_periodo", "id_disciplina" };
 	}
 
 	/**
-	 * Adicionar
-	 * 
-	 * @param id_gradePeriodo
-	 * @param id_disciplina
-	 * @return
-	 */
-	public int adicionar(Integer id_gradePeriodo, Integer id_disciplina) {
-		campoValor = new HashMap<Object, Object>();
-
-		campoValor.put(campos[0], id_gradePeriodo);
-		campoValor.put(campos[1], id_disciplina);
-
-		return super._adicionar(campoValor);
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @param id_gradePeriodo
-	 * @param id_disciplina
-	 * @return
-	 */
-	public int editar(Integer id_gradePeriodo_disciplina,
-			Integer id_gradePeriodo, Integer id_disciplina) {
-
-		campoValor = new HashMap<Object, Object>();
-
-		campoValor.put(primaryKey[0], id_gradePeriodo_disciplina);
-		campoValor.put(campos[0], id_gradePeriodo);
-		campoValor.put(campos[1], id_disciplina);
-
-		return super._editar(campoValor);
-	}
-
-	/**
-	 * Excluir
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public int excluir(Integer id) {
-		return super._excluir(id);
-	}
-
-	/**
-	 * Buscar por ID
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Map<String, Object> buscarPorId(Integer id) {
-		return super._buscarPorId(id);
-	}
-
-	/**
-	 * Listar Por
-	 * 
-	 * @param id_disciplinaAssunto
-	 * @param id_pergunta
-	 * @return
-	 */
-	public List<Map<String, Object>> listarPor(Integer id_gradePeriodo,
-			Integer id_disciplina) {
-
-		campoValor = new HashMap<Object, Object>();
-
-		campoValor.put(campos[0], id_gradePeriodo);
-		campoValor.put(campos[1], id_disciplina);
-
-		return super._listarPor(campoValor);
-	}
-
-	/**
-	 * Query de Listar disciplina por id_grade
+	 * Query de Listar disciplina pelo Id da Grade
 	 * 
 	 * @param id_grade
 	 * @return
@@ -121,49 +41,46 @@ public class Rel_GradePeriodo_DisciplinaDAO extends AbstractDAO {
 	}
 
 	/**
-	 * Lista Disciplinas por Grade
+	 * Lista Disciplinas pelo Id da Grade
 	 * 
 	 * @param id_grade
 	 * @return
 	 */
-	public List<Map<String, Object>> listarDisciplinasPorGrade(int id_grade) {
+	@SuppressWarnings("rawtypes")
+	public List listarDisciplinasPorGrade(int id_grade) {
 
 		StringBuilder builder = this.queryListarDisciplinasPorGrade(id_grade);
 		builder.append(";");
 
-		return super.executarQuery(builder.toString(),
-				this.disciplinaDAO.getAtributos());
+		return super.executarQuery(builder.toString());
 	}
 
 	/**
-	 * Lista Disciplinas por Grade e Periodo
+	 * Lista Disciplinas pelo Id da Grade e Id do Periodo
 	 * 
 	 * @param id_grade
 	 * @param id_periodo
 	 * @return
 	 */
-	public List<Map<String, Object>> listarDisciplinasPorGradePeriodo(
-			int id_grade, int id_periodo) {
+	@SuppressWarnings("rawtypes")
+	public List listarDisciplinasPorGradePeriodo(int id_grade, int id_periodo) {
 
 		StringBuilder builder = this.queryListarDisciplinasPorGrade(id_grade);
 		builder.append("AND gp.id_periodo = " + id_periodo + " ");
 		builder.append(";");
 
-		return super.executarQuery(builder.toString(),
-				this.disciplinaDAO.getAtributos());
+		return super.executarQuery(builder.toString());
 	}
 
 	/**
-	 * Remover Disciplina
+	 * Remove a Disciplina de uma Grade e Periodo específico.
 	 * 
 	 * @param id_grade
 	 * @param id_periodo
 	 * @param id_disciplina
 	 * @return
 	 */
-	public boolean removerDisciplina(int id_grade, int id_periodo,
-			int id_disciplina) {
-
+	public boolean removerDisciplina(int id_grade, int id_periodo, int id_disciplina) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("DELETE FROM grade_periodo__disciplina ");
