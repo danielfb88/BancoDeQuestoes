@@ -25,17 +25,21 @@ public class Reflexao {
 	public static void main(String args[]) {
 		try {
 			PerguntaDAO p = new PerguntaDAO();
-			// p.id_pergunta = 15;
-			p.descricao = "Et";
-			@SuppressWarnings("unchecked")
-			List<PerguntaDAO> list = p.listar();
 
-			for (PerguntaDAO pDAO : list) {
-				System.out.println("id usuario: " + pDAO.id_usuario);
-				System.out.println("descricao: " + pDAO.descricao);
-				System.out.println("enunciado: " + pDAO.enunciado);
-				System.out.println("comentario: " + pDAO.comentario);
-				System.out.println();
+			// p.id_pergunta = 15;
+			// p.descricao = "Et";
+			List<PerguntaDAO> list = p.listarPor();
+
+			if (list.size() > 0) {
+				for (PerguntaDAO pDAO : list) {
+					System.out.println("id usuario: " + pDAO.id_usuario);
+					System.out.println("descricao: " + pDAO.descricao);
+					System.out.println("enunciado: " + pDAO.enunciado);
+					System.out.println("comentario: " + pDAO.comentario);
+					System.out.println();
+				}
+			} else {
+				System.out.println("NAo DEU");
 			}
 
 			System.exit(0);

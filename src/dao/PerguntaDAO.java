@@ -1,5 +1,8 @@
 package dao;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import util.AbstractDAO;
 
 /**
@@ -20,5 +23,25 @@ public class PerguntaDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "pergunta";
 		primaryKey = new String[] { "id_pergunta" };
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PerguntaDAO> listarTodoasPerguntas() {
+		String query = "SELECT * FROM pergunta;";
+		return executarQuery(query);
+	}
+
+	public int deletarRegistroDeID(int id) {
+		return executarUpdate("DELETE FROM pergunta WHERE id_pergunta = " + id + ";");
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PerguntaDAO> listarPor() {
+		String query = "SELECT * FROM pergunta WHERE id_usuario = ? AND descricao LIKE ?";
+		List<Object> listValores = new ArrayList<Object>();
+		listValores.add(5);
+		listValores.add("Et");
+		return executarQueryPreparada(query, listValores);
+		
 	}
 }

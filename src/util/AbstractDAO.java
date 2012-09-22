@@ -11,13 +11,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Classe abstrata que efetua as operações básicas de uma DAO: - Adicionar,
- * Editar, Excluir, Buscar e Listar.
+ * Classe abstrata que efetua as operações básicas de uma DAO: 
+ * Adicionar, Editar, Excluir, Buscar e Listar. </br> 
+ * 
+ * Para utiliza-la, crie uma classe especializada e insira atributos públicos 
+ * com nomes exatamente iguais aos nomes dos campos da tabela. Em seguida implemente 
+ * o método abstrato config(), informando dentro dele, o nome da tabela, com o 
+ * atributo "nomeDaTabela" e a(s) primary key(s), no array "primaryKey". </br></br>
+ * 
+ * Exemplo de uma especialização da AbstractDAO: </br>
+ * 
+ * <pre>
+ * public class ExemploDAO extends AbstractDAO {
+ * 		public Integer id_campoPK;
+ * 		public String campo1_texto;
+ * 		public Integer campo2_numero;
+ * 
+ * 		protected void config() {
+ * 			nomeDaTabela = "anosemestre";
+ * 			primaryKey = new String[] { "id_anosemestre" };
+ * 		}
+ * 	}
+ * </pre>
+ * 
+ * 
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 10-08-2012
  * 
- *        Ultima atualização ---
+ *        Ultima atualização 22-09-2012
  * 
  * @version 2.0
  * 
@@ -249,8 +271,8 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Seta valores para os Fields baseado nos valores do ResultSet. O objeto
-	 * passado no parâmetro #1 deve obrigatoriamente conter todos os
+	 * Seta valores para os Fields baseado nos valores do ResultSet. 
+	 * O objeto passado no parâmetro #1 deve obrigatoriamente conter todos os
 	 * Fields(atributos) passados no parâmetro #2. Será utilizado Reflexão para
 	 * preencher esses fields com os valores do ResultSet.
 	 * 
@@ -329,7 +351,9 @@ public abstract class AbstractDAO {
 
 	/**
 	 * Monta uma string com os valores da primeira lista relacinando-se com os
-	 * valores da segunda lista através do sinal "=". Exemplo:
+	 * valores da segunda lista através do sinal "=". 
+	 * 
+	 * Exemplo:
 	 * "campoDaLista1 = valorDaLista1, campoDaLista2 = ValorDaLista2, campoDaLista3 = valorDaLista3"
 	 * 
 	 * @param listNomeCampo
@@ -362,7 +386,9 @@ public abstract class AbstractDAO {
 
 	/**
 	 * Monta uma string com os valores da primeira lista relacinando-se com
-	 * caractere coringa '?' Exemplo:
+	 * caractere coringa '?' 
+	 * 
+	 * Exemplo:
 	 * "campoDaLista1 = ?, campoDaLista2 = ?, campoDaLista3 = ?"
 	 * 
 	 * @param listNomeCampo
@@ -633,6 +659,7 @@ public abstract class AbstractDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.exit(0);
+
 		} catch (Exception e2) {
 			e2.printStackTrace();
 			System.exit(0);
@@ -777,6 +804,14 @@ public abstract class AbstractDAO {
 			e.printStackTrace();
 			System.exit(0);
 
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			System.exit(0);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -786,29 +821,25 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Executa query retornando um Map do ResultSet
+	 * Executa query retornando uma lista de objetos da Sub-Classe carregado com
+	 * os valores vindos do ResultSet.
 	 * 
 	 * @param query
 	 *            SQL
-	 * @param atributos
-	 *            Atributos que serão procurados no ResultSet para inserir no
-	 *            Map
-	 * @return
+	 * @return Lista de Objetos DAO
 	 */
-	protected List<Map<String, Object>> executarQuery(String query, String[] atributos) {
-
-		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected List executarQuery(String query) {
+		List list = new ArrayList();
 
 		try {
 			Statement s = AbstractDAO.conn.createStatement();
 			ResultSet rs = s.executeQuery(query);
 
 			while (rs.next()) {
-				// preencher map com primary key e campos vindos do resultSet
-				Map<String, Object> map = new HashMap<String, Object>();
-				this.carregarSubClasse(map, rs, atributos);
-
-				listMap.add(map);
+				Object obj = subClasse.newInstance();
+				this.setaValoresComReflexao(obj, atributosDaSubClasse, rs);
+				list.add(subClasse.cast(obj));
 			}
 
 			rs.close();
@@ -817,33 +848,73 @@ public abstract class AbstractDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.exit(0);
+
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(0);
 		}
 
-		// lista
-		return listMap;
+		return list;
 	}
 
 	/**
-	 * Executa query retornando um Map do ResultSet utilizando os atributos
-	 * desta DAO filha para o mapeamento.
+	 * Executa query preparada e retornando uma lista de objetos da Sub-Classe
+	 * carregado com os valores vindos do ResultSet. Deve-se obrigatoriamente
+	 * utilizar o LIKE para filtros que forem uma String. Caso contrário, nenhum
+	 * registro será retornado.
 	 * 
 	 * @param query
 	 *            SQL
+	 * @param Array
+	 *            com valor dos caracteres coringas. A ordem dos indices deve
+	 *            ser a mesma da posição dos caracteres na query.
 	 * @return
 	 */
-	protected List<Map<String, Object>> executarQuery(String query) {
-		return this.executarQuery(query, this.getNomeDosAtributosDaSubClasse());
-	}
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected List executarQueryPreparada(String query, List<Object> valores) {
+		List list = new ArrayList();
+		ResultSet rs = null;
 
-	protected List<Map<String, Object>> executarQueryPreparada(String query, Object[] ordem,
-			String[] primaryKey, String[] campos) {
-		/**
-		 * TODO: DESENVOLVER = Executar query Preparada com caracters curingas,
-		 * recebendo um array com a ordem dos valores a serem inseridos e
-		 * retornando um map dos seus registros. Isto será bastante usado para
-		 * relatórios
-		 */
-		return null;
+		try {
+			PreparedStatement ps = AbstractDAO.conn.prepareStatement(query);
+			prepareStatement(ps, valores, true);
+			rs = ps.executeQuery();
+
+			while (rs.next()) {
+				Object obj = subClasse.newInstance();
+				this.setaValoresComReflexao(obj, atributosDaSubClasse, rs);
+				list.add(subClasse.cast(obj));
+			}
+
+			rs.close();
+			ps.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			System.exit(0);
+
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(0);
+		}
+
+		return list;
 	}
 
 	/**
@@ -855,6 +926,7 @@ public abstract class AbstractDAO {
 	 */
 	protected int executarUpdate(String query) {
 		int linhasAfetadas = 0;
+
 		try {
 			Statement s = AbstractDAO.conn.createStatement();
 			linhasAfetadas = s.executeUpdate(query);
