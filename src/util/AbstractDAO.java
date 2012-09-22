@@ -249,36 +249,43 @@ public abstract class AbstractDAO {
 	}
 
 	/**
-	 * Carrega os atributos da subclasse baseado nos resultados vindos do
-	 * resultSet
+	 * Seta valores para os Fields baseado nos valores do ResultSet. O objeto
+	 * passado no parâmetro #1 deve obrigatoriamente conter todos os
+	 * Fields(atributos) passados no parâmetro #2. Será utilizado Reflexão para
+	 * preencher esses fields com os valores do ResultSet.
 	 * 
+	 * @param obj
+	 *            Objeto que possui os Fields a serem setados.
+	 * @param fields
+	 *            Fields(atributos) que serão setados.
 	 * @param rs
+	 *            Valores que serão inseridos aos Fields do Objeto.
 	 */
-	private void carregarSubClasse(ResultSet rs) {
+	private void setaValoresComReflexao(Object obj, Field[] fields, ResultSet rs) {
 
 		try {
-			for (Field field : atributosDaSubClasse) {
+			for (Field field : fields) {
 				String tipoDaClasseDoField = field.getType().getName();
 
 				// Fazendo o cast para inserir o valor no atributo da subclasse
 				switch (tipoDaClasseDoField) {
 					case "java.lang.String":
-						field.set(this, rs.getString(field.getName()));
+						field.set(obj, rs.getString(field.getName()));
 						break;
 					case "java.lang.Character":
-						field.set(this, rs.getString(field.getName()).charAt(0));
+						field.set(obj, rs.getString(field.getName()).charAt(0));
 						break;
 					case "java.lang.Integer":
-						field.set(this, rs.getInt(field.getName()));
+						field.set(obj, rs.getInt(field.getName()));
 						break;
 					case "java.lang.Double":
-						field.set(this, rs.getDouble(field.getName()));
+						field.set(obj, rs.getDouble(field.getName()));
 						break;
 					case "java.lang.Boolean":
-						field.set(this, rs.getBoolean(field.getName()));
+						field.set(obj, rs.getBoolean(field.getName()));
 						break;
 					case "java.lang.Date":
-						field.set(this, rs.getDate(field.getName()));
+						field.set(obj, rs.getDate(field.getName()));
 						break;
 					default:
 						throw new Exception("Tipo do parâmetro não reconhecido na classe " +
@@ -690,7 +697,7 @@ public abstract class AbstractDAO {
 			}
 
 			// inserindo valores do resultSet na subclasse
-			this.carregarSubClasse(rs);
+			this.setaValoresComReflexao(this, atributosDaSubClasse, rs);
 
 			rs.close();
 			ps.close();
@@ -716,64 +723,68 @@ public abstract class AbstractDAO {
 	 *            Primary Key)
 	 * @return
 	 */
-	protected List<Map<String, Object>> _listarPor(Map<Object, Object> campoValor) {
-		this.verificaNomeTabela();
-		this.verificaPK();
-
-		ResultSet resultSet = null;
+	protected List<AbstractDAO> listar() {
 		StringBuilder builder = new StringBuilder();
-		List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-		List<Object> ordem = new ArrayList<Object>();
+
+		// todos os atributos
+		String[] atributosNome = getNomeDosAtributosDaSubClasse();
+		Object[] atributosValor = getValorDosAtributosDaSubClasse();
+
+		// atributos NAO NULOS
+		List<String> atributosNome_NotNull = new ArrayList<String>();
+		List<Object> atributosValor_NotNull = new ArrayList<Object>();
+
+		List<AbstractDAO> list = new ArrayList<AbstractDAO>();
+		ResultSet rs = null;
 
 		try {
+			// Verificando se o array dos valores não é vazio
+			if (is_todosValoresNulos(atributosValor))
+				throw new Exception("Nenhum valor para os atributos no objeto da classe "
+						+ this.subClasse.getSimpleName() + " foi preenchido.");
+
 			builder.append("SELECT * FROM ");
 			builder.append(this.nomeDaTabela);
-			builder.append(" WHERE 1=1");
+			builder.append(" WHERE ");
 
-			for (int i = 0; i < this.campos.length; i++) {
-				// inserindo os valores em um array
-				if (campoValor.get(campos[i]) != null) {
-					ordem.add(campoValor.get(campos[i]));
+			for (int i = 0; i < atributosNome.length; i++) {
+				// Verificando se o valor é diferente de nulo e vazio
+				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
 
-					builder.append(" AND ");
-					// se for string use o LIKE
-					if (campoValor.get(campos[i]).getClass().getName().equals("java.lang.String")) {
-						builder.append(campos[i] + " LIKE ?");
-					} else {
-						builder.append(campos[i] + " = ?");
-					}
+					atributosNome_NotNull.add(atributosNome[i]);
+					atributosValor_NotNull.add(atributosValor[i]);
 				}
 			}
 
+			builder.append(montaStringCampoEqualCoringa(atributosNome_NotNull, atributosValor_NotNull,
+					true, "AND"));
+
 			builder.append(";");
 
-			PreparedStatement preparedStatement = AbstractDAO.conn.prepareStatement(builder.toString());
+			PreparedStatement ps = AbstractDAO.conn.prepareStatement(builder.toString());
+			this.prepareStatement(ps, atributosValor_NotNull, true);
 
-			// preparando o statement
-			this.prepareStatement(preparedStatement, ordem, true);
+			rs = ps.executeQuery();
 
-			resultSet = preparedStatement.executeQuery();
-
-			// Iterando os valores retornados no resultSet
-			while (resultSet.next()) {
-				Map<String, Object> map = new HashMap<String, Object>();
-
-				// inserindo atributos no Map
-				this.carregarSubClasse(map, resultSet, this.getNomeDosAtributosDaSubClasse());
-
-				// inserindo o hashMap no arrayList
-				listMap.add(map);
+			while (rs.next()) {
+				AbstractDAO obj = (AbstractDAO) subClasse.newInstance();
+				this.setaValoresComReflexao(obj, atributosDaSubClasse, rs);
+				list.add(obj);
 			}
 
-			resultSet.close();
-			preparedStatement.close();
+			rs.close();
+			ps.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 			System.exit(0);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(0);
 		}
 
-		return listMap;
+		return list;
 	}
 
 	/**

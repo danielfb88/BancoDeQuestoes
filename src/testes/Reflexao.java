@@ -2,6 +2,7 @@ package testes;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 import dao.PerguntaDAO;
 
@@ -26,6 +27,8 @@ public class Reflexao {
 			PerguntaDAO p = new PerguntaDAO();
 			//p.id_pergunta = 15;
 			p.descricao = "bi";
+			List<PerguntaDAO> pDAO = p.listar_();
+			System.exit(0);
 			
 			if (p.carregar()) {
 
