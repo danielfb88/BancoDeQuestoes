@@ -1,13 +1,11 @@
 package controller;
-dsadsada
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.ProvaDAO;
 import dao.Rel_GradePeriodoDAO;
-
 
 /**
  * Prova
@@ -53,43 +51,49 @@ public class Prova {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
+	 * Obter Id_grade_periodo
 	 * 
-	 * @param map
-	 * @param carregarRelacionamentos
+	 * @param id_grade
+	 * @param id_periodo
+	 * @return
 	 */
-	public Prova(Map<String, Object> map, boolean carregarRelacionamentos) {
-		this.carregarObjeto(map, carregarRelacionamentos);
+	private Integer obterIdGradePeriodo(Integer id_grade, Integer id_periodo) {
+		rel_gradePeriodoDAO.limparAtributos();
+		rel_gradePeriodoDAO.id_grade = id_grade;
+		rel_gradePeriodoDAO.id_periodo = id_periodo;
+
+		rel_gradePeriodoDAO.carregar();
+		return rel_gradePeriodoDAO.id_grade_periodo;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
-	 * @param carregarRelacionamentos
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	private void carregarObjeto(Map<String, Object> map,
-			boolean carregarRelacionamentos) {
+	public void preencherDAOComValoresDoObjeto() {
+		provaDAO.id_prova = this.id_prova;
+		provaDAO.id_grade_periodo = obterIdGradePeriodo(grade.getId_grade(), periodo.getId_periodo());
+		provaDAO.id_anosemestre = this.anoSemestre.getId_anoSemestre();
+		provaDAO.descricao = this.descricao;
+		provaDAO.data_prova = this.dataProva;
+	}
 
-		// buscando ID grade e ID periodo
-		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
-				.buscarPorId((Integer) map.get("id_grade_periodo"));
+	/**
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
+	 */
+	public void preencherObjetoComValoresDoDAO() {
+		// obtendo o id_grade e id_periodo
+		rel_gradePeriodoDAO.limparAtributos();
+		rel_gradePeriodoDAO.id_grade_periodo = provaDAO.id_grade_periodo;
+		rel_gradePeriodoDAO.carregar();
 
-		this.id_prova = (Integer) map.get("id_prova");
-		this.grade.setId_grade((Integer) mapGradePeriodo.get("id_grade"));
-		this.periodo.setId_periodo((Integer) map.get("id_periodo"));
-		this.anoSemestre.setId_anoSemestre((Integer) map.get("id_anosemestre"));
-		this.descricao = (String) map.get("descricao");
-		this.dataProva = (Date) map.get("data_prova");
-
-		if (carregarRelacionamentos) {
-			this.grade.carregar(carregarRelacionamentos);
-			this.periodo.carregar();
-			this.anoSemestre.carregar();
-		}
+		this.id_prova = provaDAO.id_prova;
+		this.grade.setId_grade(rel_gradePeriodoDAO.id_grade);
+		this.periodo.setId_periodo(rel_gradePeriodoDAO.id_periodo);
+		this.anoSemestre.setId_anoSemestre(provaDAO.id_anosemestre);
+		this.descricao = provaDAO.descricao;
+		this.dataProva = provaDAO.data_prova;
 	}
 
 	/**
@@ -98,54 +102,33 @@ public class Prova {
 	 * @return
 	 */
 	public boolean adicionar() {
-		// primeiro busca o id_grade_periodo para inserir no DAO
-		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
-				.listarPor(this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
+		provaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		try {
-			if (mapGradePeriodo == null) {
-				throw new Exception("A relação GradePeriodo id_grade="
-						+ this.grade.getId_grade() + " e id_periodo="
-						+ this.periodo.getId_periodo() + " não existe.");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
-
-		return this.provaDAO.adicionar(
-				(Integer) mapGradePeriodo.get("id_grade_periodo"),
-				this.anoSemestre.getId_anoSemestre(), descricao,
-				this.dataProva) > 0;
+		return provaDAO.adicionar() > 0;
 	}
 
 	/**
 	 * Carregar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.provaDAO.buscarPorId(this.id_prova);
+		provaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		if (map != null) {
-			this.carregarObjeto(map, carregarRelacionamentos);
+		if (provaDAO.carregar()) {
+			preencherObjetoComValoresDoDAO();
+
+			if (carregarRelacionamentos) {
+				this.grade.carregar(carregarRelacionamentos);
+				this.periodo.carregar();
+				this.anoSemestre.carregar();
+			}
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
-		this.id_prova = id;
-		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -154,53 +137,60 @@ public class Prova {
 	 * @return
 	 */
 	public boolean editar() {
-		// primeiro busca o id_grade_periodo para inserir no DAO
-		Map<String, Object> mapGradePeriodo = this.rel_gradePeriodoDAO
-				.listarPor(this.grade.getId_grade(), this.periodo.getId_periodo()).get(0);
-		try {
-			if (mapGradePeriodo == null) {
-				throw new Exception("A relação GradePeriodo id_grade="
-						+ this.grade.getId_grade() + " e id_periodo="
-						+ this.periodo.getId_periodo() + " não existe.");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
+		provaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		return this.provaDAO.editar(id_prova,
-				(Integer) mapGradePeriodo.get("id_grade_periodo"),
-				this.anoSemestre.getId_anoSemestre(), descricao, dataProva) > 0;
+		return provaDAO.editar() > 0;
+
 	}
 
 	/**
+	 * Excluir
 	 * 
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.provaDAO.excluir(id_prova) > 0;
+		provaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return provaDAO.excluir() > 0;
 	}
 
 	/**
 	 * Listar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Prova> listar(boolean carregarRelacionamentos) {
-		// primeiro busca o id_grade_periodo para inserir no DAO
-		Integer id_grade_periodo = this.rel_gradePeriodoDAO.getValuePrimaryKey(
-				grade.getId_grade(), periodo.getId_periodo());
-
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.provaDAO.listarPor(
-				id_grade_periodo, anoSemestre.getId_anoSemestre(), descricao,
-				dataProva);
+		provaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
 		List<Prova> listProva = new ArrayList<Prova>();
+		List<ProvaDAO> listProvaDAO = (List<ProvaDAO>) provaDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			listProva.add(new Prova(map, carregarRelacionamentos));
+		for (ProvaDAO pDAO : listProvaDAO) {
+			// obtendo o id_grade e id_periodo
+			rel_gradePeriodoDAO.limparAtributos();
+			rel_gradePeriodoDAO.id_grade_periodo = provaDAO.id_grade_periodo;
+			rel_gradePeriodoDAO.carregar();
+
+			Grade grade = new Grade();
+			grade.setId_grade(rel_gradePeriodoDAO.id_grade);
+
+			Periodo periodo = new Periodo();
+			periodo.setId_periodo(rel_gradePeriodoDAO.id_periodo);
+
+			AnoSemestre anoSemestre = new AnoSemestre();
+			anoSemestre.setId_anoSemestre(pDAO.id_anosemestre);
+
+			if (carregarRelacionamentos) {
+				grade.carregar(carregarRelacionamentos);
+				periodo.carregar();
+				anoSemestre.carregar();
+			}
+
+			listProva.add(new Prova(pDAO.id_prova, grade, periodo, anoSemestre, pDAO.descricao, pDAO.data_prova));
 		}
 
 		return listProva;
