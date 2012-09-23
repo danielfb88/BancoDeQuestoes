@@ -37,7 +37,6 @@ import java.util.List;
  * </pre>
  * 
  * 
- * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
  * @since 10-08-2012
  * 
@@ -626,6 +625,9 @@ public abstract class AbstractDAO {
 	 * Efetua um:
 	 * 
 	 * "DELETE FROM 'tabela' WHERE pk"
+	 * Exclui apenas por Primary Key.
+	 * Este método só funciona se pelo menos uma das Primary Keys tiver sido
+	 * preenchida.
 	 * 
 	 * @return Retorno do executeUpdate
 	 */

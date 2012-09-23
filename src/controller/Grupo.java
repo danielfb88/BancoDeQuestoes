@@ -63,13 +63,14 @@ public class Grupo {
 		grupoDAO.descricao = this.descricao;
 		grupoDAO.tipo = this.tipo;
 
-		boolean retornoOk = grupoDAO.carregar();
+		if (grupoDAO.carregar()) {
+			this.id_grupo = grupoDAO.id_grupo;
+			this.descricao = grupoDAO.descricao;
+			this.tipo = grupoDAO.tipo;
 
-		this.id_grupo = grupoDAO.id_grupo;
-		this.descricao = grupoDAO.descricao;
-		this.tipo = grupoDAO.tipo;
-
-		return retornoOk;
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -95,7 +96,7 @@ public class Grupo {
 	 */
 	public boolean excluir() {
 		grupoDAO.limparAtributos();
-		
+
 		grupoDAO.id_grupo = this.id_grupo;
 		return grupoDAO.excluir() > 0;
 	}
@@ -108,16 +109,16 @@ public class Grupo {
 	@SuppressWarnings("unchecked")
 	public List<Grupo> listar() {
 		grupoDAO.limparAtributos();
-		
-		List<Grupo> listGrupo = new ArrayList<Grupo>();
 
 		grupoDAO.id_grupo = this.id_grupo;
 		grupoDAO.descricao = this.descricao;
 		grupoDAO.tipo = this.tipo;
 
-		List<GrupoDAO> listDAO = grupoDAO.listar();
-		for (GrupoDAO g : listDAO) {
-			listGrupo.add(new Grupo(g.id_grupo, g.descricao, g.tipo));
+		List<Grupo> listGrupo = new ArrayList<Grupo>();
+		List<GrupoDAO> listGrupoDAO = grupoDAO.listar();
+		
+		for (GrupoDAO gDAO : listGrupoDAO) {
+			listGrupo.add(new Grupo(gDAO.id_grupo, gDAO.descricao, gDAO.tipo));
 		}
 
 		return listGrupo;

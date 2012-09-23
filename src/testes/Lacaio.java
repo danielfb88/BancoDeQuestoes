@@ -12,6 +12,12 @@ public class Lacaio {
 		PerguntaDAO pDAO = new PerguntaDAO();
 		pDAO.id_usuario = 5;
 		pDAO.descricao = "b";
+		if(pDAO.excluir() > 0)
+			System.out.println("OK");
+		else
+			System.out.println("NAO OK");
+		
+		System.exit(0);
 
 		if (pDAO.carregar()) {
 			System.out.println("ID: " + pDAO.id_pergunta);

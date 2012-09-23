@@ -1,10 +1,8 @@
 package controller;
-dsadasdsa
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import dao.GrupoDAO;
 import dao.UsuarioDAO;
 
 /**
@@ -51,7 +49,7 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean adicionar() {
-		usuarioDAO.reset();
+		usuarioDAO.limparAtributos();
 
 		usuarioDAO.id_usuario = this.id_usuario;
 		usuarioDAO.id_grupo = this.grupo.getId_grupo();
@@ -59,9 +57,7 @@ public class Usuario {
 		usuarioDAO.login = this.login;
 		usuarioDAO.senha = this.senha;
 
-		boolean retornoOk = usuarioDAO.adicionar() > 0;
-
-		return retornoOk;
+		return usuarioDAO.adicionar() > 0;
 	}
 
 	/**
@@ -71,7 +67,7 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		usuarioDAO.reset();
+		usuarioDAO.limparAtributos();
 
 		usuarioDAO.id_usuario = this.id_usuario;
 		usuarioDAO.id_grupo = this.grupo.getId_grupo();
@@ -79,18 +75,19 @@ public class Usuario {
 		usuarioDAO.login = this.login;
 		usuarioDAO.senha = this.senha;
 
-		boolean retornoOk = usuarioDAO.carregar();
+		if (usuarioDAO.carregar()) {
+			this.id_usuario = usuarioDAO.id_usuario;
+			this.grupo.setId_grupo(usuarioDAO.id_grupo);
+			this.nome = usuarioDAO.nome;
+			this.login = usuarioDAO.login;
+			this.senha = usuarioDAO.senha;
 
-		this.id_usuario = usuarioDAO.id_usuario;
-		this.grupo.setId_grupo(usuarioDAO.id_grupo);
-		this.nome = usuarioDAO.nome;
-		this.login = usuarioDAO.login;
-		this.senha = usuarioDAO.senha;
+			if (carregarRelacionamentos)
+				this.grupo.carregar();
 
-		if (carregarRelacionamentos)
-			this.grupo.carregar();
-
-		return retornoOk;
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -99,7 +96,7 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean editar() {
-		usuarioDAO.reset();
+		usuarioDAO.limparAtributos();
 
 		usuarioDAO.id_usuario = this.id_usuario;
 		usuarioDAO.id_grupo = this.grupo.getId_grupo();
@@ -107,9 +104,7 @@ public class Usuario {
 		usuarioDAO.login = this.login;
 		usuarioDAO.senha = this.senha;
 
-		boolean retornoOk = usuarioDAO.editar() > 0;
-
-		return retornoOk;
+		return usuarioDAO.editar() > 0;
 
 	}
 
@@ -119,12 +114,10 @@ public class Usuario {
 	 * @return
 	 */
 	public boolean excluir() {
-		usuarioDAO.reset();
-		
-		usuarioDAO.id_usuario = this.id_usuario;
+		usuarioDAO.limparAtributos();
 
-		boolean retornoOk = usuarioDAO.excluir() > 0;
-		return retornoOk;
+		usuarioDAO.id_usuario = this.id_usuario;
+		return usuarioDAO.excluir() > 0;
 	}
 
 	/**
@@ -133,20 +126,29 @@ public class Usuario {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public List<Grupo> listar() {
-		List<Grupo> listGrupo = new ArrayList<Grupo>();
+	public List<Usuario> listar(boolean carregarRelacionamentos) {
+		usuarioDAO.limparAtributos();
 
-		grupoDAO.id_grupo = this.id_grupo;
-		grupoDAO.descricao = this.descricao;
-		grupoDAO.tipo = this.tipo;
+		usuarioDAO.id_usuario = this.id_usuario;
+		usuarioDAO.id_grupo = this.grupo.getId_grupo();
+		usuarioDAO.nome = this.nome;
+		usuarioDAO.login = this.login;
+		usuarioDAO.senha = this.senha;
 
-		List<GrupoDAO> listDAO = grupoDAO.listar();
-		for (GrupoDAO g : listDAO) {
-			listGrupo.add(new Grupo(g.id_grupo, g.descricao, g.tipo));
+		List<UsuarioDAO> listUsuarioDAO = usuarioDAO.listar();
+		List<Usuario> listUsuario = new ArrayList<Usuario>();
+
+		for (UsuarioDAO uDAO : listUsuarioDAO) {
+			Grupo grupo = new Grupo();
+			grupo.setId_grupo(uDAO.id_grupo);
+
+			if (carregarRelacionamentos)
+				grupo.carregar();
+
+			listUsuario.add(new Usuario(uDAO.id_usuario, grupo, uDAO.nome, uDAO.login, uDAO.senha));
 		}
 
-		grupoDAO.reset();
-		return listGrupo;
+		return listUsuario;
 	}
 
 	/**
