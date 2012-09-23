@@ -2,10 +2,9 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.CursoDAO;
-dsadasdas
+
 /**
  * Curso
  * 
@@ -42,28 +41,25 @@ public class Curso {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public Curso(Map<String, Object> map) {
-		this.carregarObjeto(map);
+	public void preencherDAOComValoresDoObjeto() {
+		cursoDAO.id_curso = this.id_curso;
+		cursoDAO.descricao = this.descricao;
+		cursoDAO.sigla = this.sigla;
+		cursoDAO.tipo_graduacao = this.tipo_graduacao;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map) {
-
-		this.id_curso = (Integer) map.get("id_curso");
-		this.descricao = (String) map.get("descricao");
-		this.sigla = (String) map.get("sigla");
-		this.tipo_graduacao = (String) map.get("tipo_graduacao");
+	public void preencherObjetoComValoresDoDAO() {
+		this.id_curso = cursoDAO.id_curso;
+		this.descricao = cursoDAO.descricao;
+		this.sigla = cursoDAO.sigla;
+		this.tipo_graduacao = cursoDAO.tipo_graduacao;
 	}
 
 	/**
@@ -72,7 +68,10 @@ public class Curso {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.cursoDAO.adicionar(descricao, sigla, tipo_graduacao) > 0;
+		cursoDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return cursoDAO.adicionar() > 0;
 	}
 
 	/**
@@ -81,25 +80,15 @@ public class Curso {
 	 * @return
 	 */
 	public boolean carregar() {
-		Map<String, Object> map = this.cursoDAO.buscarPorId(this.id_curso);
+		cursoDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		if (map != null) {
-			this.carregarObjeto(map);
+		if (cursoDAO.carregar()) {
+			preencherObjetoComValoresDoDAO();
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id) {
-		this.id_curso = id;
-		return this.carregar();
 	}
 
 	/**
@@ -108,7 +97,11 @@ public class Curso {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.cursoDAO.editar(id_curso, descricao, sigla, tipo_graduacao) > 0;
+		cursoDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return cursoDAO.editar() > 0;
+
 	}
 
 	/**
@@ -117,7 +110,10 @@ public class Curso {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.cursoDAO.excluir(id_curso) > 0;
+		cursoDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return cursoDAO.excluir() > 0;
 	}
 
 	/**
@@ -125,14 +121,16 @@ public class Curso {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Curso> listar() {
-		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMap = this.cursoDAO.listarPor(descricao, sigla, tipo_graduacao);
+		cursoDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
 		List<Curso> listCurso = new ArrayList<Curso>();
+		List<CursoDAO> listCursoDAO = (List<CursoDAO>) cursoDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			listCurso.add(new Curso(map));
+		for (CursoDAO cDAO : listCursoDAO) {
+			listCurso.add(new Curso(cDAO.id_curso, cDAO.descricao, cDAO.sigla, cDAO.tipo_graduacao));
 		}
 
 		return listCurso;

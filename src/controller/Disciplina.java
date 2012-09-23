@@ -2,12 +2,11 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import dao.AssuntoDAO;
 import dao.DisciplinaDAO;
+import dao.PerguntaDAO;
 import dao.Rel_DisciplinaAssuntoDAO;
-import dao.Rel_DisciplinaAssunto_PerguntaDAO;
-dsadsadas
 
 /**
  * Disciplina
@@ -23,8 +22,9 @@ public class Disciplina {
 	private String sigla;
 
 	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
-	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssunto = new Rel_DisciplinaAssuntoDAO();
-	private Rel_DisciplinaAssunto_PerguntaDAO rel_disciplinaAssunto_pergunta = new Rel_DisciplinaAssunto_PerguntaDAO();
+	private AssuntoDAO assuntoDAO = new AssuntoDAO();
+	private PerguntaDAO perguntaDAO = new PerguntaDAO();
+	private Rel_DisciplinaAssuntoDAO rel_disciplinaAssuntoDAO = new Rel_DisciplinaAssuntoDAO();
 
 	public Disciplina() {
 
@@ -38,8 +38,7 @@ public class Disciplina {
 	 * @param descricao
 	 * @param sigla
 	 */
-	public Disciplina(Integer id_disciplina, Curso curso, String descricao,
-			String sigla) {
+	public Disciplina(Integer id_disciplina, Curso curso, String descricao, String sigla) {
 		super();
 		this.id_disciplina = id_disciplina;
 		this.curso = curso;
@@ -47,36 +46,26 @@ public class Disciplina {
 		this.sigla = sigla;
 	}
 
-	/***
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
-	 * @param carregarRelacionamentos
+	/**
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public Disciplina(Map<String, Object> map, boolean carregarRelacionamentos) {
-		this.carregarObjeto(map, carregarRelacionamentos);
+	public void preencherDAOComValoresDoObjeto() {
+		disciplinaDAO.id_disciplina = this.id_disciplina;
+		disciplinaDAO.id_curso = this.getCurso().getId_curso();
+		disciplinaDAO.descricao = this.descricao;
+		disciplinaDAO.sigla = this.sigla;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
-	 * @param map
-	 * @param carregarRelacionamentos
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map,
-			boolean carregarRelacionamentos) {
-
-		this.id_disciplina = (Integer) map.get("id_disciplina");
-		this.curso.setId_curso((Integer) map.get("id_curso"));
-		this.descricao = (String) map.get("descricao");
-		this.sigla = (String) map.get("sigla");
-
-		if (carregarRelacionamentos)
-			this.curso.carregar();
+	public void preencherObjetoComValoresDoDAO() {
+		this.id_disciplina = disciplinaDAO.id_disciplina;
+		this.getCurso().setId_curso(disciplinaDAO.id_curso);
+		this.descricao = disciplinaDAO.descricao;
+		this.sigla = disciplinaDAO.sigla;
 	}
 
 	/**
@@ -85,36 +74,27 @@ public class Disciplina {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.disciplinaDAO.adicionar(curso.getId_curso(), descricao,
-				sigla) > 0;
+		disciplinaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return disciplinaDAO.adicionar() > 0;
 	}
 
 	/**
 	 * Carregar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
-	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.disciplinaDAO.buscarPorId(this.id_disciplina);
+	public boolean carregar() {
+		disciplinaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		if (map != null) {
-			this.carregarObjeto(map, carregarRelacionamentos);
+		if (disciplinaDAO.carregar()) {
+			preencherObjetoComValoresDoDAO();
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
-		this.id_disciplina = id;
-		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -123,8 +103,11 @@ public class Disciplina {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.disciplinaDAO.editar(id_disciplina, curso.getId_curso(),
-				descricao, sigla) > 0;
+		disciplinaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return disciplinaDAO.editar() > 0;
+
 	}
 
 	/**
@@ -133,26 +116,34 @@ public class Disciplina {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.disciplinaDAO.excluir(id_disciplina) > 0;
+		disciplinaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return disciplinaDAO.excluir() > 0;
 	}
 
 	/**
 	 * Listar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Disciplina> listar(boolean carregarRelacionamentos) {
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.disciplinaDAO.listarPor(curso.getId_curso(), descricao, sigla);
+		disciplinaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		List<Disciplina> list = new ArrayList<Disciplina>();
+		List<Disciplina> listDisciplina = new ArrayList<Disciplina>();
+		List<DisciplinaDAO> listDisciplinaDAO = (List<DisciplinaDAO>) disciplinaDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			list.add(new Disciplina(map, carregarRelacionamentos));
+		for (DisciplinaDAO dDAO : listDisciplinaDAO) {
+			Curso curso = new Curso();
+			curso.setId_curso(dDAO.id_curso);
+			curso.carregar();
+
+			listDisciplina.add(new Disciplina(dDAO.id_disciplina, curso, dDAO.descricao, dDAO.sigla));
 		}
 
-		return list;
+		return listDisciplina;
 	}
 
 	/**
@@ -162,7 +153,12 @@ public class Disciplina {
 	 * @return
 	 */
 	public boolean inserirAssunto(Assunto assunto) {
-		return this.rel_disciplinaAssunto.adicionar(id_disciplina, assunto.getId_assunto()) > 0;
+		rel_disciplinaAssuntoDAO.limparAtributos();
+
+		rel_disciplinaAssuntoDAO.id_disciplina = this.id_disciplina;
+		rel_disciplinaAssuntoDAO.id_assunto = assunto.getId_assunto();
+
+		return rel_disciplinaAssuntoDAO.adicionar() > 0;
 	}
 
 	/**
@@ -172,16 +168,13 @@ public class Disciplina {
 	 * @return
 	 */
 	public boolean removerAssunto(Assunto assunto) {
-		// verificando se a relação existe
-		Map<String, Object> map = this.rel_disciplinaAssunto
-				.listarPor(id_disciplina, assunto.getId_assunto()).get(0);
+		rel_disciplinaAssuntoDAO.limparAtributos();
 
-		if (map != null) {
-			int id = (Integer) map.get("id_disciplina_assunto");
-			return this.rel_disciplinaAssunto.excluir(id) > 0;
-		}
+		rel_disciplinaAssuntoDAO.id_disciplina = this.id_disciplina;
+		rel_disciplinaAssuntoDAO.id_assunto = assunto.getId_assunto();
+		rel_disciplinaAssuntoDAO.carregar();
 
-		return false;
+		return rel_disciplinaAssuntoDAO.excluir() > 0;
 	}
 
 	/**
@@ -190,13 +183,15 @@ public class Disciplina {
 	 * @return
 	 */
 	public List<Assunto> listarAssuntos() {
-		List<Map<String, Object>> listMap = rel_disciplinaAssunto.listarAssuntosPorDisciplina(id_disciplina);
+		assuntoDAO.limparAtributos();
 
+		List<AssuntoDAO> listAssuntoDAO = assuntoDAO.listarAssuntosPorDisciplina(this.id_disciplina);
 		List<Assunto> listAssunto = new ArrayList<Assunto>();
 
-		for (Map<String, Object> map : listMap) {
-			listAssunto.add(new Assunto(map));
+		for (AssuntoDAO aDAO : listAssuntoDAO) {
+			listAssunto.add(new Assunto(aDAO.id_assunto, aDAO.descricao));
 		}
+
 		return listAssunto;
 	}
 
@@ -207,14 +202,19 @@ public class Disciplina {
 	 * @return
 	 */
 	public List<Pergunta> listarPerguntas(boolean carregarRelacionamentos) {
-		List<Map<String, Object>> listMap = rel_disciplinaAssunto_pergunta
-				.listarPerguntasPorDisciplina(id_disciplina);
+		perguntaDAO.limparAtributos();
 
+		List<PerguntaDAO> listPerguntaDAO = perguntaDAO.listarPerguntasPorDisciplina(this.id_disciplina);
 		List<Pergunta> listPergunta = new ArrayList<Pergunta>();
 
-		for (Map<String, Object> map : listMap) {
-			listPergunta.add(new Pergunta(map, carregarRelacionamentos));
+		for (PerguntaDAO pDAO : listPerguntaDAO) {
+			Usuario usuario = new Usuario();
+			usuario.setId_usuario(pDAO.id_usuario);
+			usuario.carregar(carregarRelacionamentos);
+
+			listPergunta.add(new Pergunta(pDAO.id_pergunta, usuario, pDAO.descricao, pDAO.tipo_pergunta, pDAO.nivel_pergunta, pDAO.enunciado, pDAO.comentario));
 		}
+
 		return listPergunta;
 	}
 

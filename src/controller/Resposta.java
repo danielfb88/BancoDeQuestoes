@@ -1,8 +1,7 @@
 package controller;
-dsadsadas
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.RespostaDAO;
 
@@ -46,33 +45,27 @@ public class Resposta {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
-	 * @param carregarRelacionamentos
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public Resposta(Map<String, Object> map, boolean carregarRelacionamentos) {
-		this.carregarObjeto(map, carregarRelacionamentos);
+	public void preencherDAOComValoresDoObjeto() {
+		respostaDAO.id_resposta = this.id_resposta;
+		respostaDAO.id_pergunta = this.getPergunta().getId_pergunta();
+		respostaDAO.descricao = this.descricao;
+		respostaDAO.correta = (this.correta) ? 1 : 0;
+		respostaDAO.observacao = this.observacao;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 * @param carregarRelacionamentos
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
-
-		this.id_resposta = (Integer) map.get("id_resposta");
-		this.pergunta.setId_pergunta((Integer) map.get("id_pergunta"));
-		this.descricao = (String) map.get("descricao");
-		this.correta = (((Integer) map.get("correta")) == 1) ? true : false;
-		this.observacao = (String) map.get("observacao");
-
-		if (carregarRelacionamentos)
-			this.pergunta.carregar(carregarRelacionamentos);
+	public void preencherObjetoComValoresDoDAO() {
+		this.id_resposta = respostaDAO.id_resposta;
+		this.getPergunta().setId_pergunta(respostaDAO.id_pergunta);
+		this.descricao = respostaDAO.descricao;
+		this.correta = (respostaDAO.correta == 1) ? true : false;
+		this.observacao = respostaDAO.observacao;
 	}
 
 	/**
@@ -81,45 +74,27 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean adicionar() {
-		// Convertendo valor 'correta' para Integer p/ inserir no DAO
-		Integer respostaCorreta = null;
-		if (correta != null) {
-			if (correta)
-				respostaCorreta = 1;
-			else if (!correta)
-				respostaCorreta = 0;
-		}
+		respostaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		return this.respostaDAO.adicionar(pergunta.getId_pergunta(), descricao,
-				respostaCorreta, observacao) > 0;
+		return respostaDAO.adicionar() > 0;
 	}
 
 	/**
 	 * Carregar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
-	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.respostaDAO.buscarPorId(this.id_resposta);
+	public boolean carregar() {
+		respostaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		if (map != null) {
-			this.carregarObjeto(map, carregarRelacionamentos);
+		if (respostaDAO.carregar()) {
+			preencherObjetoComValoresDoDAO();
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
-		this.id_resposta = id;
-		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -128,17 +103,11 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean editar() {
-		// Convertendo valor 'correta' para Integer p/ inserir no DAO
-		Integer respostaCorreta = null;
-		if (correta != null) {
-			if (correta)
-				respostaCorreta = 1;
-			else if (!correta)
-				respostaCorreta = 0;
-		}
+		respostaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		return this.respostaDAO.editar(id_resposta, pergunta.getId_pergunta(),
-				descricao, respostaCorreta, observacao) > 0;
+		return respostaDAO.editar() > 0;
+
 	}
 
 	/**
@@ -147,36 +116,35 @@ public class Resposta {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.respostaDAO.excluir(id_resposta) > 0;
+		respostaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return respostaDAO.excluir() > 0;
 	}
 
 	/**
 	 * Listar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Resposta> listar(boolean carregarRelacionamentos) {
-		// Convertendo valor 'correta' para Integer p/ inserir no DAO
-		Integer respostaCorreta = null;
-		if (correta != null) {
-			if (correta)
-				respostaCorreta = 1;
-			else if (!correta)
-				respostaCorreta = 0;
+		respostaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		List<Resposta> listResposta = new ArrayList<Resposta>();
+		List<RespostaDAO> listRespostaDAO = (List<RespostaDAO>) respostaDAO.listar();
+
+		for (RespostaDAO rDAO : listRespostaDAO) {
+			Pergunta pergunta = new Pergunta();
+			pergunta.setId_pergunta(rDAO.id_pergunta);
+			pergunta.carregar(carregarRelacionamentos);
+
+			listResposta.add(new Resposta(rDAO.id_resposta, pergunta, rDAO.descricao,
+					((rDAO.correta == 1) ? true : false), rDAO.observacao));
 		}
 
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.respostaDAO.listarPor(
-				pergunta.getId_pergunta(), descricao, respostaCorreta, observacao);
-
-		List<Resposta> list = new ArrayList<Resposta>();
-
-		for (Map<String, Object> map : listMap) {
-			list.add(new Resposta(map, carregarRelacionamentos));
-		}
-
-		return list;
+		return listResposta;
 	}
 
 	/**
