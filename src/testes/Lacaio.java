@@ -3,69 +3,43 @@ package testes;
 import java.util.List;
 
 import controller.Grupo;
-import controller.Pergunta;
-import dao.PerguntaDAO;
+import controller.Usuario;
 
 public class Lacaio {
 
 	public static void main(String[] args) {
-		PerguntaDAO pDAO = new PerguntaDAO();
-		pDAO.id_usuario = 5;
-		pDAO.descricao = "b";
-		if(pDAO.excluir() > 0)
-			System.out.println("OK");
-		else
-			System.out.println("NAO OK");
+		Usuario usuario = new Usuario();
 		
-		System.exit(0);
-
-		if (pDAO.carregar()) {
-			System.out.println("ID: " + pDAO.id_pergunta);
-			System.out.println("ID usuario: " + pDAO.id_usuario);
-			System.out.println("descricao: " + pDAO.descricao);
-			System.out.println("tipo_pergunta: " + pDAO.tipo_pergunta);
-			System.out.println("ENUNCIADO: " + pDAO.enunciado);
-			System.out.println("COMENTARIO: " + pDAO.comentario);
-
-			System.exit(0);
-			// editando
-			pDAO.id_pergunta = pDAO.id_pergunta;
-			pDAO.id_usuario = pDAO.id_usuario;
-			pDAO.descricao = pDAO.descricao;
-			pDAO.tipo_pergunta = pDAO.tipo_pergunta;
-			pDAO.enunciado = "AAAAAAAAAAAAAAaa uhu!!";
-			pDAO.comentario = null;
-
-			if (pDAO.editar() > 0) {
-				System.out.println();
-				System.out.println("Editado:");
-				System.out.println();
-				System.out.println("ID: " + pDAO.id_pergunta);
-				System.out.println("ID usuario: " + pDAO.id_usuario);
-				System.out.println("descricao: " + pDAO.descricao);
-				System.out.println("tipo_pergunta: " + pDAO.tipo_pergunta);
-				System.out.println("ENUNCIADO: " + pDAO.enunciado);
-				System.out.println("COMENTARIO: " + pDAO.comentario);
-			} else {
-				System.out.println("NAO ROLOU DE NOVO! =(((");
-			}
-		} else {
-			System.out.println("NAO ROLOU =(");
-		}
-		System.exit(0);
-
+		// adicionando
+		usuario.setNome("Kratos");
+		usuario.setLogin("ktos");
+		usuario.setSenha("12345");
+		
 		Grupo grupo = new Grupo();
-		grupo.setId_grupo(100);
-		grupo.setDescricao("C");
-		boolean ok = grupo.editar();
+		grupo.setDescricao("Grupo do Kratos");
+		grupo.setTipo('A');
+		grupo.adicionar();
+		grupo.carregar();
+		usuario.setGrupo(grupo);
+		
+		if(usuario.adicionar())
+			System.out.println("Usuario Adicionado");
+		else
+			System.out.println("Usuario NAO Adicionado");
+		
+		
+		
+		List<Usuario> listUsuario = usuario.listar(true);
 
-		if (ok) {
-			//for (Grupo grupo : listG) {
-			System.out.println("ID: " + grupo.getId_grupo());
-			System.out.println("DESCRICAO: " + grupo.getDescricao());
-			System.out.println("TIPO: " + grupo.getTipo());
-			//}
+		for (Usuario u : listUsuario) {
+			System.out.println("ID usuario: " + u.getId_usuario());
+			System.out.println("GRUPO: " + u.getGrupo().getDescricao());
+			System.out.println("NOME: " + u.getNome());
+			System.out.println("LOGIN: " + u.getLogin());
+			System.out.println("SENHA: " + u.getSenha());
+			System.out.println();
 		}
+
 	}
 
 }

@@ -44,18 +44,37 @@ public class Usuario {
 	}
 
 	/**
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
+	 */
+	public void daoRecebeThis() {
+		usuarioDAO.id_usuario = this.id_usuario;
+		usuarioDAO.id_grupo = this.grupo.getId_grupo();
+		usuarioDAO.nome = this.nome;
+		usuarioDAO.login = this.login;
+		usuarioDAO.senha = this.senha;
+	}
+
+	/**
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
+	 */
+	public void thisRecebeDao() {
+		this.id_usuario = usuarioDAO.id_usuario;
+		this.grupo.setId_grupo(usuarioDAO.id_grupo);
+		this.nome = usuarioDAO.nome;
+		this.login = usuarioDAO.login;
+		this.senha = usuarioDAO.senha;
+	}
+
+	/**
 	 * Adicionar
 	 * 
 	 * @return
 	 */
 	public boolean adicionar() {
 		usuarioDAO.limparAtributos();
-
-		usuarioDAO.id_usuario = this.id_usuario;
-		usuarioDAO.id_grupo = this.grupo.getId_grupo();
-		usuarioDAO.nome = this.nome;
-		usuarioDAO.login = this.login;
-		usuarioDAO.senha = this.senha;
+		daoRecebeThis();
 
 		return usuarioDAO.adicionar() > 0;
 	}
@@ -68,19 +87,10 @@ public class Usuario {
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
 		usuarioDAO.limparAtributos();
-
-		usuarioDAO.id_usuario = this.id_usuario;
-		usuarioDAO.id_grupo = this.grupo.getId_grupo();
-		usuarioDAO.nome = this.nome;
-		usuarioDAO.login = this.login;
-		usuarioDAO.senha = this.senha;
+		daoRecebeThis();
 
 		if (usuarioDAO.carregar()) {
-			this.id_usuario = usuarioDAO.id_usuario;
-			this.grupo.setId_grupo(usuarioDAO.id_grupo);
-			this.nome = usuarioDAO.nome;
-			this.login = usuarioDAO.login;
-			this.senha = usuarioDAO.senha;
+			thisRecebeDao();
 
 			if (carregarRelacionamentos)
 				this.grupo.carregar();
@@ -97,15 +107,9 @@ public class Usuario {
 	 */
 	public boolean editar() {
 		usuarioDAO.limparAtributos();
-
-		usuarioDAO.id_usuario = this.id_usuario;
-		usuarioDAO.id_grupo = this.grupo.getId_grupo();
-		usuarioDAO.nome = this.nome;
-		usuarioDAO.login = this.login;
-		usuarioDAO.senha = this.senha;
+		daoRecebeThis();
 
 		return usuarioDAO.editar() > 0;
-
 	}
 
 	/**
@@ -115,8 +119,8 @@ public class Usuario {
 	 */
 	public boolean excluir() {
 		usuarioDAO.limparAtributos();
+		daoRecebeThis();
 
-		usuarioDAO.id_usuario = this.id_usuario;
 		return usuarioDAO.excluir() > 0;
 	}
 
@@ -128,12 +132,7 @@ public class Usuario {
 	@SuppressWarnings("unchecked")
 	public List<Usuario> listar(boolean carregarRelacionamentos) {
 		usuarioDAO.limparAtributos();
-
-		usuarioDAO.id_usuario = this.id_usuario;
-		usuarioDAO.id_grupo = this.grupo.getId_grupo();
-		usuarioDAO.nome = this.nome;
-		usuarioDAO.login = this.login;
-		usuarioDAO.senha = this.senha;
+		daoRecebeThis();
 
 		List<UsuarioDAO> listUsuarioDAO = usuarioDAO.listar();
 		List<Usuario> listUsuario = new ArrayList<Usuario>();

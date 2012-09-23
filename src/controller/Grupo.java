@@ -37,16 +37,33 @@ public class Grupo {
 	}
 
 	/**
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
+	 */
+	public void daoRecebeThis() {
+		grupoDAO.id_grupo = this.id_grupo;
+		grupoDAO.descricao = this.descricao;
+		grupoDAO.tipo = this.tipo;
+	}
+
+	/**
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
+	 */
+	public void thisRecebeDao() {
+		this.id_grupo = grupoDAO.id_grupo;
+		this.descricao = grupoDAO.descricao;
+		this.tipo = grupoDAO.tipo;
+	}
+
+	/**
 	 * Adicionar
 	 * 
 	 * @return
 	 */
 	public boolean adicionar() {
 		grupoDAO.limparAtributos();
-
-		grupoDAO.id_grupo = id_grupo;
-		grupoDAO.descricao = descricao;
-		grupoDAO.tipo = tipo;
+		daoRecebeThis();
 
 		return grupoDAO.adicionar() > 0;
 	}
@@ -58,15 +75,10 @@ public class Grupo {
 	 */
 	public boolean carregar() {
 		grupoDAO.limparAtributos();
-
-		grupoDAO.id_grupo = this.id_grupo;
-		grupoDAO.descricao = this.descricao;
-		grupoDAO.tipo = this.tipo;
+		daoRecebeThis();
 
 		if (grupoDAO.carregar()) {
-			this.id_grupo = grupoDAO.id_grupo;
-			this.descricao = grupoDAO.descricao;
-			this.tipo = grupoDAO.tipo;
+			thisRecebeDao();
 
 			return true;
 		}
@@ -80,10 +92,7 @@ public class Grupo {
 	 */
 	public boolean editar() {
 		grupoDAO.limparAtributos();
-
-		grupoDAO.id_grupo = this.id_grupo;
-		grupoDAO.descricao = this.descricao;
-		grupoDAO.tipo = this.tipo;
+		daoRecebeThis();
 
 		return grupoDAO.editar() > 0;
 
@@ -96,8 +105,8 @@ public class Grupo {
 	 */
 	public boolean excluir() {
 		grupoDAO.limparAtributos();
+		daoRecebeThis();
 
-		grupoDAO.id_grupo = this.id_grupo;
 		return grupoDAO.excluir() > 0;
 	}
 
@@ -109,14 +118,11 @@ public class Grupo {
 	@SuppressWarnings("unchecked")
 	public List<Grupo> listar() {
 		grupoDAO.limparAtributos();
-
-		grupoDAO.id_grupo = this.id_grupo;
-		grupoDAO.descricao = this.descricao;
-		grupoDAO.tipo = this.tipo;
+		daoRecebeThis();
 
 		List<Grupo> listGrupo = new ArrayList<Grupo>();
 		List<GrupoDAO> listGrupoDAO = grupoDAO.listar();
-		
+
 		for (GrupoDAO gDAO : listGrupoDAO) {
 			listGrupo.add(new Grupo(gDAO.id_grupo, gDAO.descricao, gDAO.tipo));
 		}

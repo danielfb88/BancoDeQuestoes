@@ -787,11 +787,11 @@ public abstract class AbstractDAO {
 			builder.append("SELECT * FROM ");
 			builder.append(this.nomeDaTabela);
 			builder.append(" WHERE ");
+			builder.append("1=1 ");
 
-			// Verificando se o array dos valores não é vazio
-			if (is_todosValoresNulos(atributosValor)) {
-				builder.append(" 1=1 ");
-				builder.append(" AND ");
+			// Verificando se existem valores a serem filtrados
+			if (!is_todosValoresNulos(atributosValor)) {
+				builder.append("AND ");
 			}
 
 			for (int i = 0; i < atributosNome.length; i++) {

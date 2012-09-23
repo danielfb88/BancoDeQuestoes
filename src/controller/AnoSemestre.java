@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AnoSemestreDAO;
-dsadada
+
 /**
  * AnoSemestre
  * 
@@ -38,17 +38,35 @@ public class AnoSemestre {
 	}
 
 	/**
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
+	 */
+	public void daoRecebeThis() {
+		anoSemestreDAO.id_anosemestre = this.id_anoSemestre;
+		anoSemestreDAO.ano = this.ano;
+		anoSemestreDAO.semestre = this.semestre;
+	}
+
+	/**
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
+	 */
+	public void thisRecebeDao() {
+		this.id_anoSemestre = anoSemestreDAO.id_anosemestre;
+		this.ano = anoSemestreDAO.ano;
+		this.semestre = anoSemestreDAO.semestre;
+	}
+
+	/**
 	 * Adicionar
 	 * 
 	 * @return
 	 */
 	public boolean adicionar() {
-		anoSemestreDAO.ano = ano;
-		anoSemestreDAO.semestre = semestre;
-		boolean retornoOk = anoSemestreDAO.adicionar() > 0;
-		anoSemestreDAO.reset();
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
 
-		return retornoOk;
+		return anoSemestreDAO.adicionar() > 0;
 	}
 
 	/**
@@ -57,18 +75,15 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean carregar() {
-		anoSemestreDAO.id_anosemestre = id_anoSemestre;
-		anoSemestreDAO.ano = ano;
-		anoSemestreDAO.semestre = semestre;
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
 
-		boolean retornoOk = anoSemestreDAO.carregar();
-		
-		this.id_anoSemestre = anoSemestreDAO.id_anosemestre;
-		this.ano = anoSemestreDAO.ano;
-		this.semestre = anoSemestreDAO.semestre;
-		
-		anoSemestreDAO.reset();
-		return retornoOk;
+		if (anoSemestreDAO.carregar()) {
+			thisRecebeDao();
+
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -77,14 +92,10 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean editar() {
-		anoSemestreDAO.id_anosemestre = id_anoSemestre;
-		anoSemestreDAO.ano = ano;
-		anoSemestreDAO.semestre = semestre;
-		
-		boolean retornoOk = anoSemestreDAO.editar() > 0;
-		anoSemestreDAO.reset();
-		
-		return retornoOk;
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
+
+		return anoSemestreDAO.editar() > 0;
 	}
 
 	/**
@@ -93,12 +104,10 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean excluir() {
-		anoSemestreDAO.id_anosemestre = id_anoSemestre;
-				
-		boolean retornoOk = anoSemestreDAO.excluir() > 0;
-		anoSemestreDAO.reset();
-		
-		return retornoOk;
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
+
+		return anoSemestreDAO.excluir() > 0;
 	}
 
 	/**
@@ -106,20 +115,18 @@ public class AnoSemestre {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<AnoSemestre> listar() {
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
+
 		List<AnoSemestre> listAnoSemestre = new ArrayList<AnoSemestre>();
-		
-		anoSemestreDAO.id_anosemestre = id_anoSemestre;
-		anoSemestreDAO.ano = ano;
-		anoSemestreDAO.semestre = semestre;
-		
-		@SuppressWarnings("unchecked")
-		List<AnoSemestreDAO> listDAO = anoSemestreDAO.listar();
-		for(AnoSemestreDAO asDAO : listDAO) {
+		List<AnoSemestreDAO> listAnoSemestreDAO = anoSemestreDAO.listar();
+
+		for (AnoSemestreDAO asDAO : listAnoSemestreDAO) {
 			listAnoSemestre.add(new AnoSemestre(asDAO.id_anosemestre, asDAO.ano, asDAO.semestre));
 		}
-		
-		anoSemestreDAO.reset();
+
 		return listAnoSemestre;
 	}
 
