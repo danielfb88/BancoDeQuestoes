@@ -767,8 +767,7 @@ public abstract class AbstractDAO {
 	 * 
 	 * @return Lista de Objetos da Sub-classe (Lista de DAO's).
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public List listar() {
+	public List<? extends AbstractDAO> listar() {
 		StringBuilder builder = new StringBuilder();
 
 		// todos os atributos
@@ -779,7 +778,7 @@ public abstract class AbstractDAO {
 		List<String> atributosNome_NotNull = new ArrayList<String>();
 		List<Object> atributosValor_NotNull = new ArrayList<Object>();
 
-		List list = new ArrayList();
+		List<AbstractDAO> list = new ArrayList<AbstractDAO>();
 		ResultSet rs = null;
 
 		try {
@@ -816,7 +815,8 @@ public abstract class AbstractDAO {
 			while (rs.next()) {
 				Object obj = subClasse.newInstance();
 				this.setaValoresComReflexao(obj, atributosDaSubClasse, rs);
-				list.add(subClasse.cast(obj));
+
+				list.add((AbstractDAO) obj);
 			}
 
 			rs.close();
@@ -850,9 +850,8 @@ public abstract class AbstractDAO {
 	 *            SQL
 	 * @return Lista de Objetos DAO
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected List executarQuery(String query) {
-		List list = new ArrayList();
+	protected List<? extends AbstractDAO> executarQuery(String query) {
+		List<AbstractDAO> list = new ArrayList<AbstractDAO>();
 
 		try {
 			Statement s = AbstractDAO.conn.createStatement();
@@ -861,7 +860,7 @@ public abstract class AbstractDAO {
 			while (rs.next()) {
 				Object obj = subClasse.newInstance();
 				this.setaValoresComReflexao(obj, atributosDaSubClasse, rs);
-				list.add(subClasse.cast(obj));
+				list.add((AbstractDAO) obj);
 			}
 
 			rs.close();
@@ -900,9 +899,8 @@ public abstract class AbstractDAO {
 	 *            ser a mesma da posição dos caracteres na query.
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected List executarQueryPreparada(String query, List<Object> valores) {
-		List list = new ArrayList();
+	protected List<? extends AbstractDAO> executarQueryPreparada(String query, List<Object> valores) {
+		List<AbstractDAO> list = new ArrayList<AbstractDAO>();
 		ResultSet rs = null;
 
 		try {
@@ -913,7 +911,7 @@ public abstract class AbstractDAO {
 			while (rs.next()) {
 				Object obj = subClasse.newInstance();
 				this.setaValoresComReflexao(obj, atributosDaSubClasse, rs);
-				list.add(subClasse.cast(obj));
+				list.add((AbstractDAO) obj);
 			}
 
 			rs.close();

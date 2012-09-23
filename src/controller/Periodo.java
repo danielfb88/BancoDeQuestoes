@@ -41,7 +41,7 @@ public class Periodo {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void daoRecebeThis() {
+	public void preencherDAOComValoresDoObjeto() {
 		periodoDAO.id_periodo = this.id_periodo;
 		periodoDAO.descricao = this.descricao;
 		periodoDAO.numero = this.numero;
@@ -51,7 +51,7 @@ public class Periodo {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void thisRecebeDao() {
+	public void preencherObjetoComValoresDoDAO() {
 		this.id_periodo = periodoDAO.id_periodo;
 		this.descricao = periodoDAO.descricao;
 		this.numero = periodoDAO.numero;
@@ -64,7 +64,7 @@ public class Periodo {
 	 */
 	public boolean adicionar() {
 		periodoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return periodoDAO.adicionar() > 0;
 	}
@@ -76,10 +76,10 @@ public class Periodo {
 	 */
 	public boolean carregar() {
 		periodoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		if (periodoDAO.carregar()) {
-			thisRecebeDao();
+			preencherObjetoComValoresDoDAO();
 
 			return true;
 		}
@@ -93,7 +93,7 @@ public class Periodo {
 	 */
 	public boolean editar() {
 		periodoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return periodoDAO.editar() > 0;
 
@@ -106,7 +106,7 @@ public class Periodo {
 	 */
 	public boolean excluir() {
 		periodoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return periodoDAO.excluir() > 0;
 	}
@@ -119,10 +119,10 @@ public class Periodo {
 	@SuppressWarnings("unchecked")
 	public List<Periodo> listar() {
 		periodoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		List<Periodo> listPeriodo = new ArrayList<Periodo>();
-		List<PeriodoDAO> listPeriodoDAO = periodoDAO.listar();
+		List<PeriodoDAO> listPeriodoDAO = (List<PeriodoDAO>) periodoDAO.listar();
 
 		for (PeriodoDAO pDAO : listPeriodoDAO) {
 			listPeriodo.add(new Periodo(pDAO.id_periodo, pDAO.descricao, pDAO.numero));

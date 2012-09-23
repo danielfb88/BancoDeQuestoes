@@ -41,7 +41,7 @@ public class AnoSemestre {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void daoRecebeThis() {
+	public void preencherDAOComValoresDoObjeto() {
 		anoSemestreDAO.id_anosemestre = this.id_anoSemestre;
 		anoSemestreDAO.ano = this.ano;
 		anoSemestreDAO.semestre = this.semestre;
@@ -51,7 +51,7 @@ public class AnoSemestre {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void thisRecebeDao() {
+	public void preencherObjetoComValoresDoDAO() {
 		this.id_anoSemestre = anoSemestreDAO.id_anosemestre;
 		this.ano = anoSemestreDAO.ano;
 		this.semestre = anoSemestreDAO.semestre;
@@ -64,7 +64,7 @@ public class AnoSemestre {
 	 */
 	public boolean adicionar() {
 		anoSemestreDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return anoSemestreDAO.adicionar() > 0;
 	}
@@ -76,10 +76,10 @@ public class AnoSemestre {
 	 */
 	public boolean carregar() {
 		anoSemestreDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		if (anoSemestreDAO.carregar()) {
-			thisRecebeDao();
+			preencherObjetoComValoresDoDAO();
 
 			return true;
 		}
@@ -93,7 +93,7 @@ public class AnoSemestre {
 	 */
 	public boolean editar() {
 		anoSemestreDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return anoSemestreDAO.editar() > 0;
 	}
@@ -105,7 +105,7 @@ public class AnoSemestre {
 	 */
 	public boolean excluir() {
 		anoSemestreDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return anoSemestreDAO.excluir() > 0;
 	}
@@ -118,10 +118,10 @@ public class AnoSemestre {
 	@SuppressWarnings("unchecked")
 	public List<AnoSemestre> listar() {
 		anoSemestreDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		List<AnoSemestre> listAnoSemestre = new ArrayList<AnoSemestre>();
-		List<AnoSemestreDAO> listAnoSemestreDAO = anoSemestreDAO.listar();
+		List<AnoSemestreDAO> listAnoSemestreDAO = (List<AnoSemestreDAO>) anoSemestreDAO.listar();
 
 		for (AnoSemestreDAO asDAO : listAnoSemestreDAO) {
 			listAnoSemestre.add(new AnoSemestre(asDAO.id_anosemestre, asDAO.ano, asDAO.semestre));

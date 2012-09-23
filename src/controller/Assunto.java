@@ -28,7 +28,7 @@ public class Assunto {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	private void daoRecebeThis() {
+	private void preencherDAOComValoresDoObjeto() {
 		assuntoDAO.id_assunto = this.id_assunto;
 		assuntoDAO.descricao = this.descricao;
 	}
@@ -37,7 +37,7 @@ public class Assunto {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	private void thisRecebeDao() {
+	private void preencherObjetoComValoresDoDao() {
 		this.id_assunto = assuntoDAO.id_assunto;
 		this.descricao = assuntoDAO.descricao;
 	}
@@ -61,7 +61,7 @@ public class Assunto {
 	 */
 	public boolean adicionar() {
 		assuntoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return assuntoDAO.adicionar() > 0;
 	}
@@ -73,10 +73,10 @@ public class Assunto {
 	 */
 	public boolean carregar() {
 		assuntoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		if (assuntoDAO.carregar()) {
-			thisRecebeDao();
+			preencherObjetoComValoresDoDao();
 
 			return true;
 		}
@@ -90,7 +90,7 @@ public class Assunto {
 	 */
 	public boolean editar() {
 		assuntoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return assuntoDAO.editar() > 0;
 	}
@@ -102,7 +102,7 @@ public class Assunto {
 	 */
 	public boolean excluir() {
 		assuntoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return assuntoDAO.excluir() > 0;
 	}
@@ -115,11 +115,10 @@ public class Assunto {
 	@SuppressWarnings("unchecked")
 	public List<Assunto> listar() {
 		assuntoDAO.limparAtributos();
-
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		List<Assunto> listAssunto = new ArrayList<Assunto>();
-		List<AssuntoDAO> listAssuntoDAO = assuntoDAO.listar();
+		List<AssuntoDAO> listAssuntoDAO = (List<AssuntoDAO>) assuntoDAO.listar();
 
 		for (AssuntoDAO aDAO : listAssuntoDAO) {
 			listAssunto.add(new Assunto(aDAO.id_assunto, aDAO.descricao));

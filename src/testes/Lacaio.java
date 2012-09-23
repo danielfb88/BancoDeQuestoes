@@ -10,6 +10,7 @@ public class Lacaio {
 	public static void main(String[] args) {
 		Usuario usuario = new Usuario();
 		
+		/*
 		// adicionando
 		usuario.setNome("Kratos");
 		usuario.setLogin("ktos");
@@ -26,7 +27,7 @@ public class Lacaio {
 			System.out.println("Usuario Adicionado");
 		else
 			System.out.println("Usuario NAO Adicionado");
-		
+		*/
 		
 		
 		List<Usuario> listUsuario = usuario.listar(true);

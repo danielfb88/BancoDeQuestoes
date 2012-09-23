@@ -49,7 +49,7 @@ public class CoordenadorCurso {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void daoRecebeThis() {
+	public void preencherDAOComValoresDoObjeto() {
 		coordCursoDAO.id_coordenador_curso = this.id_coordenadorCurso;
 		coordCursoDAO.id_usuario = this.coordenador.getId_usuario();
 		coordCursoDAO.id_curso = this.curso.getId_curso();
@@ -61,7 +61,7 @@ public class CoordenadorCurso {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void thisRecebeDao() {
+	public void preencherObjetoComValoresDoDAO() {
 		this.id_coordenadorCurso = coordCursoDAO.id_coordenador_curso;
 		this.coordenador.setId_usuario(coordCursoDAO.id_usuario);
 		this.curso.setId_curso(coordCursoDAO.id_curso);
@@ -76,7 +76,7 @@ public class CoordenadorCurso {
 	 */
 	public boolean adicionar() {
 		coordCursoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return coordCursoDAO.adicionar() > 0;
 	}
@@ -88,10 +88,10 @@ public class CoordenadorCurso {
 	 */
 	public boolean carregar() {
 		coordCursoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		if (coordCursoDAO.carregar()) {
-			thisRecebeDao();
+			preencherObjetoComValoresDoDAO();
 
 			return true;
 		}
@@ -105,7 +105,7 @@ public class CoordenadorCurso {
 	 */
 	public boolean editar() {
 		coordCursoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return coordCursoDAO.editar() > 0;
 
@@ -118,7 +118,7 @@ public class CoordenadorCurso {
 	 */
 	public boolean excluir() {
 		coordCursoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		return coordCursoDAO.excluir() > 0;
 	}
@@ -131,10 +131,10 @@ public class CoordenadorCurso {
 	@SuppressWarnings("unchecked")
 	public List<CoordenadorCurso> listar(boolean carregarRelacionamentos) {
 		coordCursoDAO.limparAtributos();
-		daoRecebeThis();
+		preencherDAOComValoresDoObjeto();
 
 		List<CoordenadorCurso> listCoordCurso = new ArrayList<CoordenadorCurso>();
-		List<CoordenadorCursoDAO> listCoordCursoDAO = coordCursoDAO.listar();
+		List<CoordenadorCursoDAO> listCoordCursoDAO = (List<CoordenadorCursoDAO>) coordCursoDAO.listar();
 
 		for (CoordenadorCursoDAO coordCursoDAO : listCoordCursoDAO) {
 			Usuario usuario = new Usuario();
