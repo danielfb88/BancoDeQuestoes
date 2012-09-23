@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dao.AssuntoDAO;
+import dao.PerguntaDAO;
 import dao.Rel_AssuntoPerguntaDAO;
 
 /**
@@ -18,6 +19,7 @@ public class Assunto {
 	private String descricao;
 
 	private AssuntoDAO assuntoDAO = new AssuntoDAO();
+	private PerguntaDAO perguntaDAO = new PerguntaDAO();
 	private Rel_AssuntoPerguntaDAO rel_assuntoPerguntaDAO = new Rel_AssuntoPerguntaDAO();
 
 	public Assunto() {
@@ -163,16 +165,15 @@ public class Assunto {
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public List<Pergunta> listarPerguntas(boolean carregarRelacionamentos) {
-		rel_assuntoPerguntaDAO.limparAtributos();
+		perguntaDAO.limparAtributos();
 
-		List<Rel_AssuntoPerguntaDAO> listRel = rel_assuntoPerguntaDAO.listarPerguntasPorAssunto(this.id_assunto);
+		List<PerguntaDAO> listPerguntaDAO = perguntaDAO.listarPerguntasPorAssunto(this.id_assunto);
 		List<Pergunta> listPergunta = new ArrayList<Pergunta>();
 
-		for (Rel_AssuntoPerguntaDAO rel : listRel) {
+		for (PerguntaDAO pDAO : listPerguntaDAO) {
 			Pergunta pergunta = new Pergunta();
-			pergunta.setId_pergunta(rel.id_pergunta);
+			pergunta.setId_pergunta(pDAO.id_pergunta);
 			pergunta.carregar(carregarRelacionamentos);
 
 			listPergunta.add(pergunta);
