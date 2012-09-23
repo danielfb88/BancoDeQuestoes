@@ -28,8 +28,8 @@
 			<h:column>
 				<f:facet name="header">TIPO</f:facet>
 				<!-- Inserindo condição -->
-				<h:outputText rendered="#{item.tipo == 'A'}" value="ADMINISTRADOR" />
-				<h:outputText rendered="#{item.tipo == 'C'}" value="COORDENADOR" />
+				<h:outputText rendered="#{item.tipo.equals('A'.charAt(0))}" value="ADMINISTRADOR" />
+				<h:outputText rendered="#{item.tipo.equals('C'.charAt(0))}" value="COORDENADOR" />
 
 			</h:column>
 

@@ -52,7 +52,10 @@ public class Resposta {
 		respostaDAO.id_resposta = this.id_resposta;
 		respostaDAO.id_pergunta = this.getPergunta().getId_pergunta();
 		respostaDAO.descricao = this.descricao;
-		respostaDAO.correta = (this.correta) ? 1 : 0;
+
+		if (this.correta != null)
+			respostaDAO.correta = (this.correta) ? 1 : 0;
+
 		respostaDAO.observacao = this.observacao;
 	}
 

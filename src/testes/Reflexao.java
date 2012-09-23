@@ -24,47 +24,6 @@ public class Reflexao {
 
 	public static void main(String args[]) {
 		try {
-			PerguntaDAO p = new PerguntaDAO();
-
-			// p.id_pergunta = 15;
-			// p.descricao = "Et";
-			List<PerguntaDAO> list = p.listarPor();
-
-			if (list.size() > 0) {
-				for (PerguntaDAO pDAO : list) {
-					System.out.println("id usuario: " + pDAO.id_usuario);
-					System.out.println("descricao: " + pDAO.descricao);
-					System.out.println("enunciado: " + pDAO.enunciado);
-					System.out.println("comentario: " + pDAO.comentario);
-					System.out.println();
-				}
-			} else {
-				System.out.println("NAo DEU");
-			}
-
-			System.exit(0);
-
-			if (p.carregar()) {
-
-				System.out.println("id usuario" + p.id_usuario);
-				System.out.println("descricao" + p.descricao);
-				System.out.println("enunciado" + p.enunciado);
-				System.out.println("comentario" + p.comentario);
-
-			} else {
-				System.out.println("Nao rolou =(");
-			}
-
-			System.exit(0);
-
-			p.id_usuario = 5;
-			p.tipo_pergunta = 'A';
-			p.nivel_pergunta = 'D';
-			p.enunciado = "Uhuuuuu!!";
-			p.descricao = "Eta porra! 2.0!!! 2";
-
-			p.adicionar();
-			System.exit(0);
 
 			Class cls = Class.forName("util.AbstractDAO");
 			Method methlist[] = cls.getDeclaredMethods();

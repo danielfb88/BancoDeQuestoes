@@ -95,7 +95,6 @@ public class Grupo {
 		preencherDAOComValoresDoObjeto();
 
 		return grupoDAO.editar() > 0;
-
 	}
 
 	/**

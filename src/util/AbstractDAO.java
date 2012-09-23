@@ -37,10 +37,8 @@ import java.util.List;
  * </pre>
  * 
  * 
- * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 10-08-2012
- * 
- *        Ultima atualização 22-09-2012
+ * @author Daniel Bonfim (daniel.fb88@gmail.com)
+ * @since 10-08-2012 (Ultima atualização 23-09-2012)
  * 
  * @version 2.0
  * 
@@ -457,6 +455,8 @@ public abstract class AbstractDAO {
 	 * 
 	 * "INSERT INTO 'tabela' (campos) VALUES (valores);"
 	 * 
+	 * A Primary Key deve ser auto-increment.
+	 * 
 	 */
 	public int adicionar() {
 		int linhasAfetadas = 0;
@@ -481,8 +481,9 @@ public abstract class AbstractDAO {
 			int countVirgula = 0;
 
 			for (int i = 0; i < atributosNome.length; i++) {
-				// Verificando se o valor é diferente de nulo e vazio
-				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
+				// Verificando se o valor é diferente de nulo e vazio e diferende de PK
+				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()
+						&& !is_campoIgualPrimaryKey(atributosNome[i])) {
 
 					// inserindo nomes e valores NAO NULOS em arraylist
 					atributosNome_NotNull.add(atributosNome[i]);
