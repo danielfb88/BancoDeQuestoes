@@ -1,13 +1,11 @@
 package controller;
 
-import java.util.ArrayList;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.CoordenadorCursoDAO;
 
-dasdsadsa
 /**
  * CoordenadorCurso
  * 
@@ -47,39 +45,28 @@ public class CoordenadorCurso {
 		this.dataSaida = dataSaida;
 	}
 
-	/***
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
-	 * @param carregarRelacionamentos
+	/**
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public CoordenadorCurso(Map<String, Object> map, boolean carregarRelacionamentos) {
-		this.carregarObjeto(map, carregarRelacionamentos);
+	public void daoRecebeThis() {
+		coordCursoDAO.id_coordenador_curso = this.id_coordenadorCurso;
+		coordCursoDAO.id_usuario = this.coordenador.getId_usuario();
+		coordCursoDAO.id_curso = this.curso.getId_curso();
+		coordCursoDAO.data_entrada = this.dataEntrada;
+		coordCursoDAO.data_saida = this.dataSaida;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
-	 * @param map
-	 * @param carregarRelacionamentos
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map,
-			boolean carregarRelacionamentos) {
-
-		this.id_coordenadorCurso = (Integer) map.get("id_coordenador_curso");
-		this.coordenador.setId_usuario((Integer) map.get("id_usuario"));
-		this.curso.setId_curso((Integer) map.get("id_curso"));
-		this.dataEntrada = (Date) map.get("data_entrada");
-		this.dataSaida = (Date) map.get("data_saida");
-
-		if (carregarRelacionamentos) {
-			this.curso.carregar();
-			this.coordenador.carregar(carregarRelacionamentos);
-		}
+	public void thisRecebeDao() {
+		this.id_coordenadorCurso = coordCursoDAO.id_coordenador_curso;
+		this.coordenador.setId_usuario(coordCursoDAO.id_usuario);
+		this.curso.setId_curso(coordCursoDAO.id_curso);
+		this.dataEntrada = coordCursoDAO.data_entrada;
+		this.dataSaida = coordCursoDAO.data_saida;
 	}
 
 	/**
@@ -88,36 +75,27 @@ public class CoordenadorCurso {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.coordCursoDAO.adicionar(coordenador.getId_usuario(),
-				curso.getId_curso(), dataEntrada, dataSaida) > 0;
+		coordCursoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return coordCursoDAO.adicionar() > 0;
 	}
 
 	/**
 	 * Carregar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
-	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.coordCursoDAO.buscarPorId(this.id_coordenadorCurso);
+	public boolean carregar() {
+		coordCursoDAO.limparAtributos();
+		daoRecebeThis();
 
-		if (map != null) {
-			this.carregarObjeto(map, carregarRelacionamentos);
+		if (coordCursoDAO.carregar()) {
+			thisRecebeDao();
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
-		this.id_coordenadorCurso = id;
-		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -126,9 +104,11 @@ public class CoordenadorCurso {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.coordCursoDAO.editar(id_coordenadorCurso,
-				coordenador.getId_usuario(), curso.getId_curso(), dataEntrada,
-				dataSaida) > 0;
+		coordCursoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return coordCursoDAO.editar() > 0;
+
 	}
 
 	/**
@@ -137,28 +117,41 @@ public class CoordenadorCurso {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.coordCursoDAO.excluir(id_coordenadorCurso) > 0;
+		coordCursoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return coordCursoDAO.excluir() > 0;
 	}
 
 	/**
 	 * Listar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<CoordenadorCurso> listar(boolean carregarRelacionamentos) {
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.coordCursoDAO.listarPor(
-				coordenador.getId_usuario(), curso.getId_curso(), dataEntrada,
-				dataSaida);
+		coordCursoDAO.limparAtributos();
+		daoRecebeThis();
 
-		List<CoordenadorCurso> list = new ArrayList<CoordenadorCurso>();
+		List<CoordenadorCurso> listCoordCurso = new ArrayList<CoordenadorCurso>();
+		List<CoordenadorCursoDAO> listCoordCursoDAO = coordCursoDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			list.add(new CoordenadorCurso(map, carregarRelacionamentos));
+		for (CoordenadorCursoDAO coordCursoDAO : listCoordCursoDAO) {
+			Usuario usuario = new Usuario();
+			usuario.setId_usuario(coordCursoDAO.id_usuario);
+			usuario.carregar(carregarRelacionamentos);
+
+			Curso curso = new Curso();
+			curso.setId_curso(coordCursoDAO.id_curso);
+			curso.carregar();
+
+			listCoordCurso.add(
+					new CoordenadorCurso(
+							coordCursoDAO.id_coordenador_curso, usuario, curso,
+							coordCursoDAO.data_entrada, coordCursoDAO.data_saida));
 		}
 
-		return list;
+		return listCoordCurso;
 	}
 
 	/**
