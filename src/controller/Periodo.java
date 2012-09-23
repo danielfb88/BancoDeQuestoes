@@ -1,11 +1,9 @@
 package controller;
-dsadsad
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.PeriodoDAO;
-
 
 /**
  * Periodo
@@ -40,38 +38,23 @@ public class Periodo {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public Periodo(Map<String, Object> map) {
-		this.carregarObjeto(map);
+	public void daoRecebeThis() {
+		periodoDAO.id_periodo = this.id_periodo;
+		periodoDAO.descricao = this.descricao;
+		periodoDAO.numero = this.numero;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map) {
-
-		this.id_periodo = (Integer) map.get("id_periodo");
-		this.descricao = (String) map.get("descricao");
-		this.numero = (Integer) map.get("numero");
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id) {
-		this.id_periodo = id;
-		return this.carregar();
+	public void thisRecebeDao() {
+		this.id_periodo = periodoDAO.id_periodo;
+		this.descricao = periodoDAO.descricao;
+		this.numero = periodoDAO.numero;
 	}
 
 	/**
@@ -80,7 +63,10 @@ public class Periodo {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.periodoDAO.adicionar(descricao, numero) > 0;
+		periodoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return periodoDAO.adicionar() > 0;
 	}
 
 	/**
@@ -89,10 +75,11 @@ public class Periodo {
 	 * @return
 	 */
 	public boolean carregar() {
-		Map<String, Object> map = this.periodoDAO.buscarPorId(this.id_periodo);
+		periodoDAO.limparAtributos();
+		daoRecebeThis();
 
-		if (map != null) {
-			this.carregarObjeto(map);
+		if (periodoDAO.carregar()) {
+			thisRecebeDao();
 
 			return true;
 		}
@@ -105,7 +92,11 @@ public class Periodo {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.periodoDAO.editar(id_periodo, descricao, numero) > 0;
+		periodoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return periodoDAO.editar() > 0;
+
 	}
 
 	/**
@@ -114,7 +105,10 @@ public class Periodo {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.periodoDAO.excluir(id_periodo) > 0;
+		periodoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return periodoDAO.excluir() > 0;
 	}
 
 	/**
@@ -122,17 +116,19 @@ public class Periodo {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Periodo> listar() {
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.periodoDAO.listarPor(descricao, numero);
+		periodoDAO.limparAtributos();
+		daoRecebeThis();
 
-		List<Periodo> list = new ArrayList<Periodo>();
+		List<Periodo> listPeriodo = new ArrayList<Periodo>();
+		List<PeriodoDAO> listPeriodoDAO = periodoDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			list.add(new Periodo(map));
+		for (PeriodoDAO pDAO : listPeriodoDAO) {
+			listPeriodo.add(new Periodo(pDAO.id_periodo, pDAO.descricao, pDAO.numero));
 		}
 
-		return list;
+		return listPeriodo;
 	}
 
 	/**
