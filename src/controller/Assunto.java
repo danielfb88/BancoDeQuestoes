@@ -174,7 +174,10 @@ public class Assunto {
 		for (PerguntaDAO pDAO : listPerguntaDAO) {
 			Pergunta pergunta = new Pergunta();
 			pergunta.setId_pergunta(pDAO.id_pergunta);
-			pergunta.carregar(carregarRelacionamentos);
+
+			if (carregarRelacionamentos) {
+				pergunta.carregar(carregarRelacionamentos);
+			}
 
 			listPergunta.add(pergunta);
 		}

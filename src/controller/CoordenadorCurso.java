@@ -86,12 +86,17 @@ public class CoordenadorCurso {
 	 * 
 	 * @return
 	 */
-	public boolean carregar() {
+	public boolean carregar(boolean carregarRelacionamentos) {
 		coordCursoDAO.limparAtributos();
 		preencherDAOComValoresDoObjeto();
 
 		if (coordCursoDAO.carregar()) {
 			preencherObjetoComValoresDoDAO();
+
+			if (carregarRelacionamentos) {
+				this.coordenador.carregar(carregarRelacionamentos);
+				this.curso.carregar();
+			}
 
 			return true;
 		}
@@ -137,17 +142,20 @@ public class CoordenadorCurso {
 		List<CoordenadorCursoDAO> listCoordCursoDAO = (List<CoordenadorCursoDAO>) coordCursoDAO.listar();
 
 		for (CoordenadorCursoDAO coordCursoDAO : listCoordCursoDAO) {
-			Usuario usuario = new Usuario();
-			usuario.setId_usuario(coordCursoDAO.id_usuario);
-			usuario.carregar(carregarRelacionamentos);
+			Usuario coordenador = new Usuario();
+			coordenador.setId_usuario(coordCursoDAO.id_usuario);
 
 			Curso curso = new Curso();
 			curso.setId_curso(coordCursoDAO.id_curso);
-			curso.carregar();
+
+			if (carregarRelacionamentos) {
+				coordenador.carregar(carregarRelacionamentos);
+				curso.carregar();
+			}
 
 			listCoordCurso.add(
 					new CoordenadorCurso(
-							coordCursoDAO.id_coordenador_curso, usuario, curso,
+							coordCursoDAO.id_coordenador_curso, coordenador, curso,
 							coordCursoDAO.data_entrada, coordCursoDAO.data_saida));
 		}
 

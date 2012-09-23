@@ -85,12 +85,16 @@ public class Disciplina {
 	 * 
 	 * @return
 	 */
-	public boolean carregar() {
+	public boolean carregar(boolean carregarRelacionamentos) {
 		disciplinaDAO.limparAtributos();
 		preencherDAOComValoresDoObjeto();
 
 		if (disciplinaDAO.carregar()) {
 			preencherObjetoComValoresDoDAO();
+
+			if (carregarRelacionamentos) {
+				this.curso.carregar();
+			}
 
 			return true;
 		}
@@ -138,7 +142,10 @@ public class Disciplina {
 		for (DisciplinaDAO dDAO : listDisciplinaDAO) {
 			Curso curso = new Curso();
 			curso.setId_curso(dDAO.id_curso);
-			curso.carregar();
+
+			if (carregarRelacionamentos) {
+				curso.carregar();
+			}
 
 			listDisciplina.add(new Disciplina(dDAO.id_disciplina, curso, dDAO.descricao, dDAO.sigla));
 		}
@@ -210,7 +217,10 @@ public class Disciplina {
 		for (PerguntaDAO pDAO : listPerguntaDAO) {
 			Usuario usuario = new Usuario();
 			usuario.setId_usuario(pDAO.id_usuario);
-			usuario.carregar(carregarRelacionamentos);
+
+			if (carregarRelacionamentos) {
+				usuario.carregar(carregarRelacionamentos);
+			}
 
 			listPergunta.add(new Pergunta(pDAO.id_pergunta, usuario, pDAO.descricao, pDAO.tipo_pergunta, pDAO.nivel_pergunta, pDAO.enunciado, pDAO.comentario));
 		}

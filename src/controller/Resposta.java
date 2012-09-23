@@ -85,12 +85,16 @@ public class Resposta {
 	 * 
 	 * @return
 	 */
-	public boolean carregar() {
+	public boolean carregar(boolean carregarRelacionamentos) {
 		respostaDAO.limparAtributos();
 		preencherDAOComValoresDoObjeto();
 
 		if (respostaDAO.carregar()) {
 			preencherObjetoComValoresDoDAO();
+
+			if (carregarRelacionamentos) {
+				this.pergunta.carregar(carregarRelacionamentos);
+			}
 
 			return true;
 		}
@@ -138,7 +142,10 @@ public class Resposta {
 		for (RespostaDAO rDAO : listRespostaDAO) {
 			Pergunta pergunta = new Pergunta();
 			pergunta.setId_pergunta(rDAO.id_pergunta);
-			pergunta.carregar(carregarRelacionamentos);
+
+			if (carregarRelacionamentos) {
+				pergunta.carregar(carregarRelacionamentos);
+			}
 
 			listResposta.add(new Resposta(rDAO.id_resposta, pergunta, rDAO.descricao,
 					((rDAO.correta == 1) ? true : false), rDAO.observacao));

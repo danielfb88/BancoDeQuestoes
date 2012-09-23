@@ -1,8 +1,7 @@
 package controller;
-dsadsadas
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.PerguntaDAO;
 
@@ -17,8 +16,8 @@ public class Pergunta {
 	private Integer id_pergunta;
 	private Usuario usuario = new Usuario();
 	private String descricao;
-	private String tipo_pergunta;
-	private String nivel_pergunta;
+	private Character tipo_pergunta;
+	private Character nivel_pergunta;
 	private String enunciado;
 	private String comentario;
 
@@ -52,36 +51,31 @@ public class Pergunta {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
-	 * @param carregarRelacionamentos
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public Pergunta(Map<String, Object> map, boolean carregarRelacionamentos) {
-		this.carregarObjeto(map, carregarRelacionamentos);
+	public void preencherDAOComValoresDoObjeto() {
+		perguntaDAO.id_pergunta = this.id_pergunta;
+		perguntaDAO.id_usuario = this.usuario.getId_usuario();
+		perguntaDAO.descricao = this.descricao;
+		perguntaDAO.tipo_pergunta = this.tipo_pergunta;
+		perguntaDAO.nivel_pergunta = this.nivel_pergunta;
+		perguntaDAO.enunciado = this.enunciado;
+		perguntaDAO.comentario = this.comentario;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
-	 * @param carregarRelacionamentos
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map, boolean carregarRelacionamentos) {
-
-		this.id_pergunta = (Integer) map.get("id_pergunta");
-		this.usuario.setId_usuario((Integer) map.get("id_usuario"));
-		this.descricao = (String) map.get("descricao");
-		this.tipo_pergunta = (String) map.get("tipo_pergunta");
-		this.nivel_pergunta = (String) map.get("nivel_pergunta");
-		this.enunciado = (String) map.get("enunciado");
-		this.comentario = (String) map.get("comentario");
-
-		if (carregarRelacionamentos)
-			this.usuario.carregar(carregarRelacionamentos);
+	public void preencherObjetoComValoresDoDAO() {
+		this.id_pergunta = perguntaDAO.id_pergunta;
+		this.usuario.setId_usuario(perguntaDAO.id_usuario);
+		this.descricao = perguntaDAO.descricao;
+		this.tipo_pergunta = perguntaDAO.tipo_pergunta;
+		this.nivel_pergunta = perguntaDAO.nivel_pergunta;
+		this.enunciado = perguntaDAO.enunciado;
+		this.comentario = perguntaDAO.comentario;
 	}
 
 	/**
@@ -90,37 +84,31 @@ public class Pergunta {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.perguntaDAO.adicionar(usuario.getId_usuario(), descricao,
-				tipo_pergunta, nivel_pergunta, enunciado,
-				comentario) > 0;
+		perguntaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return perguntaDAO.adicionar() > 0;
 	}
 
 	/**
 	 * Carregar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
-		Map<String, Object> map = this.perguntaDAO.buscarPorId(this.id_pergunta);
+		perguntaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		if (map != null) {
-			this.carregarObjeto(map, carregarRelacionamentos);
+		if (perguntaDAO.carregar()) {
+			preencherObjetoComValoresDoDAO();
+
+			if (carregarRelacionamentos) {
+				this.usuario.carregar(carregarRelacionamentos);
+			}
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id, boolean carregarRelacionamentos) {
-		this.id_pergunta = id;
-		return this.carregar(carregarRelacionamentos);
 	}
 
 	/**
@@ -129,9 +117,11 @@ public class Pergunta {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.perguntaDAO.editar(id_pergunta, usuario.getId_usuario(),
-				descricao, tipo_pergunta, nivel_pergunta,
-				enunciado, comentario) > 0;
+		perguntaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return perguntaDAO.editar() > 0;
+
 	}
 
 	/**
@@ -140,28 +130,39 @@ public class Pergunta {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.perguntaDAO.excluir(id_pergunta) > 0;
+		perguntaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
+
+		return perguntaDAO.excluir() > 0;
 	}
 
 	/**
 	 * Listar
 	 * 
-	 * @param carregarRelacionamentos
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Pergunta> listar(boolean carregarRelacionamentos) {
-		// buscando a lista de Mapa recuperando pelos parametros
-		List<Map<String, Object>> listMap = this.perguntaDAO.listarPor(
-				usuario.getId_usuario(), descricao, tipo_pergunta,
-				nivel_pergunta, enunciado, comentario);
+		perguntaDAO.limparAtributos();
+		preencherDAOComValoresDoObjeto();
 
-		List<Pergunta> list = new ArrayList<Pergunta>();
+		List<Pergunta> listPergunta = new ArrayList<Pergunta>();
+		List<PerguntaDAO> listPerguntaDAO = (List<PerguntaDAO>) perguntaDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			list.add(new Pergunta(map, carregarRelacionamentos));
+		for (PerguntaDAO pDAO : listPerguntaDAO) {
+			Usuario usuario = new Usuario();
+			usuario.setId_usuario(pDAO.id_usuario);
+
+			if (carregarRelacionamentos) {
+				usuario.carregar(carregarRelacionamentos);
+			}
+
+			listPergunta.add(
+					new Pergunta(pDAO.id_pergunta, usuario, pDAO.descricao, pDAO.tipo_pergunta,
+							pDAO.nivel_pergunta, pDAO.enunciado, pDAO.comentario));
 		}
 
-		return list;
+		return listPergunta;
 	}
 
 	/**
@@ -212,7 +213,7 @@ public class Pergunta {
 	/**
 	 * @return the tipo_pergunta
 	 */
-	public String getTipo_pergunta() {
+	public Character getTipo_pergunta() {
 		return tipo_pergunta;
 	}
 
@@ -220,14 +221,14 @@ public class Pergunta {
 	 * @param tipo_pergunta
 	 *            the tipo_pergunta to set
 	 */
-	public void setTipo_pergunta(String tipo_pergunta) {
+	public void setTipo_pergunta(Character tipo_pergunta) {
 		this.tipo_pergunta = tipo_pergunta;
 	}
 
 	/**
 	 * @return the nivel_pergunta
 	 */
-	public String getNivel_pergunta() {
+	public Character getNivel_pergunta() {
 		return nivel_pergunta;
 	}
 
@@ -235,7 +236,7 @@ public class Pergunta {
 	 * @param nivel_pergunta
 	 *            the nivel_pergunta to set
 	 */
-	public void setNivel_pergunta(String nivel_pergunta) {
+	public void setNivel_pergunta(Character nivel_pergunta) {
 		this.nivel_pergunta = nivel_pergunta;
 	}
 
