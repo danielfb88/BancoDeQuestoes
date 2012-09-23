@@ -2,10 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.GrupoDAO;
-
 
 /**
  * Grupo
@@ -17,7 +15,7 @@ import dao.GrupoDAO;
 public class Grupo {
 	private Integer id_grupo;
 	private String descricao;
-	private String tipo;
+	private Character tipo;
 
 	private GrupoDAO grupoDAO = new GrupoDAO();
 
@@ -26,13 +24,12 @@ public class Grupo {
 	}
 
 	/**
-	 * Grupo
 	 * 
 	 * @param id_grupo
 	 * @param descricao
 	 * @param tipo
 	 */
-	public Grupo(Integer id_grupo, String descricao, String tipo) {
+	public Grupo(Integer id_grupo, String descricao, Character tipo) {
 		super();
 		this.id_grupo = id_grupo;
 		this.descricao = descricao;
@@ -40,27 +37,23 @@ public class Grupo {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public Grupo(Map<String, Object> map) {
-		this.carregarObjeto(map);
+	public void daoRecebeThis() {
+		grupoDAO.id_grupo = this.id_grupo;
+		grupoDAO.descricao = this.descricao;
+		grupoDAO.tipo = this.tipo;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
-	 *            Map espelhando a tabela correspondente deste objeto
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map) {
-
-		this.id_grupo = (Integer) map.get("id_grupo");
-		this.descricao = (String) map.get("descricao");
-		this.tipo = (String) map.get("tipo");
+	public void thisRecebeDao() {
+		this.id_grupo = grupoDAO.id_grupo;
+		this.descricao = grupoDAO.descricao;
+		this.tipo = grupoDAO.tipo;
 	}
 
 	/**
@@ -69,7 +62,10 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.grupoDAO.adicionar(descricao, tipo.toString()) > 0;
+		grupoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return grupoDAO.adicionar() > 0;
 	}
 
 	/**
@@ -78,25 +74,15 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean carregar() {
-		Map<String, Object> map = this.grupoDAO.buscarPorId(this.id_grupo);
+		grupoDAO.limparAtributos();
+		daoRecebeThis();
 
-		if (map != null) {
-			this.carregarObjeto(map);
+		if (grupoDAO.carregar()) {
+			thisRecebeDao();
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id) {
-		this.id_grupo = id;
-		return this.carregar();
 	}
 
 	/**
@@ -105,7 +91,11 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.grupoDAO.editar(id_grupo, descricao, tipo.toString()) > 0;
+		grupoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return grupoDAO.editar() > 0;
+
 	}
 
 	/**
@@ -114,7 +104,10 @@ public class Grupo {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.grupoDAO.excluir(id_grupo) > 0;
+		grupoDAO.limparAtributos();
+		daoRecebeThis();
+
+		return grupoDAO.excluir() > 0;
 	}
 
 	/**
@@ -122,17 +115,19 @@ public class Grupo {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Grupo> listar() {
-		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMap = this.grupoDAO.listarPor(descricao, tipo);
+		grupoDAO.limparAtributos();
+		daoRecebeThis();
 
-		List<Grupo> list = new ArrayList<Grupo>();
+		List<Grupo> listGrupo = new ArrayList<Grupo>();
+		List<GrupoDAO> listGrupoDAO = grupoDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			list.add(new Grupo(map));
+		for (GrupoDAO gDAO : listGrupoDAO) {
+			listGrupo.add(new Grupo(gDAO.id_grupo, gDAO.descricao, gDAO.tipo));
 		}
 
-		return list;
+		return listGrupo;
 	}
 
 	/**
@@ -168,7 +163,7 @@ public class Grupo {
 	/**
 	 * @return the tipo
 	 */
-	public String getTipo() {
+	public Character getTipo() {
 		return tipo;
 	}
 
@@ -176,7 +171,7 @@ public class Grupo {
 	 * @param tipo
 	 *            the tipo to set
 	 */
-	public void setTipo(String tipo) {
+	public void setTipo(Character tipo) {
 		this.tipo = tipo;
 	}
 

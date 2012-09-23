@@ -1,110 +1,28 @@
 package dao;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import util.AbstractDAO;
 
-/**
- * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 29-08-2012
- * 
- */
 public class Rel_DisciplinaAssuntoDAO extends AbstractDAO {
-	private Map<Object, Object> campoValor;
-	private DisciplinaDAO disciplinaDAO = new DisciplinaDAO();
-	private AssuntoDAO assuntoDAO = new AssuntoDAO();
+	public Integer id_disciplina_assunto;
+	public Integer id_disciplina;
+	public Integer id_assunto;
 
-	public Rel_DisciplinaAssuntoDAO() {
+	@Override
+	protected void config() {
 		nomeDaTabela = "disciplina_assunto";
 		primaryKey = new String[] { "id_disciplina_assunto" };
-		campos = new String[] { "id_disciplina", "id_assunto" };
 	}
 
 	/**
-	 * Adicionar
-	 * 
-	 * @param id_disciplina
-	 * @param id_assunto
-	 * @return
-	 */
-	public int adicionar(Integer id_disciplina, Integer id_assunto) {
-		campoValor = new HashMap<Object, Object>();
-
-		campoValor.put(campos[0], id_disciplina);
-		campoValor.put(campos[1], id_assunto);
-
-		return super._adicionar(campoValor);
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @param id_disciplina_assunto
-	 * @param id_disciplina
-	 * @param id_assunto
-	 * @return
-	 */
-	public int editar(Integer id_disciplina_assunto, Integer id_disciplina,
-			Integer id_assunto) {
-
-		campoValor = new HashMap<Object, Object>();
-
-		campoValor.put(primaryKey[0], id_disciplina_assunto);
-		campoValor.put(campos[0], id_disciplina);
-		campoValor.put(campos[1], id_assunto);
-
-		return super._editar(campoValor);
-	}
-
-	/**
-	 * Excluir
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public int excluir(Integer id) {
-		return super._excluir(id);
-	}
-
-	/**
-	 * Buscar por ID
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Map<String, Object> buscarPorId(Integer id) {
-		return super._buscarPorId(id);
-	}
-
-	/**
-	 * Listar Por
-	 * 
-	 * @param id_disciplina
-	 * @param id_assunto
-	 * @return
-	 */
-	public List<Map<String, Object>> listarPor(Integer id_disciplina,
-			Integer id_assunto) {
-
-		campoValor = new HashMap<Object, Object>();
-
-		campoValor.put(campos[0], id_disciplina);
-		campoValor.put(campos[1], id_assunto);
-
-		return super._listarPor(campoValor);
-	}
-
-	/**
-	 * Lista Disciplinas por Assunto
+	 * Lista Disciplinas pelo Id do Assunto.
 	 * 
 	 * @param id_assunto
 	 * @return
 	 */
-	public List<Map<String, Object>> listarDisciplinasPorAssunto(
-			Integer id_assunto) {
-
+	@SuppressWarnings("rawtypes")
+	public List listarDisciplinasPorAssunto(Integer id_assunto) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("SELECT ");
@@ -122,19 +40,17 @@ public class Rel_DisciplinaAssuntoDAO extends AbstractDAO {
 		builder.append("WHERE a.id_assunto = " + id_assunto + " ");
 		builder.append(";");
 
-		return super.executarQuery(builder.toString(),
-				this.disciplinaDAO.getAtributos());
+		return super.executarQuery(builder.toString());
 	}
 
 	/**
-	 * Lista Assuntos por Disciplina
+	 * Lista Assuntos pelo Id da Disciplina.
 	 * 
 	 * @param id_disciplina
 	 * @return
 	 */
-	public List<Map<String, Object>> listarAssuntosPorDisciplina(
-			Integer id_disciplina) {
-
+	@SuppressWarnings("rawtypes")
+	public List listarAssuntosPorDisciplina(Integer id_disciplina) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("SELECT ");
@@ -151,7 +67,7 @@ public class Rel_DisciplinaAssuntoDAO extends AbstractDAO {
 		builder.append("WHERE d.id_disciplina = " + id_disciplina + " ");
 		builder.append(";");
 
-		return super.executarQuery(builder.toString(),
-				this.assuntoDAO.getAtributos());
+		return super.executarQuery(builder.toString());
 	}
+
 }

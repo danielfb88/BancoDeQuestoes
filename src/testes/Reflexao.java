@@ -2,6 +2,17 @@ package testes;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.List;
+
+import dao.PerguntaDAO;
+
+class Teste1 {
+	private String att1;
+}
+
+class Teste2 extends Teste1 {
+	private String att2;
+}
 
 public class Reflexao {
 
@@ -13,7 +24,49 @@ public class Reflexao {
 
 	public static void main(String args[]) {
 		try {
-			Class cls = Class.forName("app.util.AbstractDAO");
+			PerguntaDAO p = new PerguntaDAO();
+
+			// p.id_pergunta = 15;
+			// p.descricao = "Et";
+			List<PerguntaDAO> list = p.listarPor();
+
+			if (list.size() > 0) {
+				for (PerguntaDAO pDAO : list) {
+					System.out.println("id usuario: " + pDAO.id_usuario);
+					System.out.println("descricao: " + pDAO.descricao);
+					System.out.println("enunciado: " + pDAO.enunciado);
+					System.out.println("comentario: " + pDAO.comentario);
+					System.out.println();
+				}
+			} else {
+				System.out.println("NAo DEU");
+			}
+
+			System.exit(0);
+
+			if (p.carregar()) {
+
+				System.out.println("id usuario" + p.id_usuario);
+				System.out.println("descricao" + p.descricao);
+				System.out.println("enunciado" + p.enunciado);
+				System.out.println("comentario" + p.comentario);
+
+			} else {
+				System.out.println("Nao rolou =(");
+			}
+
+			System.exit(0);
+
+			p.id_usuario = 5;
+			p.tipo_pergunta = 'A';
+			p.nivel_pergunta = 'D';
+			p.enunciado = "Uhuuuuu!!";
+			p.descricao = "Eta porra! 2.0!!! 2";
+
+			p.adicionar();
+			System.exit(0);
+
+			Class cls = Class.forName("util.AbstractDAO");
 			Method methlist[] = cls.getDeclaredMethods();
 
 			for (int i = 0; i < methlist.length; i++) {

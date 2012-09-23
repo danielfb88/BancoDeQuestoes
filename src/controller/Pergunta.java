@@ -1,5 +1,5 @@
 package controller;
-
+dsadsadas
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,8 +40,7 @@ public class Pergunta {
 	 * @param comentario
 	 */
 	public Pergunta(Integer id_pergunta, Usuario usuario, String descricao,
-			String tipo_pergunta, String nivel_pergunta,
-			String enunciado, String comentario) {
+			String tipo_pergunta, String nivel_pergunta, String enunciado, String comentario) {
 		super();
 		this.id_pergunta = id_pergunta;
 		this.usuario = usuario;

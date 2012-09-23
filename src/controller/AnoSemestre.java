@@ -2,10 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import dao.AnoSemestreDAO;
-
 
 /**
  * AnoSemestre
@@ -40,26 +38,23 @@ public class AnoSemestre {
 	}
 
 	/**
-	 * Constroi e carrega o objeto com um Map que possua suas chaves iguais aos
-	 * nomes das colunas do banco, referente a este objeto
-	 * 
-	 * @param map
+	 * Os atributos da propriedade DAO receberão os valores contidos nos
+	 * atributos do objeto (this)
 	 */
-	public AnoSemestre(Map<String, Object> map) {
-		this.carregarObjeto(map);
+	public void daoRecebeThis() {
+		anoSemestreDAO.id_anosemestre = this.id_anoSemestre;
+		anoSemestreDAO.ano = this.ano;
+		anoSemestreDAO.semestre = this.semestre;
 	}
 
 	/**
-	 * Carrega objeto baseado no HashMap de Entrada. As chaves do Map devem ser
-	 * iguais ao nome dos campos da tabela.
-	 * 
-	 * @param map
+	 * Os atributos do objeto (this) receberão os valores das propriedades da
+	 * classe DAO
 	 */
-	private void carregarObjeto(Map<String, Object> map) {
-
-		this.id_anoSemestre = (Integer) map.get("id_anosemestre");
-		this.ano = (Integer) map.get("ano");
-		this.semestre = (Integer) map.get("semestre");
+	public void thisRecebeDao() {
+		this.id_anoSemestre = anoSemestreDAO.id_anosemestre;
+		this.ano = anoSemestreDAO.ano;
+		this.semestre = anoSemestreDAO.semestre;
 	}
 
 	/**
@@ -68,7 +63,10 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean adicionar() {
-		return this.anoSemestreDAO.adicionar(ano, semestre) > 0;
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
+
+		return anoSemestreDAO.adicionar() > 0;
 	}
 
 	/**
@@ -77,26 +75,15 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean carregar() {
-		Map<String, Object> map = this.anoSemestreDAO
-				.buscarPorId(this.id_anoSemestre);
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
 
-		if (map != null) {
-			this.carregarObjeto(map);
+		if (anoSemestreDAO.carregar()) {
+			thisRecebeDao();
 
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Carregar por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public boolean carregarPorId(int id) {
-		this.id_anoSemestre = id;
-		return this.carregar();
 	}
 
 	/**
@@ -105,7 +92,10 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean editar() {
-		return this.anoSemestreDAO.editar(id_anoSemestre, ano, id_anoSemestre) > 0;
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
+
+		return anoSemestreDAO.editar() > 0;
 	}
 
 	/**
@@ -114,7 +104,10 @@ public class AnoSemestre {
 	 * @return
 	 */
 	public boolean excluir() {
-		return this.anoSemestreDAO.editar(id_anoSemestre, ano, id_anoSemestre) > 0;
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
+
+		return anoSemestreDAO.excluir() > 0;
 	}
 
 	/**
@@ -122,18 +115,19 @@ public class AnoSemestre {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<AnoSemestre> listar() {
-		// buscando a lista de Mapas recuperados pelos parametros
-		List<Map<String, Object>> listMap = this.anoSemestreDAO.listarPor(
-				this.ano, this.semestre);
+		anoSemestreDAO.limparAtributos();
+		daoRecebeThis();
 
-		List<AnoSemestre> list = new ArrayList<AnoSemestre>();
+		List<AnoSemestre> listAnoSemestre = new ArrayList<AnoSemestre>();
+		List<AnoSemestreDAO> listAnoSemestreDAO = anoSemestreDAO.listar();
 
-		for (Map<String, Object> map : listMap) {
-			list.add(new AnoSemestre(map));
+		for (AnoSemestreDAO asDAO : listAnoSemestreDAO) {
+			listAnoSemestre.add(new AnoSemestre(asDAO.id_anosemestre, asDAO.ano, asDAO.semestre));
 		}
 
-		return list;
+		return listAnoSemestre;
 	}
 
 	/**
