@@ -7,7 +7,7 @@ public class GradeDAO extends AbstractDAO {
 	public Integer id_curso;
 	public Integer id_anosemestre_inicial;
 	public Integer id_anosemestre_final;
-	public Integer descricao;
+	public String descricao;
 
 	@Override
 	protected void config() {
