@@ -30,13 +30,21 @@ public class ConnectionFactory {
 			Class.forName("org.postgresql.Driver");
 
 			conn = DriverManager.getConnection(url, login, senha);
+			if (conn == null)
+				throw new Exception("Não foi possível conectar ao banco de dados: " + url);
 
 		} catch (ClassNotFoundException e1) {
 			e1.getMessage();
 			e1.printStackTrace();
+			System.exit(0);
 
 		} catch (SQLException e2) {
 			e2.printStackTrace();
+			System.exit(0);
+
+		} catch (Exception e3) {
+			e3.printStackTrace();
+			System.exit(0);
 		}
 
 		return conn;

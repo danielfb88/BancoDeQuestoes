@@ -11,5 +11,6 @@ public class GrupoDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "grupo";
 		primaryKey = new String[] { "id_grupo" };
+		is_autoIncrement = true;
 	}
 }

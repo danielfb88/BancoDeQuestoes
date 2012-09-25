@@ -38,9 +38,9 @@ import java.util.List;
  * 
  * 
  * @author Daniel Bonfim (daniel.fb88@gmail.com)
- * @since 10-08-2012 (Ultima atualização 23-09-2012)
+ * @since 10-08-2012 (Ultima atualização 24-09-2012)
  * 
- * @version 2.0
+ * @version 2.1
  * 
  */
 public abstract class AbstractDAO {
@@ -59,6 +59,11 @@ public abstract class AbstractDAO {
 	 * Nome do(s) campo(s) primaryKey
 	 */
 	protected String[] primaryKey;
+
+	/**
+	 * Marca se a PrimaryKey é auto-incremento ou não.
+	 */
+	protected boolean is_autoIncrement;
 
 	/**
 	 * SubClasse
@@ -104,7 +109,7 @@ public abstract class AbstractDAO {
 				throw new Exception("Nome da tabela não informado na classe " + this.subClasse.getSimpleName());
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.exit(0);
+				System.exit(-1);
 			}
 		}
 	}
@@ -141,7 +146,7 @@ public abstract class AbstractDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 	}
 
@@ -174,11 +179,11 @@ public abstract class AbstractDAO {
 
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 
 		return arrayValores;
@@ -197,11 +202,11 @@ public abstract class AbstractDAO {
 
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 	}
 
@@ -265,11 +270,11 @@ public abstract class AbstractDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e2) {
 			e2.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 	}
 
@@ -320,19 +325,19 @@ public abstract class AbstractDAO {
 
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 	}
 
@@ -457,9 +462,12 @@ public abstract class AbstractDAO {
 	 * 
 	 * A Primary Key deve ser auto-increment.
 	 * 
+	 * @return
+	 *         Retorna 0 para nenhuma modificação no DB e
+	 *         Retorna > 0 (Quantidade de linhas afetadas) Status OK.
 	 */
 	public int adicionar() {
-		int linhasAfetadas = 0;
+		int status = 0;
 		StringBuilder builder = new StringBuilder();
 
 		String[] atributosNome = getNomeDosAtributosDaSubClasse();
@@ -481,18 +489,32 @@ public abstract class AbstractDAO {
 			int countVirgula = 0;
 
 			for (int i = 0; i < atributosNome.length; i++) {
-				// Verificando se o valor é diferente de nulo e vazio e diferende de PK
-				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()
-						&& !is_campoIgualPrimaryKey(atributosNome[i])) {
+				// Verificando se o valor é diferente de nulo e vazio
+				if (atributosValor[i] != null && !atributosValor[i].toString().isEmpty()) {
+					// se for auto-incremento ignore a primaryKey
+					if (is_autoIncrement) {
+						// Verifica se o campo não é uma primary key
+						if (!is_campoIgualPrimaryKey(atributosNome[i])) {
+							// inserindo nomes e valores NAO NULOS  e NAO PRIMARY KEY em arraylist
+							atributosNome_NotNull.add(atributosNome[i]);
+							atributosValor_NotNull.add(atributosValor[i]);
 
-					// inserindo nomes e valores NAO NULOS em arraylist
-					atributosNome_NotNull.add(atributosNome[i]);
-					atributosValor_NotNull.add(atributosValor[i]);
+							// inserindo a virgula depois do primeiro elemento
+							if (countVirgula++ != 0)
+								builder.append(",");
+							builder.append(atributosNome[i]);
+						}
+					} else {
+						// inserindo nomes e valores NAO NULOS + PRIMARY KEY em arraylist
+						atributosNome_NotNull.add(atributosNome[i]);
+						atributosValor_NotNull.add(atributosValor[i]);
 
-					// inserindo a virgula depois do primeiro elemento
-					if (countVirgula++ != 0)
-						builder.append(",");
-					builder.append(atributosNome[i]);
+						// inserindo a virgula depois do primeiro elemento
+						if (countVirgula++ != 0)
+							builder.append(",");
+						builder.append(atributosNome[i]);
+					}
+
 				}
 			}
 
@@ -515,18 +537,20 @@ public abstract class AbstractDAO {
 			this.prepareStatement(ps, atributosValor_NotNull, false);
 
 			// executando
-			linhasAfetadas = ps.executeUpdate();
+			status = ps.executeUpdate();
 			ps.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e2) {
 			e2.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
-		return linhasAfetadas;
+
+		return status;
+
 	}
 
 	/**
@@ -613,11 +637,11 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e2) {
 			e2.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 		return linhasAfetadas;
 	}
@@ -679,11 +703,11 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e2) {
 			e2.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 		return linhasAfetadas;
 	}
@@ -752,11 +776,11 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 
 		return true;
@@ -825,19 +849,19 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (InstantiationException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 
 		return list;
@@ -869,19 +893,19 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (InstantiationException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e2) {
 			e2.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 
 		return list;
@@ -920,19 +944,19 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (InstantiationException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 
 		} catch (Exception e2) {
 			e2.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 
 		return list;
@@ -955,7 +979,7 @@ public abstract class AbstractDAO {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			System.exit(0);
+			System.exit(-1);
 		}
 
 		return linhasAfetadas;
