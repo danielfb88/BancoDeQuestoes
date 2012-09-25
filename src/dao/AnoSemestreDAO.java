@@ -11,5 +11,6 @@ public class AnoSemestreDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "anosemestre";
 		primaryKey = new String[] { "id_anosemestre" };
+		is_autoIncrement = true;
 	}
 }
