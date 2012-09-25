@@ -13,6 +13,7 @@ public class PeriodoDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "periodo";
 		primaryKey = new String[] { "id_periodo" };
+		is_autoIncrement = true;
 	}
 
 	/**

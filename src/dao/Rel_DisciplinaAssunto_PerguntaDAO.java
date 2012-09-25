@@ -11,5 +11,6 @@ public class Rel_DisciplinaAssunto_PerguntaDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "disciplina_assunto__pergunta";
 		primaryKey = new String[] { "id_disciplina_assunto__pergunta" };
+		is_autoIncrement = true;
 	}
 }

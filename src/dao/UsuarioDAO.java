@@ -18,5 +18,6 @@ public class UsuarioDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "usuario";
 		primaryKey = new String[] { "id_usuario" };
+		is_autoIncrement = true;
 	}
 }

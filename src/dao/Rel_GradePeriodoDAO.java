@@ -11,5 +11,6 @@ public class Rel_GradePeriodoDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "grade_periodo";
 		primaryKey = new String[] { "id_grade_periodo" };
+		is_autoIncrement = true;
 	}
 }

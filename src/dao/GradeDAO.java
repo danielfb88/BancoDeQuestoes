@@ -13,5 +13,6 @@ public class GradeDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "grade";
 		primaryKey = new String[] { "id_grade" };
+		is_autoIncrement = true;
 	}
 }

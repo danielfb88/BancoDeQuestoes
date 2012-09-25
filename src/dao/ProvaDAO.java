@@ -15,5 +15,6 @@ public class ProvaDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "prova";
 		primaryKey = new String[] { "id_prova" };
+		is_autoIncrement = true;
 	}
 }

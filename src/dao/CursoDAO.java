@@ -12,5 +12,6 @@ public class CursoDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "curso";
 		primaryKey = new String[] { "id_curso" };
+		is_autoIncrement = true;
 	}
 }

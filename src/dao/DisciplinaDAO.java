@@ -14,6 +14,7 @@ public class DisciplinaDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "disciplina";
 		primaryKey = new String[] { "id_disciplina" };
+		is_autoIncrement = true;
 	}
 
 	/**

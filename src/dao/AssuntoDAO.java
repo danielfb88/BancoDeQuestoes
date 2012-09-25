@@ -12,6 +12,7 @@ public class AssuntoDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "assunto";
 		primaryKey = new String[] { "id_assunto" };
+		is_autoIncrement = true;
 	}
 
 	/**

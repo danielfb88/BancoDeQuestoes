@@ -13,5 +13,6 @@ public class RespostaDAO extends AbstractDAO {
 	protected void config() {
 		nomeDaTabela = "resposta";
 		primaryKey = new String[] { "id_resposta" };
+		is_autoIncrement = true;
 	}
 }

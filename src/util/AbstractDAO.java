@@ -32,6 +32,7 @@ import java.util.List;
  * 		protected void config() {
  * 			nomeDaTabela = "tb_teste";
  * 			primaryKey = new String[] { "id_campoPk" };
+ * 			is_autoIncrement = true;
  * 		}
  * 	}
  * </pre>
