@@ -12,47 +12,43 @@
 	<hr />
 
 	<h:form>
-		<h:dataTable var="item" value="#{cursoBean.cursos}" border="1">
+		<h:dataTable var="item" value="#{cursoBean.lista}" rules="rows"
+			cellpadding="5">
+			<f:facet name="header">Listagem das Perguntas</f:facet>
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="CÓDIGO" />
-				</f:facet>
-				<h:outputLabel value="#{item.id_curso}" />
+				<f:facet name="header">CÓDIGO</f:facet>
+				#{item.id_curso}
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="DESCRIÇÃO" />
-				</f:facet>
-				<h:outputLabel value="#{item.descricao}" />
+				<f:facet name="header">DESCRIÇÃO</f:facet>
+				#{item.descricao}
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="SIGLA" />
-				</f:facet>
-				<h:outputLabel value="#{item.sigla}" />
-			</h:column>
-			
-			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="TIPO GRADUACAO" />
-				</f:facet>
-				<h:outputLabel value="#{item.tipo_graduacao}" />
+				<f:facet name="header">SIGLA</f:facet>
+				#{item.sigla}
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="AÇÕES" />
-				</f:facet>
-				<h:commandLink value="Apagar" action="#{cursoBean.excluir}">
+				<f:facet name="header">TIPO GRADUACAO</f:facet>
+				#{item.tipo_graduacao}
+			</h:column>
+
+			<h:column>
+				<h:commandLink action="#{cursoBean.excluir}"
+					onclick="if (!confirm('Você realmente deseja excluir o curso #{item.descricao}?')) return false;">
+					<h:graphicImage library="imagens/botoes" name="delete.gif"
+						style="border:0" />
 					<f:setPropertyActionListener value="#{item}"
 						target="#{cursoBean.curso}" />
 				</h:commandLink>
+			</h:column>
 
-				<h:outputLabel value=" - " />
-
-				<h:commandLink value="Editar" action="#{cursoBean.formularioEditar}">
+			<h:column>
+				<h:commandLink action="#{cursoBean.formularioEditar}">
+					<h:graphicImage library="imagens/botoes" name="edit.gif"
+						style="border:0" />
 					<f:setPropertyActionListener value="#{item}"
 						target="#{cursoBean.curso}" />
 				</h:commandLink>

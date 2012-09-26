@@ -32,6 +32,11 @@
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
 	<managed-bean>
+		<managed-bean-name>cursoBean</managed-bean-name>
+		<managed-bean-class>managedbean.CursoMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
 		<managed-bean-name>periodoBean</managed-bean-name>
 		<managed-bean-class>managedbean.PeriodoMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
@@ -91,7 +96,7 @@
 			<from-outcome>indexPergunta</from-outcome>
 			<to-view-id>/admin/pergunta/index.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<!-- INDEX RESPOSTA -->
 		<navigation-case>
 			<from-outcome>indexResposta</from-outcome>
@@ -103,7 +108,7 @@
 			<from-outcome>indexPeriodo</from-outcome>
 			<to-view-id>/admin/periodo/index.xhtml</to-view-id>
 		</navigation-case>
-		
+
 		<!-- INDEX GRADE -->
 		<navigation-case>
 			<from-outcome>indexGrade</from-outcome>
@@ -179,7 +184,7 @@
 			<to-view-id>/admin/usuario/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-	
+
 	<!-- MÓDULO PERGUNTA -->
 	<navigation-rule>
 		<from-view-id>/admin/pergunta/*</from-view-id>
@@ -199,7 +204,7 @@
 			<to-view-id>/admin/pergunta/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-	
+
 	<!-- MÓDULO RESPOSTA -->
 	<navigation-rule>
 		<from-view-id>/admin/resposta/*</from-view-id>
@@ -219,7 +224,7 @@
 			<to-view-id>/admin/resposta/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-	
+
 	<!-- MÓDULO PERIODO -->
 	<navigation-rule>
 		<from-view-id>/admin/periodo/*</from-view-id>
@@ -239,7 +244,7 @@
 			<to-view-id>/admin/periodo/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-	
+
 	<!-- MÓDULO PROVA -->
 	<navigation-rule>
 		<from-view-id>/admin/prova/*</from-view-id>
@@ -259,7 +264,7 @@
 			<to-view-id>/admin/prova/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
-	
+
 	<!-- MÓDULO GRADE -->
 	<navigation-rule>
 		<from-view-id>/admin/grade/*</from-view-id>
@@ -277,6 +282,26 @@
 		<navigation-case>
 			<from-outcome>paginaListar</from-outcome>
 			<to-view-id>/admin/grade/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+
+	<!-- MÓDULO CURSO -->
+	<navigation-rule>
+		<from-view-id>/admin/curso/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/curso/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/curso/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/curso/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 
