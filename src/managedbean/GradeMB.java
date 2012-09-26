@@ -12,11 +12,11 @@ import controller.Grade;
  * Bean Gerenciável de Grade.
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 07-09-2012
+ * @since 27-09-2012
  * 
  */
 public class GradeMB {
-	private Grade grade = new Grade();
+	private Grade Grade = new Grade();
 	private List<Grade> lista;
 
 	/**
@@ -25,7 +25,7 @@ public class GradeMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.grade = new Grade();
+		this.Grade = new Grade();
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +53,8 @@ public class GradeMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (grade.adicionar()) {
-			this.grade = new Grade();
+		if (Grade.adicionar()) {
+			this.Grade = new Grade();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -62,7 +62,7 @@ public class GradeMB {
 		} else {
 			// Adicionando uma mensagem ao contexto do JSF
 			FacesMessage facesMessage = new FacesMessage(
-					"Não foi possível adicionar a Grade");
+					"Não foi possível adicionar o Grade");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
@@ -76,8 +76,8 @@ public class GradeMB {
 	 * @return
 	 */
 	public String editar() {
-		if (grade.editar()) {
-			this.grade = new Grade();
+		if (Grade.editar()) {
+			this.Grade = new Grade();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -85,7 +85,7 @@ public class GradeMB {
 		} else {
 			FacesContext context = FacesContext.getCurrentInstance();
 			FacesMessage facesMessage = new FacesMessage(
-					"Não foi possível editar a Grade");
+					"Não foi possível editar o Grade");
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
 			return null;
@@ -98,16 +98,16 @@ public class GradeMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (grade.excluir()) {
-			this.grade = new Grade();
+		if (Grade.excluir()) {
+			this.Grade = new Grade();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.grade = new Grade();
+			this.Grade = new Grade();
 			FacesMessage facesMessage = new FacesMessage(
-					"Não é possível excluir a Grade");
+					"Não é possível excluir o Grade");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
 			return null;
@@ -120,17 +120,17 @@ public class GradeMB {
 	 * @return
 	 */
 	public Grade getGrade() {
-		return grade;
+		return Grade;
 	}
 
 	/**
-	 * Retornar Lista de Grade
+	 * Retornar Lista de Grades
 	 * 
 	 * @return
 	 */
 	public List<Grade> getLista() {
 		if (this.lista == null)
-			this.lista = this.grade.listar(false);
+			this.lista = this.Grade.listar(true);
 
 		return this.lista;
 	}
@@ -139,8 +139,8 @@ public class GradeMB {
 	 * @param Grade
 	 *            the Grade to set
 	 */
-	public void setGrade(Grade grade) {
-		this.grade = grade;
+	public void setGrade(Grade Grade) {
+		this.Grade = Grade;
 	}
 
 }

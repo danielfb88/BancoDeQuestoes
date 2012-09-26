@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Cadastro de Grade</title>
+</h:head>
+<h:body>
+	<h1>Adicionar Grade</h1>
+	<h:form id="frm_adicionar">
+		<h:messages />
+		<h:inputHidden value="#{gradeBean.grade.id_grade}" />
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Curso" for="slct_curso" />
+			<h:selectOneMenu id="slct_curso"
+				value="#{gradeBean.grade.curso.id_curso}">
+				<f:selectItems value="#{cursoBean.lista}" var="item"
+					itemValue="#{item.id_curso}" itemLabel="#{item.descricao}" />
+			</h:selectOneMenu>
+
+			<h:outputLabel value="Ano/Semestre Inicio" for="slct_anoSemestre_inicio" />
+			<h:selectOneMenu id="slct_anoSemestre_inicio"
+				value="#{gradeBean.grade.anoSemestre_inicial.id_anoSemestre}">
+				<f:selectItems value="#{anoSemestreBean.lista}" var="item"
+					itemValue="#{item.id_anoSemestre}" itemLabel="#{item.ano}.#{item.semestre}" />
+			</h:selectOneMenu>
+			
+			<h:outputLabel value="Ano/Semestre Fim" for="slct_anoSemestre_fim" />
+			<h:selectOneMenu id="slct_anoSemestre_fim"
+				value="#{gradeBean.grade.anoSemestre_final.id_anoSemestre}">
+				<f:selectItems value="#{anoSemestreBean.lista}" var="item"
+					itemValue="#{item.id_anoSemestre}" itemLabel="#{item.ano}.#{item.semestre}" />
+			</h:selectOneMenu>
+			
+			<h:outputText value="Descrição" for="tx_descricao" />
+			<h:inputText id="tx_descricao" label="Descricao"
+				value="#{gradeBean.grade.descricao}" size="30" maxlength="10"
+				required="true" requiredMessage="Informe a descricao." />
+
+		</h:panelGrid>
+
+		<h:commandButton action="#{gradeBean.adicionar}" value="Salvar" />
+
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexGrade" value="Voltar" />
+	</h:form>
+</h:body>
+</html>

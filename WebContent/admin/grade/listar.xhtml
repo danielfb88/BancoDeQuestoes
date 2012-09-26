@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Listar Grades</title>
+</h:head>
+<h:body>
+	<h1>Listar Grades</h1>
+	<hr />
+
+	<h:form>
+		<h:dataTable var="item" value="#{gradeBean.lista}" rules="rows"
+			cellpadding="5">
+			<f:facet name="header">Listagem dos Grades</f:facet>
+			<h:column>
+				<f:facet name="header">CÓDIGO</f:facet>
+				#{item.id_grade}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Curso</f:facet>
+				#{item.curso.descricao}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Ano/Semestre Inicio</f:facet>
+				#{item.anoSemestre_inicial.ano}.#{item.anoSemestre_inicial.semestre}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Ano/Semestre Final</f:facet>
+				#{item.anoSemestre_final.ano}.#{item.anoSemestre_final.semestre}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Descricao</f:facet>
+				#{item.descricao}
+			</h:column>
+
+			<h:column>
+				<h:commandLink action="#{gradeBean.excluir}"
+					onclick="if (!confirm('Você realmente deseja excluir o grade #{item.descricao}?')) return false;">
+					<h:graphicImage library="imagens/botoes" name="delete.gif"
+						style="border:0" />
+					<f:setPropertyActionListener value="#{item}"
+						target="#{gradeBean.grade}" />
+				</h:commandLink>
+			</h:column>
+
+			<h:column>
+				<h:commandLink action="#{gradeBean.formularioEditar}">
+					<h:graphicImage library="imagens/botoes" name="edit.gif"
+						style="border:0" />
+					<f:setPropertyActionListener value="#{item}"
+						target="#{gradeBean.grade}" />
+				</h:commandLink>
+			</h:column>
+		</h:dataTable>
+	</h:form>
+	<h:form>
+		<h:commandLink action="indexGrade" value="Voltar" />
+	</h:form>
+
+</h:body>
+</html>

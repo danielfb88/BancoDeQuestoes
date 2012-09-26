@@ -51,6 +51,11 @@
 		<managed-bean-class>managedbean.AnoSemestreMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>gradeBean</managed-bean-name>
+		<managed-bean-class>managedbean.GradeMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 
 	<!-- REGRAS GLOBAIS -->
 	<navigation-rule>
