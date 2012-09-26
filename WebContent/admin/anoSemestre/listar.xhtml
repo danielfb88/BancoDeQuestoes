@@ -12,40 +12,38 @@
 	<hr />
 
 	<h:form>
-		<h:dataTable var="item" value="#{anoSemestreBean.anoSemestres}" border="1">
+		<h:dataTable var="item" value="#{anoSemestreBean.lista}" rules="rows"
+			cellpadding="5">
+			<f:facet name="header">Listagem dos Ano/Semestres</f:facet>
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="CÓDIGO" />
-				</f:facet>
-				<h:outputLabel value="#{item.id_anoSemestre}" />
+				<f:facet name="header">CÓDIGO</f:facet>
+				#{item.id_anoSemestre}
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="ANO" />
-				</f:facet>
-				<h:outputLabel value="#{item.ano}" />
-			</h:column>
-			
-			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="SEMESTRE" />
-				</f:facet>
-				<h:outputLabel value="#{item.semestre}" />
+				<f:facet name="header">ANO</f:facet>
+				#{item.ano}
 			</h:column>
 
 			<h:column>
-				<f:facet name="header">
-					<h:outputLabel value="AÇÕES" />
-				</f:facet>
-				<h:commandLink value="Apagar" action="#{anoSemestreBean.excluir}">
+				<f:facet name="header">SEMESTRE</f:facet>
+				#{item.semestre}
+			</h:column>
+
+			<h:column>
+				<h:commandLink action="#{anoSemestreBean.excluir}"
+					onclick="if (!confirm('Você realmente deseja excluir o anoSemestre #{item.ano} / #{item.semestre}?')) return false;">
+					<h:graphicImage library="imagens/botoes" name="delete.gif"
+						style="border:0" />
 					<f:setPropertyActionListener value="#{item}"
 						target="#{anoSemestreBean.anoSemestre}" />
 				</h:commandLink>
+			</h:column>
 
-				<h:outputLabel value=" - " />
-
-				<h:commandLink value="Editar" action="#{anoSemestreBean.formularioEditar}">
+			<h:column>
+				<h:commandLink action="#{anoSemestreBean.formularioEditar}">
+					<h:graphicImage library="imagens/botoes" name="edit.gif"
+						style="border:0" />
 					<f:setPropertyActionListener value="#{item}"
 						target="#{anoSemestreBean.anoSemestre}" />
 				</h:commandLink>

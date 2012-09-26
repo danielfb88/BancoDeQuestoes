@@ -46,6 +46,11 @@
 		<managed-bean-class>managedbean.ProvaMB</managed-bean-class>
 		<managed-bean-scope>request</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>anoSemestreBean</managed-bean-name>
+		<managed-bean-class>managedbean.AnoSemestreMB</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
 
 	<!-- REGRAS GLOBAIS -->
 	<navigation-rule>
@@ -302,6 +307,26 @@
 		<navigation-case>
 			<from-outcome>paginaListar</from-outcome>
 			<to-view-id>/admin/curso/listar.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<!-- MÓDULO ANOSEMESTRE -->
+	<navigation-rule>
+		<from-view-id>/admin/anoSemestre/*</from-view-id>
+
+		<navigation-case>
+			<from-outcome>formularioAdicionar</from-outcome>
+			<to-view-id>/admin/anoSemestre/adicionar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>formularioEditar</from-outcome>
+			<to-view-id>/admin/anoSemestre/editar.xhtml</to-view-id>
+		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>paginaListar</from-outcome>
+			<to-view-id>/admin/anoSemestre/listar.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 
