@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Editar de Prova</title>
+</h:head>
+<h:body>
+	<h1>Editar Prova</h1>
+	<h:form id="frm_editar">
+		<h:messages />
+		<h:inputHidden value="#{provaBean.prova.id_prova}" />
+
+		<h:panelGrid columns="2">
+			<h:outputLabel value="Grade" for="slct_grade" />
+			<h:selectOneMenu id="slct_grade"
+				value="#{provaBean.prova.grade.id_grade}">
+				<f:selectItems value="#{gradeBean.lista}" var="item"
+					itemValue="#{item.id_grade}" itemLabel="#{item.descricao}" />
+			</h:selectOneMenu>
+
+			<h:outputLabel value="Periodo" for="slct_periodo" />
+			<h:selectOneMenu id="slct_periodo"
+				value="#{provaBean.prova.periodo.id_periodo}">
+				<f:selectItems value="#{periodoBean.lista}" var="item"
+					itemValue="#{item.id_periodo}" itemLabel="#{item.descricao}" />
+			</h:selectOneMenu>
+
+			<h:outputLabel value="Ano/Semestre" for="slct_anoSemestre" />
+			<h:selectOneMenu id="slct_anoSemestre"
+				value="#{provaBean.prova.anoSemestre.id_anoSemestre}">
+				<f:selectItems value="#{anoSemestreBean.lista}" var="item"
+					itemValue="#{item.id_anoSemestre}"
+					itemLabel="#{item.ano}.#{item.semestre}" />
+			</h:selectOneMenu>
+
+			<h:outputText value="Descrição" for="tx_descricao" />
+			<h:inputText id="tx_descricao" label="Descricao"
+				value="#{provaBean.prova.descricao}" size="30" maxlength="10"
+				required="true" requiredMessage="Informe a descricao." />
+
+			<h:outputText value="Data da Prova" for="tx_data" />
+			<h:inputText id="tx_data" label="Data da Prova"
+				value="#{provaBean.prova.dataProva}" size="30" maxlength="10"
+				required="true" requiredMessage="Informe a dataProva" />
+
+		</h:panelGrid>
+
+		<h:commandButton action="#{provaBean.editar}" value="Salvar" />
+
+	</h:form>
+	<h:form>
+		<h:commandLink action="#{provaBean.paginaListar}" value="Voltar" />
+	</h:form>
+</h:body>
+</html>

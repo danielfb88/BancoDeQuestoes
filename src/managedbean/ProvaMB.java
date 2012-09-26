@@ -12,11 +12,11 @@ import controller.Prova;
  * Bean Gerenciável de Prova.
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 07-09-2012
+ * @since 27-09-2012
  * 
  */
 public class ProvaMB {
-	private Prova prova = new Prova();
+	private Prova Prova = new Prova();
 	private List<Prova> lista;
 
 	/**
@@ -25,7 +25,7 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.prova = new Prova();
+		this.Prova = new Prova();
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +53,8 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (prova.adicionar()) {
-			this.prova = new Prova();
+		if (Prova.adicionar()) {
+			this.Prova = new Prova();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -62,7 +62,7 @@ public class ProvaMB {
 		} else {
 			// Adicionando uma mensagem ao contexto do JSF
 			FacesMessage facesMessage = new FacesMessage(
-					"Não foi possível adicionar a Prova");
+					"Não foi possível adicionar o Prova");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
@@ -76,8 +76,8 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String editar() {
-		if (prova.editar()) {
-			this.prova = new Prova();
+		if (Prova.editar()) {
+			this.Prova = new Prova();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -85,7 +85,7 @@ public class ProvaMB {
 		} else {
 			FacesContext context = FacesContext.getCurrentInstance();
 			FacesMessage facesMessage = new FacesMessage(
-					"Não foi possível editar a Prova");
+					"Não foi possível editar o Prova");
 			context.addMessage(null, facesMessage);
 			// Vai permanecer na mesma página
 			return null;
@@ -98,16 +98,16 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (prova.excluir()) {
-			this.prova = new Prova();
+		if (Prova.excluir()) {
+			this.Prova = new Prova();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.prova = new Prova();
+			this.Prova = new Prova();
 			FacesMessage facesMessage = new FacesMessage(
-					"Não é possível excluir a Prova");
+					"Não é possível excluir o Prova");
 			FacesContext context = FacesContext.getCurrentInstance();
 			context.addMessage(null, facesMessage);
 			return null;
@@ -120,17 +120,17 @@ public class ProvaMB {
 	 * @return
 	 */
 	public Prova getProva() {
-		return prova;
+		return Prova;
 	}
 
 	/**
-	 * Retornar Lista de Prova
+	 * Retornar Lista de Provas
 	 * 
 	 * @return
 	 */
 	public List<Prova> getLista() {
 		if (this.lista == null)
-			this.lista = this.prova.listar(false);
+			this.lista = this.Prova.listar(true);
 
 		return this.lista;
 	}
@@ -139,8 +139,8 @@ public class ProvaMB {
 	 * @param Prova
 	 *            the Prova to set
 	 */
-	public void setResposta(Prova prova) {
-		this.prova = prova;
+	public void setProva(Prova Prova) {
+		this.Prova = Prova;
 	}
 
 }

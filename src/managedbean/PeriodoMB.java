@@ -12,11 +12,11 @@ import controller.Periodo;
  * Bean Gerenciável de Periodo.
  * 
  * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 07-09-2012
+ * @since 27-09-2012
  * 
  */
 public class PeriodoMB {
-	private Periodo periodo = new Periodo();
+	private Periodo Periodo = new Periodo();
 	private List<Periodo> lista;
 
 	/**
@@ -25,7 +25,7 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.periodo = new Periodo();
+		this.Periodo = new Periodo();
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +53,8 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (periodo.adicionar()) {
-			this.periodo = new Periodo();
+		if (Periodo.adicionar()) {
+			this.Periodo = new Periodo();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -76,8 +76,8 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String editar() {
-		if (periodo.editar()) {
-			this.periodo = new Periodo();
+		if (Periodo.editar()) {
+			this.Periodo = new Periodo();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -98,14 +98,14 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (periodo.excluir()) {
-			this.periodo = new Periodo();
+		if (Periodo.excluir()) {
+			this.Periodo = new Periodo();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.periodo = new Periodo();
+			this.Periodo = new Periodo();
 			FacesMessage facesMessage = new FacesMessage(
 					"Não é possível excluir o Periodo");
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -120,17 +120,17 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public Periodo getPeriodo() {
-		return periodo;
+		return Periodo;
 	}
 
 	/**
-	 * Retornar Lista de Periodo
+	 * Retornar Lista de Periodos
 	 * 
 	 * @return
 	 */
 	public List<Periodo> getLista() {
 		if (this.lista == null)
-			this.lista = this.periodo.listar();
+			this.lista = this.Periodo.listar();
 
 		return this.lista;
 	}
@@ -139,8 +139,8 @@ public class PeriodoMB {
 	 * @param Periodo
 	 *            the Periodo to set
 	 */
-	public void setPeriodo(Periodo periodo) {
-		this.periodo = periodo;
+	public void setPeriodo(Periodo Periodo) {
+		this.Periodo = Periodo;
 	}
 
 }
