@@ -1,6 +1,9 @@
 package controller;
 
-import java.sql.Date;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +61,9 @@ public class Prova {
 	 * @return
 	 */
 	private Integer obterIdGradePeriodo(Integer id_grade, Integer id_periodo) {
+		if (id_grade == null || id_periodo == null)
+			return null;
+
 		rel_gradePeriodoDAO.limparAtributos();
 		rel_gradePeriodoDAO.id_grade = id_grade;
 		rel_gradePeriodoDAO.id_periodo = id_periodo;
@@ -70,19 +76,21 @@ public class Prova {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		provaDAO.id_prova = this.id_prova;
 		provaDAO.id_grade_periodo = obterIdGradePeriodo(grade.getId_grade(), periodo.getId_periodo());
 		provaDAO.id_anosemestre = this.anoSemestre.getId_anoSemestre();
 		provaDAO.descricao = this.descricao;
-		provaDAO.data_prova = this.dataProva;
+
+		// util.date para sql.date
+		provaDAO.data_prova = (this.dataProva != null) ? new java.sql.Date(this.dataProva.getTime()) : null;
 	}
 
 	/**
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		// obtendo o id_grade e id_periodo
 		rel_gradePeriodoDAO.limparAtributos();
 		rel_gradePeriodoDAO.id_grade_periodo = provaDAO.id_grade_periodo;
@@ -103,7 +111,7 @@ public class Prova {
 	 */
 	public boolean adicionar() {
 		provaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return provaDAO.adicionar() > 0;
 	}
@@ -115,10 +123,10 @@ public class Prova {
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
 		provaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (provaDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			if (carregarRelacionamentos) {
 				this.grade.carregar(carregarRelacionamentos);
@@ -138,7 +146,7 @@ public class Prova {
 	 */
 	public boolean editar() {
 		provaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return provaDAO.editar() > 0;
 
@@ -151,7 +159,7 @@ public class Prova {
 	 */
 	public boolean excluir() {
 		provaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return provaDAO.excluir() > 0;
 	}
@@ -164,7 +172,7 @@ public class Prova {
 	@SuppressWarnings("unchecked")
 	public List<Prova> listar(boolean carregarRelacionamentos) {
 		provaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<Prova> listProva = new ArrayList<Prova>();
 		List<ProvaDAO> listProvaDAO = (List<ProvaDAO>) provaDAO.listar();
@@ -172,7 +180,7 @@ public class Prova {
 		for (ProvaDAO pDAO : listProvaDAO) {
 			// obtendo o id_grade e id_periodo
 			rel_gradePeriodoDAO.limparAtributos();
-			rel_gradePeriodoDAO.id_grade_periodo = provaDAO.id_grade_periodo;
+			rel_gradePeriodoDAO.id_grade_periodo = pDAO.id_grade_periodo;
 			rel_gradePeriodoDAO.carregar();
 
 			Grade grade = new Grade();
@@ -284,6 +292,21 @@ public class Prova {
 	 */
 	public void setDataProva(Date dataProva) {
 		this.dataProva = dataProva;
+	}
+
+	public void setDataProva(String dataProva) {
+		if (dataProva != null) {
+			try {
+				DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+				this.dataProva = new Date(fmt.parse(dataProva).getTime());
+
+			} catch (ParseException e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		} else {
+			dataProva = null;
+		}
 	}
 
 	/*

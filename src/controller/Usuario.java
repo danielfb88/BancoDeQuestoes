@@ -47,7 +47,7 @@ public class Usuario {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		usuarioDAO.id_usuario = this.id_usuario;
 		usuarioDAO.id_grupo = this.grupo.getId_grupo();
 		usuarioDAO.nome = this.nome;
@@ -59,7 +59,7 @@ public class Usuario {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		this.id_usuario = usuarioDAO.id_usuario;
 		this.grupo.setId_grupo(usuarioDAO.id_grupo);
 		this.nome = usuarioDAO.nome;
@@ -74,7 +74,7 @@ public class Usuario {
 	 */
 	public boolean adicionar() {
 		usuarioDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return usuarioDAO.adicionar() > 0;
 	}
@@ -87,10 +87,10 @@ public class Usuario {
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
 		usuarioDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (usuarioDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			if (carregarRelacionamentos)
 				this.grupo.carregar();
@@ -107,7 +107,7 @@ public class Usuario {
 	 */
 	public boolean editar() {
 		usuarioDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return usuarioDAO.editar() > 0;
 	}
@@ -119,7 +119,7 @@ public class Usuario {
 	 */
 	public boolean excluir() {
 		usuarioDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return usuarioDAO.excluir() > 0;
 	}
@@ -132,7 +132,7 @@ public class Usuario {
 	@SuppressWarnings("unchecked")
 	public List<Usuario> listar(boolean carregarRelacionamentos) {
 		usuarioDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<UsuarioDAO> listUsuarioDAO = (List<UsuarioDAO>) usuarioDAO.listar();
 		List<Usuario> listUsuario = new ArrayList<Usuario>();

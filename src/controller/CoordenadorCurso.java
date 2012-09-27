@@ -49,7 +49,7 @@ public class CoordenadorCurso {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		coordCursoDAO.id_coordenador_curso = this.id_coordenadorCurso;
 		coordCursoDAO.id_usuario = this.coordenador.getId_usuario();
 		coordCursoDAO.id_curso = this.curso.getId_curso();
@@ -61,7 +61,7 @@ public class CoordenadorCurso {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		this.id_coordenadorCurso = coordCursoDAO.id_coordenador_curso;
 		this.coordenador.setId_usuario(coordCursoDAO.id_usuario);
 		this.curso.setId_curso(coordCursoDAO.id_curso);
@@ -76,7 +76,7 @@ public class CoordenadorCurso {
 	 */
 	public boolean adicionar() {
 		coordCursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return coordCursoDAO.adicionar() > 0;
 	}
@@ -88,10 +88,10 @@ public class CoordenadorCurso {
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
 		coordCursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (coordCursoDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			if (carregarRelacionamentos) {
 				this.coordenador.carregar(carregarRelacionamentos);
@@ -110,7 +110,7 @@ public class CoordenadorCurso {
 	 */
 	public boolean editar() {
 		coordCursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return coordCursoDAO.editar() > 0;
 
@@ -123,7 +123,7 @@ public class CoordenadorCurso {
 	 */
 	public boolean excluir() {
 		coordCursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return coordCursoDAO.excluir() > 0;
 	}
@@ -136,7 +136,7 @@ public class CoordenadorCurso {
 	@SuppressWarnings("unchecked")
 	public List<CoordenadorCurso> listar(boolean carregarRelacionamentos) {
 		coordCursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<CoordenadorCurso> listCoordCurso = new ArrayList<CoordenadorCurso>();
 		List<CoordenadorCursoDAO> listCoordCursoDAO = (List<CoordenadorCursoDAO>) coordCursoDAO.listar();

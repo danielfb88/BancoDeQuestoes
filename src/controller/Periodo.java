@@ -41,7 +41,7 @@ public class Periodo {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		periodoDAO.id_periodo = this.id_periodo;
 		periodoDAO.descricao = this.descricao;
 		periodoDAO.numero = this.numero;
@@ -51,7 +51,7 @@ public class Periodo {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		this.id_periodo = periodoDAO.id_periodo;
 		this.descricao = periodoDAO.descricao;
 		this.numero = periodoDAO.numero;
@@ -64,7 +64,7 @@ public class Periodo {
 	 */
 	public boolean adicionar() {
 		periodoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return periodoDAO.adicionar() > 0;
 	}
@@ -76,10 +76,10 @@ public class Periodo {
 	 */
 	public boolean carregar() {
 		periodoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (periodoDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			return true;
 		}
@@ -93,7 +93,7 @@ public class Periodo {
 	 */
 	public boolean editar() {
 		periodoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return periodoDAO.editar() > 0;
 
@@ -106,7 +106,7 @@ public class Periodo {
 	 */
 	public boolean excluir() {
 		periodoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return periodoDAO.excluir() > 0;
 	}
@@ -119,7 +119,7 @@ public class Periodo {
 	@SuppressWarnings("unchecked")
 	public List<Periodo> listar() {
 		periodoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<Periodo> listPeriodo = new ArrayList<Periodo>();
 		List<PeriodoDAO> listPeriodoDAO = (List<PeriodoDAO>) periodoDAO.listar();

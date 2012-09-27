@@ -56,7 +56,7 @@ public class Grade {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		gradeDAO.id_grade = this.id_grade;
 		gradeDAO.id_curso = this.getCurso().getId_curso();
 		gradeDAO.id_anosemestre_inicial = this.getAnoSemestre_inicial().getId_anoSemestre();
@@ -68,7 +68,7 @@ public class Grade {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		this.id_grade = gradeDAO.id_grade;
 		this.getCurso().setId_curso(gradeDAO.id_curso);
 		this.getAnoSemestre_inicial().setId_anoSemestre(gradeDAO.id_anosemestre_inicial);
@@ -83,7 +83,7 @@ public class Grade {
 	 */
 	public boolean adicionar() {
 		gradeDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return gradeDAO.adicionar() > 0;
 	}
@@ -96,10 +96,10 @@ public class Grade {
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
 		gradeDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (gradeDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			if (carregarRelacionamentos) {
 				this.curso.carregar();
@@ -119,7 +119,7 @@ public class Grade {
 	 */
 	public boolean editar() {
 		gradeDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return gradeDAO.editar() > 0;
 	}
@@ -131,7 +131,7 @@ public class Grade {
 	 */
 	public boolean excluir() {
 		gradeDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return gradeDAO.excluir() > 0;
 	}
@@ -144,7 +144,7 @@ public class Grade {
 	@SuppressWarnings("unchecked")
 	public List<Grade> listar(boolean carregarRelacionamentos) {
 		gradeDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<GradeDAO> listGradeDAO = (List<GradeDAO>) gradeDAO.listar();
 		List<Grade> listGrade = new ArrayList<Grade>();

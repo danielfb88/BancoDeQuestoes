@@ -44,7 +44,9 @@
 			<h:outputText value="Data da Prova" for="tx_data" />
 			<h:inputText id="tx_data" label="Data da Prova"
 				value="#{provaBean.prova.dataProva}" size="30" maxlength="10"
-				required="true" requiredMessage="Informe a dataProva" />
+				required="true" requiredMessage="Informe a dataProva">
+				<f:convertDateTime type="date" pattern="dd/mm/yyyy" />
+			</h:inputText>
 
 		</h:panelGrid>
 

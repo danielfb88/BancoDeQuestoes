@@ -50,7 +50,7 @@ public class Disciplina {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		disciplinaDAO.id_disciplina = this.id_disciplina;
 		disciplinaDAO.id_curso = this.getCurso().getId_curso();
 		disciplinaDAO.descricao = this.descricao;
@@ -61,7 +61,7 @@ public class Disciplina {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		this.id_disciplina = disciplinaDAO.id_disciplina;
 		this.getCurso().setId_curso(disciplinaDAO.id_curso);
 		this.descricao = disciplinaDAO.descricao;
@@ -75,7 +75,7 @@ public class Disciplina {
 	 */
 	public boolean adicionar() {
 		disciplinaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return disciplinaDAO.adicionar() > 0;
 	}
@@ -87,10 +87,10 @@ public class Disciplina {
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
 		disciplinaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (disciplinaDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			if (carregarRelacionamentos) {
 				this.curso.carregar();
@@ -108,7 +108,7 @@ public class Disciplina {
 	 */
 	public boolean editar() {
 		disciplinaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return disciplinaDAO.editar() > 0;
 
@@ -121,7 +121,7 @@ public class Disciplina {
 	 */
 	public boolean excluir() {
 		disciplinaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return disciplinaDAO.excluir() > 0;
 	}
@@ -134,7 +134,7 @@ public class Disciplina {
 	@SuppressWarnings("unchecked")
 	public List<Disciplina> listar(boolean carregarRelacionamentos) {
 		disciplinaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<Disciplina> listDisciplina = new ArrayList<Disciplina>();
 		List<DisciplinaDAO> listDisciplinaDAO = (List<DisciplinaDAO>) disciplinaDAO.listar();

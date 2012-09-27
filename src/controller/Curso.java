@@ -44,7 +44,7 @@ public class Curso {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		cursoDAO.id_curso = this.id_curso;
 		cursoDAO.descricao = this.descricao;
 		cursoDAO.sigla = this.sigla;
@@ -55,7 +55,7 @@ public class Curso {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		this.id_curso = cursoDAO.id_curso;
 		this.descricao = cursoDAO.descricao;
 		this.sigla = cursoDAO.sigla;
@@ -69,7 +69,7 @@ public class Curso {
 	 */
 	public boolean adicionar() {
 		cursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return cursoDAO.adicionar() > 0;
 	}
@@ -81,10 +81,10 @@ public class Curso {
 	 */
 	public boolean carregar() {
 		cursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (cursoDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			return true;
 		}
@@ -98,7 +98,7 @@ public class Curso {
 	 */
 	public boolean editar() {
 		cursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return cursoDAO.editar() > 0;
 
@@ -111,7 +111,7 @@ public class Curso {
 	 */
 	public boolean excluir() {
 		cursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return cursoDAO.excluir() > 0;
 	}
@@ -124,7 +124,7 @@ public class Curso {
 	@SuppressWarnings("unchecked")
 	public List<Curso> listar() {
 		cursoDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<Curso> listCurso = new ArrayList<Curso>();
 		List<CursoDAO> listCursoDAO = (List<CursoDAO>) cursoDAO.listar();

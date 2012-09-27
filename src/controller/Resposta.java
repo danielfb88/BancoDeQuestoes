@@ -48,7 +48,7 @@ public class Resposta {
 	 * Os atributos da propriedade DAO receberão os valores contidos nos
 	 * atributos do objeto (this)
 	 */
-	public void preencherDAOComValoresDoObjeto() {
+	private void validarDadosParaEntrada() {
 		respostaDAO.id_resposta = this.id_resposta;
 		respostaDAO.id_pergunta = this.getPergunta().getId_pergunta();
 		respostaDAO.descricao = this.descricao;
@@ -63,7 +63,7 @@ public class Resposta {
 	 * Os atributos do objeto (this) receberão os valores das propriedades da
 	 * classe DAO
 	 */
-	public void preencherObjetoComValoresDoDAO() {
+	private void validarDadosParaSaida() {
 		this.id_resposta = respostaDAO.id_resposta;
 		this.getPergunta().setId_pergunta(respostaDAO.id_pergunta);
 		this.descricao = respostaDAO.descricao;
@@ -78,7 +78,7 @@ public class Resposta {
 	 */
 	public boolean adicionar() {
 		respostaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return respostaDAO.adicionar() > 0;
 	}
@@ -90,10 +90,10 @@ public class Resposta {
 	 */
 	public boolean carregar(boolean carregarRelacionamentos) {
 		respostaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		if (respostaDAO.carregar()) {
-			preencherObjetoComValoresDoDAO();
+			validarDadosParaSaida();
 
 			if (carregarRelacionamentos) {
 				this.pergunta.carregar(carregarRelacionamentos);
@@ -111,7 +111,7 @@ public class Resposta {
 	 */
 	public boolean editar() {
 		respostaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return respostaDAO.editar() > 0;
 
@@ -124,7 +124,7 @@ public class Resposta {
 	 */
 	public boolean excluir() {
 		respostaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		return respostaDAO.excluir() > 0;
 	}
@@ -137,7 +137,7 @@ public class Resposta {
 	@SuppressWarnings("unchecked")
 	public List<Resposta> listar(boolean carregarRelacionamentos) {
 		respostaDAO.limparAtributos();
-		preencherDAOComValoresDoObjeto();
+		validarDadosParaEntrada();
 
 		List<Resposta> listResposta = new ArrayList<Resposta>();
 		List<RespostaDAO> listRespostaDAO = (List<RespostaDAO>) respostaDAO.listar();

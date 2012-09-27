@@ -258,7 +258,7 @@ public abstract class AbstractDAO {
 						case "java.lang.Boolean":
 							ps.setBoolean(indexPS, (Boolean) parametros.get(i));
 							break;
-						case "java.lang.Date":
+						case "java.sql.Date":
 							ps.setDate(indexPS, (Date) parametros.get(i));
 							break;
 						default:
@@ -315,7 +315,7 @@ public abstract class AbstractDAO {
 					case "java.lang.Boolean":
 						field.set(obj, rs.getBoolean(field.getName()));
 						break;
-					case "java.lang.Date":
+					case "java.sql.Date":
 						field.set(obj, rs.getDate(field.getName()));
 						break;
 					default:
