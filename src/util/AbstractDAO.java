@@ -39,9 +39,9 @@ import java.util.List;
  * 
  * 
  * @author Daniel Bonfim (daniel.fb88@gmail.com)
- * @since 10-08-2012 (Ultima atualização 24-09-2012)
+ * @since 10-08-2012 (Ultima modificação 27-09-2012)
  * 
- * @version 2.1
+ * @version 2.2
  * 
  */
 public abstract class AbstractDAO {
@@ -67,10 +67,14 @@ public abstract class AbstractDAO {
 	protected boolean is_autoIncrement;
 
 	/**
+	 * Ordena pelo número do parâmetro informado.
+	 */
+	public Integer orderByParam;
+
+	/**
 	 * SubClasse
 	 */
-	@SuppressWarnings("rawtypes")
-	private Class subClasse;
+	private Class<? extends AbstractDAO> subClasse;
 
 	/**
 	 * Atributos da Subclasse
@@ -830,6 +834,22 @@ public abstract class AbstractDAO {
 
 			builder.append(montaStringCampoEqualCoringa(atributosNome_NotNull, atributosValor_NotNull,
 					true, "AND"));
+
+			/*
+			 * Order By
+			 */
+			if (orderByParam != null) {
+				if ((orderByParam > 0) && (orderByParam <= atributosNome.length)) {
+					builder.append(" ORDER BY ");
+					builder.append(atributosNome[orderByParam - 1]);
+
+				} else {
+					throw new Exception("O index para o OrderByParam está fora do " +
+							"intervalo dos atributos da classe " + subClasse.getSimpleName() +
+							" - Número de atributos: " + atributosNome.length +
+							" - Index informado: " + orderByParam);
+				}
+			}
 
 			builder.append(";");
 
