@@ -39,9 +39,9 @@ import java.util.List;
  * 
  * 
  * @author Daniel Bonfim (daniel.fb88@gmail.com)
- * @since 10-08-2012 (Ultima modificação 27-09-2012)
+ * @since 10-08-2012 (Ultima modificação 28-09-2012)
  * 
- * @version 2.2
+ * @version 2.3
  * 
  */
 public abstract class AbstractDAO {
@@ -1004,6 +1004,67 @@ public abstract class AbstractDAO {
 		}
 
 		return linhasAfetadas;
+	}
+
+	/**
+	 * Inicia Tranzação
+	 */
+	public void iniciarTranzacao() {
+		try {
+			if ((AbstractDAO.conn != null) && !AbstractDAO.conn.isClosed()
+					&& (AbstractDAO.conn.getAutoCommit() == true)) {
+				AbstractDAO.conn.setAutoCommit(false);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+
+	/**
+	 * Commita modificações
+	 */
+	public void commit() {
+		try {
+			if ((AbstractDAO.conn != null) && !AbstractDAO.conn.isClosed()
+					&& (AbstractDAO.conn.getAutoCommit() == false)) {
+				AbstractDAO.conn.commit();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+
+	/**
+	 * Rollback das Modificações
+	 */
+	public void rollback() {
+		try {
+			if ((AbstractDAO.conn != null) && !AbstractDAO.conn.isClosed()
+					&& (AbstractDAO.conn.getAutoCommit() == false)) {
+				AbstractDAO.conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+	}
+
+	/**
+	 * Commita modificações e finaliza a Tranzação
+	 */
+	public void finalizarTranzacao() {
+		try {
+			if ((AbstractDAO.conn != null) && !AbstractDAO.conn.isClosed()
+					&& (AbstractDAO.conn.getAutoCommit() == false)) {
+				AbstractDAO.conn.commit();
+				AbstractDAO.conn.setAutoCommit(true);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
 	}
 
 }
