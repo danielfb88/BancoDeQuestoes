@@ -5,7 +5,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
-import controller.Usuario;
+import dominio.Usuario;
 
 
 /**

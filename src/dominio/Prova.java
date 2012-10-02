@@ -1,4 +1,4 @@
-package controller;
+package dominio;
 
 import java.util.Date;
 import java.text.DateFormat;
