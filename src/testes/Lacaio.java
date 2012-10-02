@@ -2,8 +2,8 @@ package testes;
 
 import java.util.List;
 
-import dao.AssuntoDAO;
-import dao.UsuarioDAO;
+import dao.jdbc.AssuntoDAO;
+import dao.jdbc.UsuarioDAO;
 
 public class Lacaio {
 

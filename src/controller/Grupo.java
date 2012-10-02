@@ -3,7 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.GrupoDAO;
+import dao.jdbc.GrupoDAO;
 
 /**
  * Grupo

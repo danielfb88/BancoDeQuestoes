@@ -3,9 +3,9 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.AssuntoDAO;
-import dao.PerguntaDAO;
-import dao.Rel_AssuntoPerguntaDAO;
+import dao.jdbc.AssuntoDAO;
+import dao.jdbc.PerguntaDAO;
+import dao.jdbc.Rel_AssuntoPerguntaDAO;
 
 /**
  * Assunto

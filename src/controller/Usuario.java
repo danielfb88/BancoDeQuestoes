@@ -3,7 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.UsuarioDAO;
+import dao.jdbc.UsuarioDAO;
 
 /**
  * Usuario

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
-import dao.PerguntaDAO;
+import dao.jdbc.PerguntaDAO;
 
 class Teste1 {
 	private String att1;

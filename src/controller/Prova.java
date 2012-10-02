@@ -7,8 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.ProvaDAO;
-import dao.Rel_GradePeriodoDAO;
+import dao.jdbc.ProvaDAO;
+import dao.jdbc.Rel_GradePeriodoDAO;
 
 /**
  * Prova

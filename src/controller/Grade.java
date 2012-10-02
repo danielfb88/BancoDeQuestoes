@@ -3,11 +3,11 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.DisciplinaDAO;
-import dao.GradeDAO;
-import dao.PeriodoDAO;
-import dao.Rel_GradePeriodoDAO;
-import dao.Rel_GradePeriodo_DisciplinaDAO;
+import dao.jdbc.DisciplinaDAO;
+import dao.jdbc.GradeDAO;
+import dao.jdbc.PeriodoDAO;
+import dao.jdbc.Rel_GradePeriodoDAO;
+import dao.jdbc.Rel_GradePeriodo_DisciplinaDAO;
 
 /**
  * Grade

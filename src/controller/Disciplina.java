@@ -3,10 +3,10 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.AssuntoDAO;
-import dao.DisciplinaDAO;
-import dao.PerguntaDAO;
-import dao.Rel_DisciplinaAssuntoDAO;
+import dao.jdbc.AssuntoDAO;
+import dao.jdbc.DisciplinaDAO;
+import dao.jdbc.PerguntaDAO;
+import dao.jdbc.Rel_DisciplinaAssuntoDAO;
 
 /**
  * Disciplina

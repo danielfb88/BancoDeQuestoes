@@ -4,7 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import dao.CoordenadorCursoDAO;
+import dao.jdbc.CoordenadorCursoDAO;
 
 /**
  * CoordenadorCurso
