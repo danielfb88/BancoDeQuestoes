@@ -1,6 +1,6 @@
 package dao.jdbc;
 
-import util.AbstractDAO;
+import util.jdbc.AbstractDAO;
 
 public class GradeDAO extends AbstractDAO {
 	public Integer id_grade;

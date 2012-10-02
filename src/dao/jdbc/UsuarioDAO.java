@@ -1,6 +1,6 @@
 package dao.jdbc;
 
-import util.AbstractDAO;
+import util.jdbc.AbstractDAO;
 
 /**
  * @author Daniel Bonfim <daniel.fb88@gmail.com>

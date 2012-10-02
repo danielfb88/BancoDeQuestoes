@@ -1,6 +1,6 @@
 package dao.jdbc;
 
-import util.AbstractDAO;
+import util.jdbc.AbstractDAO;
 
 public class Rel_AssuntoPerguntaDAO extends AbstractDAO {
 	public Integer id_assunto_pergunta;

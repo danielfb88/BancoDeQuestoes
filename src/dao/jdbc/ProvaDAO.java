@@ -2,7 +2,7 @@ package dao.jdbc;
 
 import java.sql.Date;
 
-import util.AbstractDAO;
+import util.jdbc.AbstractDAO;
 
 public class ProvaDAO extends AbstractDAO {
 	public Integer id_prova;

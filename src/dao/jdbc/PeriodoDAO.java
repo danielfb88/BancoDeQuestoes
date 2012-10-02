@@ -2,7 +2,7 @@ package dao.jdbc;
 
 import java.util.List;
 
-import util.AbstractDAO;
+import util.jdbc.AbstractDAO;
 
 public class PeriodoDAO extends AbstractDAO {
 	public Integer id_periodo;

@@ -3,6 +3,8 @@ package dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.*;
+
 import dao.jdbc.GrupoDAO;
 
 /**
@@ -12,6 +14,9 @@ import dao.jdbc.GrupoDAO;
  * @since 30-08-2012
  * 
  */
+
+@Entity
+@Table(name = "grupo")
 public class Grupo {
 	private Integer id_grupo;
 	private String descricao;
