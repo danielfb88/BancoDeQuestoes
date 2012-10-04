@@ -1,14 +1,19 @@
 package util.hibernate;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import org.hibernate.cfg.AnnotationConfiguration;
 
+/**
+ * Classe que carrega o arquivo de configurações do Hibernate
+ * @author daniel
+ *
+ */
 public class HibernateUtil {
 	private static final SessionFactory sessionFactory = buildSessionFactory();
 
 	private static SessionFactory buildSessionFactory() {
 		try {
-			Configuration cfg = new Configuration();
+			AnnotationConfiguration cfg = new AnnotationConfiguration();
 			cfg.configure("hibernate.cfg.xml");
 			return cfg.buildSessionFactory();
 

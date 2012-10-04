@@ -1,6 +1,8 @@
-package util.hibernate;
+package testes;
 
 import org.hibernate.Session;
+
+import util.hibernate.HibernateUtil;
 
 public class ConnectionHibernatePostgres {
 

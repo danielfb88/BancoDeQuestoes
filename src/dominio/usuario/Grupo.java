@@ -1,28 +1,25 @@
 package dominio.usuario;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.*;
-
-import dao.jdbc.GrupoDAO;
-
-/**
- * Grupo
- * 
- * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 30-08-2012
- * 
- */
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "grupo")
 public class Grupo {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)  
+	@Column(name = "id_grupo")
 	private Integer id_grupo;
-	private String descricao;
-	private Character tipo;
 
-	private GrupoDAO grupoDAO = new GrupoDAO();
+	@Column(name = "descricao", length = 50, nullable = false)
+	private String descricao;
+
+	@Column(name = "tipo", nullable = false)
+	private Character tipo;
 
 	public Grupo() {
 
@@ -39,99 +36,6 @@ public class Grupo {
 		this.id_grupo = id_grupo;
 		this.descricao = descricao;
 		this.tipo = tipo;
-	}
-
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		grupoDAO.id_grupo = this.id_grupo;
-		grupoDAO.descricao = this.descricao;
-		grupoDAO.tipo = this.tipo;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_grupo = grupoDAO.id_grupo;
-		this.descricao = grupoDAO.descricao;
-		this.tipo = grupoDAO.tipo;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
-	public boolean adicionar() {
-		grupoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return grupoDAO.adicionar() > 0;
-	}
-
-	/**
-	 * Carregar
-	 * 
-	 * @return
-	 */
-	public boolean carregar() {
-		grupoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (grupoDAO.carregar()) {
-			validarDadosParaSaida();
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
-	public boolean editar() {
-		grupoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return grupoDAO.editar() > 0;
-	}
-
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
-	public boolean excluir() {
-		grupoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return grupoDAO.excluir() > 0;
-	}
-
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Grupo> listar() {
-		grupoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		List<Grupo> listGrupo = new ArrayList<Grupo>();
-		List<GrupoDAO> listGrupoDAO = (List<GrupoDAO>) grupoDAO.listar();
-
-		for (GrupoDAO gDAO : listGrupoDAO) {
-			listGrupo.add(new Grupo(gDAO.id_grupo, gDAO.descricao, gDAO.tipo));
-		}
-
-		return listGrupo;
 	}
 
 	/**

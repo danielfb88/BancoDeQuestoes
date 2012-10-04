@@ -1,23 +1,20 @@
 package testes;
 
-import java.util.List;
-
-import dao.jdbc.AssuntoDAO;
-import dao.jdbc.UsuarioDAO;
+import dao.hibernate.GrupoDAO;
+import dominio.usuario.Grupo;
 
 public class Lacaio {
 
 	public static void main(String[] args) {
-		AssuntoDAO aDAO = new AssuntoDAO();
-		aDAO.orderByParam = 2;
-		@SuppressWarnings("unchecked")
-		List<AssuntoDAO> listAssuntoDAO = (List<AssuntoDAO>) aDAO.listar();
+		GrupoDAO grupoDAO = new GrupoDAO();
+		Grupo grupo = new Grupo();
+		grupo.setDescricao("Grupo Hibernate 1");
+		grupo.setTipo('A');
 
-		for (AssuntoDAO assuntoDAO : listAssuntoDAO) {
-			System.out.println("ID ASSUNTO: " + assuntoDAO.id_assunto);
-			System.out.println("DESCRICAO: " + assuntoDAO.descricao);
-			System.out.println();
-		}
+		if (grupoDAO.salvar(grupo))
+			System.out.println("Adicionado com sucesso");
+		else
+			System.out.println("Não foi possivel adicionar");
 
 	}
 
