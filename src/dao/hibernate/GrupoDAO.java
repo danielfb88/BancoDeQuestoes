@@ -12,7 +12,7 @@ import dominio.usuario.Grupo;
 
 public class GrupoDAO {
 
-	public boolean salvar(Grupo grupo) {
+	public boolean adicionar(Grupo grupo) {
 		boolean statusOk = false;
 		Session sessao = null;
 		Transaction transacao = null;
@@ -40,7 +40,7 @@ public class GrupoDAO {
 		return statusOk;
 	}
 
-	public boolean atualizar(Grupo grupo) {
+	public boolean editar(Grupo grupo) {
 		boolean statusOk = false;
 		Session sessao = null;
 		Transaction transacao = null;
@@ -95,39 +95,7 @@ public class GrupoDAO {
 		return statusOk;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List<Grupo> listarTodos() {
-		Session sessao = null;
-		Transaction transacao = null;
-		Query consulta = null;
-		List<Grupo> resultado = null;
-
-		try {
-			sessao = HibernateUtil.getSessionFactory().openSession();
-			transacao = sessao.beginTransaction();
-
-			consulta = sessao.createQuery("from Grupo");
-			resultado = (List<Grupo>) consulta.list();
-
-			transacao.commit();
-
-		} catch (HibernateException e) {
-			System.out.println("Não foi possível selecionar Grupos. Erro: " + e.getMessage());
-			e.printStackTrace();
-
-		} finally {
-			try {
-				sessao.close();
-			} catch (Throwable e) {
-				System.out.println("Erro ao fechar operação de consulta. Mensagem: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-
-		return resultado;
-	}
-
-	public Grupo buscarPorId(Integer id) {
+	public Grupo buscarPorId(int id) {
 		Grupo grupo = null;
 		Session sessao = null;
 		Transaction transacao = null;
@@ -159,8 +127,9 @@ public class GrupoDAO {
 		return grupo;
 	}
 
-	public Grupo buscarGrupoPor(String descricao, Character tipo) {
-		Grupo grupo = null;
+	@SuppressWarnings("unchecked")
+	public List<Grupo> listarPor(String descricao, Character tipo) {
+		List<Grupo> list = null;
 		Session sessao = null;
 		Transaction transacao = null;
 		Query consulta = null;
@@ -174,23 +143,27 @@ public class GrupoDAO {
 			transacao = sessao.beginTransaction();
 
 			builder = new StringBuilder();
-			builder.append("from Grupo where");
-			
+			builder.append("from Grupo where ");
+
 			if (descricao != null)
-				builder.append("descricao = :descricao");
+				builder.append("descricao = :descricao ");
 
 			if (tipo != null)
-				builder.append("tipo = :tipo");
+				builder.append("AND tipo = :tipo ");
 
 			consulta = sessao.createQuery(builder.toString());
-			consulta.setString(":descricao", descricao);
-			consulta.setCharacter("tipo", tipo);
 
-			grupo = (Grupo) consulta.uniqueResult();
+			if (descricao != null)
+				consulta.setString("descricao", descricao);
+
+			if (tipo != null)
+				consulta.setCharacter("tipo", tipo);
+
+			list = ((List<Grupo>) consulta.list());
 			transacao.commit();
 
 		} catch (HibernateException e) {
-			System.out.println("Não foi possível buscar o Grupo. Erro: " + e.getMessage());
+			System.out.println("Não foi possível listar os Grupos. Erro: " + e.getMessage());
 			e.printStackTrace();
 
 		} catch (Exception e) {
@@ -200,11 +173,43 @@ public class GrupoDAO {
 			try {
 				sessao.close();
 			} catch (Throwable e) {
-				System.out.println("Erro ao fechar operação de buscar. Mensagem: " + e.getMessage());
+				System.out.println("Erro ao fechar operação de listar. Mensagem: " + e.getMessage());
 				e.printStackTrace();
 			}
 		}
 
-		return grupo;
+		return list;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Grupo> listarTodos() {
+		Session sessao = null;
+		Transaction transacao = null;
+		Query consulta = null;
+		List<Grupo> resultado = null;
+
+		try {
+			sessao = HibernateUtil.getSessionFactory().openSession();
+			transacao = sessao.beginTransaction();
+
+			consulta = sessao.createQuery("from Grupo");
+			resultado = (List<Grupo>) consulta.list();
+
+			transacao.commit();
+
+		} catch (HibernateException e) {
+			System.out.println("Não foi possível selecionar Grupos. Erro: " + e.getMessage());
+			e.printStackTrace();
+
+		} finally {
+			try {
+				sessao.close();
+			} catch (Throwable e) {
+				System.out.println("Erro ao fechar operação de consulta. Mensagem: " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return resultado;
 	}
 }

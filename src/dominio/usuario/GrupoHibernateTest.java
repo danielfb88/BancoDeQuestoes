@@ -19,9 +19,9 @@ public class GrupoHibernateTest extends Grupo {
 	@Test
 	public void testBuscarPorFiltros() {
 		Grupo grupo = new Grupo();
-		grupo.setDescricao("Teste Hibernate 1");
+		grupo.setId_grupo(115);
 
-		Grupo resultado = grupo.buscarPorFiltros();
+		Grupo resultado = grupo.buscarPorId();
 
 		assertNotNull(resultado.getId_grupo());
 		System.out.println("Id do Grupo: " + resultado.getId_grupo());
@@ -31,17 +31,17 @@ public class GrupoHibernateTest extends Grupo {
 	public void testAtualizar() {
 		Grupo grupo = new Grupo();
 		grupo.setDescricao("Teste Hibernate 1");
-		Grupo resultado = grupo.buscarPorFiltros();
+		Grupo resultado = grupo.listar().get(0);
 		
 		resultado.setTipo('C');
-		assertTrue(resultado.atualizar());
+		assertTrue(resultado.editar());
 	}
 
 	@Test
 	public void testExcluir() {
 		Grupo grupo = new Grupo();
 		grupo.setDescricao("Teste Hibernate 1");
-		Grupo resultado = grupo.buscarPorFiltros();
+		Grupo resultado = grupo.listar().get(0);
 		
 		assertTrue(resultado.excluir());
 	}

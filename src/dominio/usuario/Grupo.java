@@ -1,5 +1,7 @@
 package dominio.usuario;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,11 +9,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import dao.DaoFactory;
+
 @Entity
 @Table(name = "grupo")
 public class Grupo {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)  
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_grupo")
 	private Integer id_grupo;
 
@@ -36,6 +40,30 @@ public class Grupo {
 		this.id_grupo = id_grupo;
 		this.descricao = descricao;
 		this.tipo = tipo;
+	}
+
+	public boolean adicionar() {
+		return DaoFactory.getGrupoDAO().adicionar(this);
+	}
+
+	public boolean editar() {
+		return DaoFactory.getGrupoDAO().editar(this);
+	}
+
+	public boolean excluir() {
+		return DaoFactory.getGrupoDAO().excluir(this);
+	}
+
+	public Grupo buscarPorId() {
+		return DaoFactory.getGrupoDAO().buscarPorId(id_grupo);
+	}
+
+	public List<Grupo> listar() {
+		return DaoFactory.getGrupoDAO().listarPor(descricao, tipo);
+	}
+
+	public List<Grupo> listarTodos() {
+		return DaoFactory.getGrupoDAO().listarTodos();
 	}
 
 	/**

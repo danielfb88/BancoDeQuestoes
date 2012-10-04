@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import util.ConnectionFactory;
 
 /**
  * Classe abstrata que efetua as operações básicas de uma DAO:
