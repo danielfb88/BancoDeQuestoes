@@ -1,4 +1,4 @@
-package dominio;
+package dominio.curso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import dao.jdbc.GradeDAO;
 import dao.jdbc.PeriodoDAO;
 import dao.jdbc.Rel_GradePeriodoDAO;
 import dao.jdbc.Rel_GradePeriodo_DisciplinaDAO;
+import dominio.disciplina.Disciplina;
 
 /**
  * Grade

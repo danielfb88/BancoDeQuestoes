@@ -1,4 +1,4 @@
-package dominio;
+package dominio.disciplina;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import dao.jdbc.AssuntoDAO;
 import dao.jdbc.PerguntaDAO;
 import dao.jdbc.Rel_AssuntoPerguntaDAO;
+import dominio.prova.Pergunta;
 
 /**
  * Assunto

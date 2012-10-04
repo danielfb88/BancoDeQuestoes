@@ -1,10 +1,11 @@
-package dominio;
+package dominio.curso;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 import dao.jdbc.CoordenadorCursoDAO;
+import dominio.usuario.Usuario;
 
 /**
  * CoordenadorCurso

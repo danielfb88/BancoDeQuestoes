@@ -1,4 +1,4 @@
-package dominio;
+package dominio.curso;
 
 import java.util.ArrayList;
 import java.util.List;

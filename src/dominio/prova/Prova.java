@@ -1,4 +1,4 @@
-package dominio;
+package dominio.prova;
 
 import java.util.Date;
 import java.text.DateFormat;
@@ -9,6 +9,9 @@ import java.util.List;
 
 import dao.jdbc.ProvaDAO;
 import dao.jdbc.Rel_GradePeriodoDAO;
+import dominio.curso.AnoSemestre;
+import dominio.curso.Grade;
+import dominio.curso.Periodo;
 
 /**
  * Prova
@@ -21,7 +24,7 @@ public class Prova {
 	private Integer id_prova;
 	private Grade grade = new Grade();
 	private Periodo periodo = new Periodo();
-	private AnoSemestre anoSemestre = new AnoSemestre();
+	private Date data_prova;
 	private String descricao;
 	private Date dataProva;
 

@@ -1,9 +1,10 @@
-package dominio;
+package dominio.prova;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import dao.jdbc.PerguntaDAO;
+import dominio.usuario.Usuario;
 
 /**
  * Pergunta
