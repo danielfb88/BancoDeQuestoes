@@ -8,8 +8,15 @@ public class Lacaio {
 
 	public static void main(String[] args) {
 		Grupo grupo = new Grupo();
-		grupo.setDescricao("Grupo Hibernate 2");
+		grupo.setDescricao("Grupo Hibernate 5");
 		grupo.setTipo('A');
+		
+		if(grupo.adicionar()) 
+			System.out.println("Adicionado com sucesso");
+		else
+			System.out.println("Não adicionado");
+		
+		System.exit(0);
 
 		List<Grupo> list = grupo.listar();
 

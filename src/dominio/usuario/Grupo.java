@@ -1,5 +1,6 @@
 package dominio.usuario;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,7 +14,9 @@ import dao.DaoFactory;
 
 @Entity
 @Table(name = "grupo")
-public class Grupo {
+public class Grupo implements Serializable {
+	private static final long serialVersionUID = 6069773659343194922L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_grupo")

@@ -1,25 +1,40 @@
 package dominio.usuario;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-import dao.jdbc.UsuarioDAO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
-/**
- * Usuario
- * 
- * @author Daniel Bonfim <daniel.fb88@gmail.com>
- * @since 30-08-2012
- * 
- */
-public class Usuario {
+import dao.DaoFactory;
+
+@Entity
+@Table(name = "usuario")
+public class Usuario implements Serializable {
+	private static final long serialVersionUID = -1564865176763126485L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id_usuario;
-	private Grupo grupo = new Grupo();
-	private String nome;
-	private String login;
-	private String senha;
 
-	private UsuarioDAO usuarioDAO = new UsuarioDAO();
+	@ManyToOne
+	@JoinColumn(name = "id_grupo")
+	private Grupo grupo;
+
+	@Column(name = "nome", length = 50, nullable = false)
+	private String nome;
+
+	@Column(name = "login", length = 50, nullable = false)
+	private String login;
+
+	@Column(name = "senha", length = 64, nullable = false)
+	private String senha;
 
 	public Usuario() {
 
@@ -43,111 +58,28 @@ public class Usuario {
 		this.senha = senha;
 	}
 
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		usuarioDAO.id_usuario = this.id_usuario;
-		usuarioDAO.id_grupo = this.grupo.getId_grupo();
-		usuarioDAO.nome = this.nome;
-		usuarioDAO.login = this.login;
-		usuarioDAO.senha = this.senha;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_usuario = usuarioDAO.id_usuario;
-		this.grupo.setId_grupo(usuarioDAO.id_grupo);
-		this.nome = usuarioDAO.nome;
-		this.login = usuarioDAO.login;
-		this.senha = usuarioDAO.senha;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
 	public boolean adicionar() {
-		usuarioDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return usuarioDAO.adicionar() > 0;
+		return DaoFactory.getUsuarioDAO().adicionar(this);
 	}
 
-	/**
-	 * Carregar
-	 * 
-	 * @param carregarRelacionamentos
-	 * @return
-	 */
-	public boolean carregar(boolean carregarRelacionamentos) {
-		usuarioDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (usuarioDAO.carregar()) {
-			validarDadosParaSaida();
-
-			if (carregarRelacionamentos)
-				this.grupo.carregar();
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
 	public boolean editar() {
-		usuarioDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return usuarioDAO.editar() > 0;
+		return DaoFactory.getUsuarioDAO().editar(this);
 	}
 
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
 	public boolean excluir() {
-		usuarioDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return usuarioDAO.excluir() > 0;
+		return DaoFactory.getUsuarioDAO().excluir(this);
 	}
 
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Usuario> listar(boolean carregarRelacionamentos) {
-		usuarioDAO.limparAtributos();
-		validarDadosParaEntrada();
+	public Usuario buscarPorId() {
+		return DaoFactory.getUsuarioDAO().buscarPorId(id_usuario);
+	}
 
-		List<UsuarioDAO> listUsuarioDAO = (List<UsuarioDAO>) usuarioDAO.listar();
-		List<Usuario> listUsuario = new ArrayList<Usuario>();
+	public List<Usuario> listar() {
+		return DaoFactory.getUsuarioDAO().listarPor(nome, login);
+	}
 
-		for (UsuarioDAO uDAO : listUsuarioDAO) {
-			Grupo grupo = new Grupo();
-			grupo.setId_grupo(uDAO.id_grupo);
-
-			if (carregarRelacionamentos)
-				grupo.carregar();
-
-			listUsuario.add(new Usuario(uDAO.id_usuario, grupo, uDAO.nome, uDAO.login, uDAO.senha));
-		}
-
-		return listUsuario;
+	public List<Usuario> listarTodos() {
+		return DaoFactory.getUsuarioDAO().listarTodos();
 	}
 
 	/**
