@@ -16,6 +16,7 @@ import org.hibernate.Transaction;
  * 
  * @author Daniel Bonfim (daniel.fb88@gmail.com)
  * @since 06-10-2012
+ * @version 1.0
  * 
  */
 public abstract class HibernateAbstractDAO {
@@ -154,10 +155,10 @@ public abstract class HibernateAbstractDAO {
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Object> listarTodos(Class classe) {
+	protected List<Object> listarTodos(Class classe) {
 		Session sessao = null;
 		Transaction transacao = null;
-		Query consulta = null;
+		Query query = null;
 		List<Object> resultado = null;
 
 		try {
@@ -167,8 +168,8 @@ public abstract class HibernateAbstractDAO {
 			sessao = HibernateUtil.getSessionFactory().openSession();
 			transacao = sessao.beginTransaction();
 
-			consulta = sessao.createQuery("from " + classe.getSimpleName());
-			resultado = consulta.list();
+			query = sessao.createQuery("from " + classe.getSimpleName());
+			resultado = query.list();
 
 			transacao.commit();
 
@@ -196,6 +197,9 @@ public abstract class HibernateAbstractDAO {
 	 * Lista registros utilizando as informações contidas no Map como
 	 * filtro.
 	 * 
+	 * Para valores que sejam String é utilizado o comando LIKE % valor % ao
+	 * montar a SQL.
+	 * 
 	 * @param classe
 	 *            Classe do Objeto Entity que será retornado. É Necessário fazer
 	 *            um Cast na sub-classe.
@@ -204,7 +208,7 @@ public abstract class HibernateAbstractDAO {
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public List<Object> listarPor(Class classe, Map<String, Object> campoValor) {
+	protected List<Object> listar(Class classe, Map<String, Object> campoValor) {
 		List<Object> list = null;
 		Session sessao = null;
 		Transaction transacao = null;
@@ -235,7 +239,7 @@ public abstract class HibernateAbstractDAO {
 			 * os parâmetros de entrada para o filtro são nulos. Neste caso não
 			 * há filtros a serem inseridos na query.
 			 */
-			int countValoresMapNaoNulos = 0;
+			int countMapValoresNulos = 0;
 			int i = 0;
 			while (it.hasNext()) {
 
@@ -246,25 +250,27 @@ public abstract class HibernateAbstractDAO {
 					if (i++ != 0)
 						builder.append(" AND ");
 
-					//builder.append(map.getKey() + " = :e" + i);
-					builder.append(map.getKey() + " = ? ");
+					if (map.getValue() instanceof java.lang.String)
+						builder.append(map.getKey() + " LIKE ? ");
+					else
+						builder.append(map.getKey() + " = ? ");
 
 				} else {
-					countValoresMapNaoNulos++;
+					countMapValoresNulos++;
 				}
 			}
 
 			/*
 			 * Se não há filtros para a consulta, retorne todos os registros.
 			 */
-			if (countValoresMapNaoNulos == campoValor.size())
+			if (countMapValoresNulos == campoValor.size())
 				return listarTodos(classe);
 
 			// Enviando a Query
 			query = sessao.createQuery(builder.toString());
 
 			// Preparando os parâmetros
-			prepareQuery(query, listObj, false);
+			prepareQuery(query, listObj, true);
 
 			list = query.list();
 			transacao.commit();

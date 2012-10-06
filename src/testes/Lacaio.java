@@ -24,7 +24,8 @@ public class Lacaio {
 
 	private static void listar() {
 		Grupo grupo = new Grupo();
-		grupo.setTipo('A');
+		grupo.setTipo('C');
+//		grupo.setDescricao("Hibernate");
 		List<Grupo> list = grupo.listar();
 
 		for (Grupo g : list) {

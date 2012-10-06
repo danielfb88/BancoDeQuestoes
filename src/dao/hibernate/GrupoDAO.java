@@ -11,36 +11,17 @@ import dominio.usuario.Grupo;
 public class GrupoDAO extends HibernateAbstractDAO {
 
 	/**
-	 * Buscar Por Id
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public Grupo buscarPorId(int id) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id_grupo", id);
-
-		return (Grupo) listarPor(Grupo.class, map).get(0);
-	}
-
-	/**
-	 * Listar Por
+	 * Listar
 	 * 
 	 * @return
 	 */
-	public List<Grupo> listarPor(String descricao, Character tipo) {
+	public List<Grupo> listar(Integer id_grupo, String descricao, Character tipo) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("id_grupo", id_grupo);
 		map.put("descricao", descricao);
 		map.put("tipo", tipo);
 
-		List<Object> listObj = listarPor(Grupo.class, map);
-		List<Grupo> listGrupo = new ArrayList<Grupo>();
-
-		for (Object obj : listObj) {
-			listGrupo.add((Grupo) obj);
-		}
-
-		return listGrupo;
+		return fazerCast(super.listar(Grupo.class, map));
 	}
 
 	/**
@@ -49,13 +30,22 @@ public class GrupoDAO extends HibernateAbstractDAO {
 	 * @return
 	 */
 	public List<Grupo> listarTodos() {
-		List<Object> listObj = listarTodos(Grupo.class);
-		List<Grupo> listGrupo = new ArrayList<Grupo>();
+		return fazerCast(super.listarTodos(Grupo.class));
+	}
+
+	/**
+	 * Faz cast de uma lista de Object para uma lista do objeto correspondente.
+	 * 
+	 * @param listObj
+	 * @return
+	 */
+	private List<Grupo> fazerCast(List<Object> listObj) {
+		List<Grupo> list = new ArrayList<Grupo>();
 
 		for (Object obj : listObj) {
-			listGrupo.add((Grupo) obj);
+			list.add((Grupo) obj);
 		}
 
-		return listGrupo;
+		return list;
 	}
 }

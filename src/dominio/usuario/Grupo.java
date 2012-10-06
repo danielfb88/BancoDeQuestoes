@@ -58,11 +58,11 @@ public class Grupo implements Serializable {
 	}
 
 	public Grupo buscarPorId() {
-		return DaoFactory.getGrupoDAO().buscarPorId(id_grupo);
+		return DaoFactory.getGrupoDAO().listar(id_grupo, null, null).get(0);
 	}
 
 	public List<Grupo> listar() {
-		return DaoFactory.getGrupoDAO().listarPor(descricao, tipo);
+		return DaoFactory.getGrupoDAO().listar(null, descricao, tipo);
 	}
 
 	public List<Grupo> listarTodos() {
