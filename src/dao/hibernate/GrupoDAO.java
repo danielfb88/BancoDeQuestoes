@@ -1,14 +1,14 @@
 package dao.hibernate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import util.hibernate.HibernateAbstractDAO;
 import dominio.usuario.Grupo;
 
-public class GrupoDAO extends HibernateAbstractDAO {
+import util.hibernate.HibernateAbstractDAO;
+
+public class GrupoDAO extends HibernateAbstractDAO<Grupo> {
 
 	/**
 	 * Listar
@@ -21,7 +21,7 @@ public class GrupoDAO extends HibernateAbstractDAO {
 		map.put("descricao", descricao);
 		map.put("tipo", tipo);
 
-		return fazerCast(super.listar(Grupo.class, map));
+		return super.listar(Grupo.class, map);
 	}
 
 	/**
@@ -30,22 +30,7 @@ public class GrupoDAO extends HibernateAbstractDAO {
 	 * @return
 	 */
 	public List<Grupo> listarTodos() {
-		return fazerCast(super.listarTodos(Grupo.class));
+		return super.listarTodos(Grupo.class);
 	}
 
-	/**
-	 * Faz cast de uma lista de Object para uma lista do objeto correspondente.
-	 * 
-	 * @param listObj
-	 * @return
-	 */
-	private List<Grupo> fazerCast(List<Object> listObj) {
-		List<Grupo> list = new ArrayList<Grupo>();
-
-		for (Object obj : listObj) {
-			list.add((Grupo) obj);
-		}
-
-		return list;
-	}
 }

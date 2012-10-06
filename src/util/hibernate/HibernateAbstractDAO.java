@@ -19,7 +19,7 @@ import org.hibernate.Transaction;
  * @version 1.0
  * 
  */
-public abstract class HibernateAbstractDAO {
+public abstract class HibernateAbstractDAO<T> {
 
 	/**
 	 * Adicionar
@@ -150,16 +150,15 @@ public abstract class HibernateAbstractDAO {
 	 * Lista todos os registros
 	 * 
 	 * @param classe
-	 *            Classe do Objeto Entity que será retornado. É Necessário fazer
-	 *            um Cast na sub-classe.
+	 *            Classe do Objeto Entity que será retornado.
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected List<Object> listarTodos(Class classe) {
+	@SuppressWarnings("unchecked")
+	protected List<T> listarTodos(Class<T> classe) {
 		Session sessao = null;
 		Transaction transacao = null;
 		Query query = null;
-		List<Object> resultado = null;
+		List<T> resultado = null;
 
 		try {
 			if (classe == null)
@@ -207,9 +206,9 @@ public abstract class HibernateAbstractDAO {
 	 *            Map Contendo os filtros para a busca.
 	 * @return
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected List<Object> listar(Class classe, Map<String, Object> campoValor) {
-		List<Object> list = null;
+	@SuppressWarnings("unchecked")
+	protected List<T> listar(Class<T> classe, Map<String, Object> campoValor) {
+		List<T> list = null;
 		Session sessao = null;
 		Transaction transacao = null;
 		Query query = null;
@@ -220,7 +219,7 @@ public abstract class HibernateAbstractDAO {
 				throw new Exception("A Classe do Objeto Entity deve ser informada.");
 
 			// O Map não pode ser vazio ou nulo 
-			if (campoValor == null || campoValor.size() == 0 || campoValor.isEmpty())
+			if (campoValor == null || campoValor.isEmpty())
 				throw new Exception("Objeto map sem opções para filtragem.");
 
 			sessao = HibernateUtil.getSessionFactory().openSession();
@@ -231,8 +230,6 @@ public abstract class HibernateAbstractDAO {
 
 			List<Object> listObj = new ArrayList<Object>();
 
-			// Criando os filtros com alias. Ex: campo = :aliasDoValor 
-			Iterator<Map.Entry<String, Object>> it = campoValor.entrySet().iterator();
 			/*
 			 * Verifica quantidade de valores não nulos. Caso este número seja
 			 * igual ao tamanho do Map, significa que todos
@@ -241,6 +238,8 @@ public abstract class HibernateAbstractDAO {
 			 */
 			int countMapValoresNulos = 0;
 			int i = 0;
+
+			Iterator<Map.Entry<String, Object>> it = campoValor.entrySet().iterator();
 			while (it.hasNext()) {
 
 				Map.Entry<String, Object> map = (Map.Entry<String, Object>) it.next();
@@ -250,6 +249,7 @@ public abstract class HibernateAbstractDAO {
 					if (i++ != 0)
 						builder.append(" AND ");
 
+					// Se for uma String, use o LIKE
 					if (map.getValue() instanceof java.lang.String)
 						builder.append(map.getKey() + " LIKE ? ");
 					else
@@ -261,7 +261,8 @@ public abstract class HibernateAbstractDAO {
 			}
 
 			/*
-			 * Se não há filtros para a consulta, retorne todos os registros.
+			 * Se o valor dos filtros forem nulos, não há filtros para a
+			 * consulta. Retorne todos os registros.
 			 */
 			if (countMapValoresNulos == campoValor.size())
 				return listarTodos(classe);
@@ -281,6 +282,7 @@ public abstract class HibernateAbstractDAO {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(-1);
 
 		} finally {
 			try {
@@ -301,7 +303,7 @@ public abstract class HibernateAbstractDAO {
 	 *            Objeto Query do Hibernate.
 	 * @param parametros
 	 *            Lista com os valores inseridos na mesma ordem dos caracteres
-	 *            curinga na query.
+	 *            coringa na query.
 	 */
 	protected void prepareQuery(Query query, List<Object> parametros, Boolean useLike) {
 		try {
