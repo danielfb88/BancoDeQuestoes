@@ -7,17 +7,24 @@ import dominio.usuario.Grupo;
 public class Lacaio {
 
 	public static void main(String[] args) {
+		listar();
+	}
+
+	private static void adicionar() {
 		Grupo grupo = new Grupo();
-		grupo.setDescricao("Grupo Hibernate 5");
+		grupo.setDescricao("Grupo Hibernate 6");
 		grupo.setTipo('A');
-		
-		if(grupo.adicionar()) 
+
+		if (grupo.adicionar())
 			System.out.println("Adicionado com sucesso");
 		else
 			System.out.println("Não adicionado");
-		
-		System.exit(0);
 
+	}
+
+	private static void listar() {
+		Grupo grupo = new Grupo();
+		grupo.setTipo('A');
 		List<Grupo> list = grupo.listar();
 
 		for (Grupo g : list) {
@@ -25,7 +32,6 @@ public class Lacaio {
 			System.out.println("DESCRICAO: " + g.getDescricao());
 			System.out.println("TIPO: " + g.getTipo());
 		}
-
 	}
 
 }

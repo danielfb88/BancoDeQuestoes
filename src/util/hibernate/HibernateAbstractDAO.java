@@ -1,5 +1,7 @@
 package util.hibernate;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -8,8 +10,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
-import dominio.usuario.Grupo;
 
 /**
  * Abstração das operações de Adicionar, Editar e Excluir para Hibernate.
@@ -199,56 +199,78 @@ public abstract class HibernateAbstractDAO {
 	 * @param classe
 	 *            Classe do Objeto Entity que será retornado. É Necessário fazer
 	 *            um Cast na sub-classe.
-	 * @param map
+	 * @param campoValor
 	 *            Map Contendo os filtros para a busca.
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public List<Object> listarPor(Class classe, Map<String, Object> map) {
-		List<Grupo> list = null;
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public List<Object> listarPor(Class classe, Map<String, Object> campoValor) {
+		List<Object> list = null;
 		Session sessao = null;
 		Transaction transacao = null;
-		Query consulta = null;
+		Query query = null;
 		StringBuilder builder = null;
 
 		try {
 			if (classe == null)
 				throw new Exception("A Classe do Objeto Entity deve ser informada.");
 
-			if (map.isEmpty())
+			// O Map não pode ser vazio ou nulo 
+			if (campoValor == null || campoValor.size() == 0 || campoValor.isEmpty())
 				throw new Exception("Objeto map sem opções para filtragem.");
 
 			sessao = HibernateUtil.getSessionFactory().openSession();
 			transacao = sessao.beginTransaction();
 
 			builder = new StringBuilder();
-			builder.append("from " + classe.getSimpleName() + " where ");
+			builder.append("FROM " + classe.getSimpleName() + " WHERE ");
 
-			Iterator<String, Object> it = map.entrySet().iterator();
-			while(es.iterator().hasNext()) {
-				es.iterator().next();
-				builder.append(map.entrySet().iterator().next().);
+			List<Object> listObj = new ArrayList<Object>();
+
+			// Criando os filtros com alias. Ex: campo = :aliasDoValor 
+			Iterator<Map.Entry<String, Object>> it = campoValor.entrySet().iterator();
+			/*
+			 * Verifica quantidade de valores não nulos. Caso este número seja
+			 * igual ao tamanho do Map, significa que todos
+			 * os parâmetros de entrada para o filtro são nulos. Neste caso não
+			 * há filtros a serem inseridos na query.
+			 */
+			int countValoresMapNaoNulos = 0;
+			int i = 0;
+			while (it.hasNext()) {
+
+				Map.Entry<String, Object> map = (Map.Entry<String, Object>) it.next();
+				if (map.getValue() != null) {
+					listObj.add(map.getValue());
+
+					if (i++ != 0)
+						builder.append(" AND ");
+
+					//builder.append(map.getKey() + " = :e" + i);
+					builder.append(map.getKey() + " = ? ");
+
+				} else {
+					countValoresMapNaoNulos++;
+				}
 			}
-			
-			if (descricao != null)
-				builder.append("descricao = :descricao ");
 
-			if (tipo != null)
-				builder.append("AND tipo = :tipo ");
+			/*
+			 * Se não há filtros para a consulta, retorne todos os registros.
+			 */
+			if (countValoresMapNaoNulos == campoValor.size())
+				return listarTodos(classe);
 
-			consulta = sessao.createQuery(builder.toString());
+			// Enviando a Query
+			query = sessao.createQuery(builder.toString());
 
-			if (descricao != null)
-				consulta.setString("descricao", descricao);
+			// Preparando os parâmetros
+			prepareQuery(query, listObj, false);
 
-			if (tipo != null)
-				consulta.setCharacter("tipo", tipo);
-
-			list = ((List<Grupo>) consulta.list());
+			list = query.list();
 			transacao.commit();
 
 		} catch (HibernateException e) {
-			System.out.println("Não foi possível listar os Grupos. Erro: " + e.getMessage());
+			System.out.println("Não foi possível listar. Erro: " + e.getMessage());
 			e.printStackTrace();
 
 		} catch (Exception e) {
@@ -267,101 +289,46 @@ public abstract class HibernateAbstractDAO {
 	}
 
 	/**
-	 * @deprecated Utilizar como exemplo
-	 * @param id
-	 * @return
+	 * Prepara os dados contra SQL Injection.
+	 * 
+	 * @param query
+	 *            Objeto Query do Hibernate.
+	 * @param parametros
+	 *            Lista com os valores inseridos na mesma ordem dos caracteres
+	 *            curinga na query.
 	 */
-	// TODO: UTILIZAR CLASSE CRITERIA
-	public Grupo buscarPorId_(int id) {
-		Grupo grupo = null;
-		Session sessao = null;
-		Transaction transacao = null;
-		Query consulta = null;
-
+	protected void prepareQuery(Query query, List<Object> parametros, Boolean useLike) {
 		try {
-			sessao = HibernateUtil.getSessionFactory().openSession();
-			transacao = sessao.beginTransaction();
-
-			consulta = sessao.createQuery("from Grupo where id_grupo = :id");
-			consulta.setInteger(":id", id);
-
-			grupo = (Grupo) consulta.uniqueResult();
-			transacao.commit();
-
-		} catch (HibernateException e) {
-			System.out.println("Não foi possível buscar o Grupo. Erro: " + e.getMessage());
-			e.printStackTrace();
-
-		} finally {
-			try {
-				sessao.close();
-			} catch (Throwable e) {
-				System.out.println("Erro ao fechar operação de buscar. Mensagem: " + e.getMessage());
-				e.printStackTrace();
+			for (int i = 0; i < parametros.size(); i++) {
+				switch (parametros.get(i).getClass().getName()) {
+					case "java.lang.String":
+						if (useLike)
+							query.setString(i, "%" + (String) parametros.get(i) + "%");
+						else
+							query.setString(i, (String) parametros.get(i));
+						break;
+					case "java.lang.Character":
+						query.setString(i, parametros.get(i).toString());
+						break;
+					case "java.lang.Integer":
+						query.setInteger(i, (Integer) parametros.get(i));
+						break;
+					case "java.lang.Double":
+						query.setDouble(i, (Double) parametros.get(i));
+						break;
+					case "java.lang.Boolean":
+						query.setBoolean(i, (Boolean) parametros.get(i));
+						break;
+					case "java.sql.Date":
+						query.setDate(i, (Date) parametros.get(i));
+						break;
+					default:
+						throw new Exception("Tipo do parâmetro não reconhecido.");
+				}
 			}
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			System.exit(-1);
 		}
-
-		return grupo;
-	}
-
-	/**
-	 * @deprecated Utilizar como exemplo
-	 * @param descricao
-	 * @param tipo
-	 * @return
-	 */
-	// TODO: UTILIZAR CLASSE CRITERIA
-	@SuppressWarnings("unchecked")
-	public List<Grupo> listarPor(String descricao, Character tipo) {
-		List<Grupo> list = null;
-		Session sessao = null;
-		Transaction transacao = null;
-		Query consulta = null;
-		StringBuilder builder = null;
-
-		try {
-			if (descricao == null && tipo == null)
-				throw new Exception("Filtros com valores nulos.");
-
-			sessao = HibernateUtil.getSessionFactory().openSession();
-			transacao = sessao.beginTransaction();
-
-			builder = new StringBuilder();
-			builder.append("from Grupo where ");
-
-			if (descricao != null)
-				builder.append("descricao = :descricao ");
-
-			if (tipo != null)
-				builder.append("AND tipo = :tipo ");
-
-			consulta = sessao.createQuery(builder.toString());
-
-			if (descricao != null)
-				consulta.setString("descricao", descricao);
-
-			if (tipo != null)
-				consulta.setCharacter("tipo", tipo);
-
-			list = ((List<Grupo>) consulta.list());
-			transacao.commit();
-
-		} catch (HibernateException e) {
-			System.out.println("Não foi possível listar os Grupos. Erro: " + e.getMessage());
-			e.printStackTrace();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-
-		} finally {
-			try {
-				sessao.close();
-			} catch (Throwable e) {
-				System.out.println("Erro ao fechar operação de listar. Mensagem: " + e.getMessage());
-				e.printStackTrace();
-			}
-		}
-
-		return list;
 	}
 }
