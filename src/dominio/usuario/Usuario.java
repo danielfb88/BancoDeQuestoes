@@ -70,12 +70,11 @@ public class Usuario implements Serializable {
 		return DaoFactory.getUsuarioDAO().excluir(this);
 	}
 
-	public Usuario buscarPorId() {
-		return DaoFactory.getUsuarioDAO().buscarPorId(id_usuario);
-	}
-
 	public List<Usuario> listar() {
-		return DaoFactory.getUsuarioDAO().listarPor(nome, login);
+		if (grupo != null)
+			return DaoFactory.getUsuarioDAO().listar(id_usuario, grupo.getId_grupo(), nome, login, senha);
+		else
+			return DaoFactory.getUsuarioDAO().listar(id_usuario, null, nome, login, senha);
 	}
 
 	public List<Usuario> listarTodos() {

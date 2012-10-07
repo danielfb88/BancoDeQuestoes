@@ -2,7 +2,7 @@ package testes;
 
 import java.util.List;
 
-import dominio.usuario.Grupo;
+import dominio.usuario.Usuario;
 
 public class Lacaio {
 
@@ -11,11 +11,10 @@ public class Lacaio {
 	}
 
 	private static void adicionar() {
-		Grupo grupo = new Grupo();
-		grupo.setDescricao("Grupo Hibernate 6");
-		grupo.setTipo('A');
+		Usuario usuario = new Usuario();
+		usuario.setNome("Daniel");
 
-		if (grupo.adicionar())
+		if (usuario.adicionar())
 			System.out.println("Adicionado com sucesso");
 		else
 			System.out.println("Não adicionado");
@@ -23,16 +22,18 @@ public class Lacaio {
 	}
 
 	private static void listar() {
-		Grupo grupo = new Grupo();
-//		grupo.setId_grupo(116);
-		grupo.setTipo('C');
-//		grupo.setDescricao("Hibernate");
-		List<Grupo> list = grupo.listar();
+		Usuario usuario = new Usuario();
+		//		usuario.setId_usuario(116);
+		usuario.setNome("Daniel");
+		//		usuario.setDescricao("Hibernate");
+		List<Usuario> list = usuario.listar();
 
-		for (Grupo g : list) {
-			System.out.println("ID: " + g.getId_grupo());
-			System.out.println("DESCRICAO: " + g.getDescricao());
-			System.out.println("TIPO: " + g.getTipo());
+		for (Usuario u : list) {
+			System.out.println("ID: " + u.getId_usuario());
+			System.out.println("NOME: " + u.getNome());
+			System.out.println("GRUPO: " + u.getGrupo().getDescricao());
+			System.out.println("LOGIN: " + u.getLogin());
+			System.out.println("SENHA: " + u.getSenha());
 		}
 	}
 

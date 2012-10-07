@@ -24,5 +24,6 @@
 		<property name="use_sql_comments">true</property>
 		<!-- Entities -->
 		<mapping class="dominio.usuario.Grupo" />
+		<mapping class="dominio.usuario.Usuario" />
 	</session-factory>
 </hibernate-configuration>
