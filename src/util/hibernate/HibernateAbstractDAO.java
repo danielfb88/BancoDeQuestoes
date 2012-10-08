@@ -1,10 +1,16 @@
 package util.hibernate;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -20,6 +26,15 @@ import org.hibernate.Transaction;
  * 
  */
 public abstract class HibernateAbstractDAO<T> {
+	/**
+	 * Campos da tabela.
+	 */
+	private List<String> camposDaTabela;
+	/**
+	 * Campos da classe que possuem as anotações referentes a uma coluna de um
+	 * objeto Entity.
+	 */
+	private List<String> camposDaClasse;
 
 	/**
 	 * Adicionar
@@ -207,7 +222,7 @@ public abstract class HibernateAbstractDAO<T> {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected List<T> listar(Class<T> classe, Map<String, Object> campoValor) {
+	protected List<T> listar(Class<T> classe, Object pojo) {
 		List<T> list = null;
 		Session sessao = null;
 		Transaction transacao = null;
@@ -218,9 +233,9 @@ public abstract class HibernateAbstractDAO<T> {
 			if (classe == null)
 				throw new Exception("A Classe do Objeto Entity deve ser informada.");
 
-			// O Map não pode ser vazio ou nulo 
-			if (campoValor == null || campoValor.isEmpty())
-				throw new Exception("Objeto map sem opções para filtragem.");
+			// O Objeto Entity (Pojo) não pode ser nulo 
+			if (pojo == null)
+				throw new Exception("Objeto Entity nulo.");
 
 			sessao = HibernateUtil.getSessionFactory().openSession();
 			transacao = sessao.beginTransaction();
@@ -228,50 +243,50 @@ public abstract class HibernateAbstractDAO<T> {
 			builder = new StringBuilder();
 			builder.append("FROM " + classe.getSimpleName() + " WHERE ");
 
-			List<Object> listObj = new ArrayList<Object>();
+			List<Object> listValoresCamposDaClasse = obterValoresDosCamposDaClasse(pojo);
+			List<String> listNomeCampoDaTabela = this.camposDaTabela;
+			List<Object> listValoresCamposDaClasseNaoNulos = new ArrayList<Object>();
 
 			/*
 			 * Verifica quantidade de valores não nulos. Caso este número seja
-			 * igual ao tamanho do Map, significa que todos
+			 * igual ao tamanho da lista, significa que todos
 			 * os parâmetros de entrada para o filtro são nulos. Neste caso não
 			 * há filtros a serem inseridos na query.
 			 */
-			int countMapValoresNulos = 0;
+			int countValoresNulos = 0;
 			int i = 0;
 
-			Iterator<Map.Entry<String, Object>> it = campoValor.entrySet().iterator();
-			while (it.hasNext()) {
-
-				Map.Entry<String, Object> map = (Map.Entry<String, Object>) it.next();
-				if (map.getValue() != null) {
-					listObj.add(map.getValue());
+			for (int k = 0; k < listValoresCamposDaClasse.size(); k++) {
+				if (listValoresCamposDaClasse.get(k) != null) {
+					listValoresCamposDaClasseNaoNulos.add(listValoresCamposDaClasse.get(k));
 
 					if (i++ != 0)
 						builder.append(" AND ");
 
 					// Se for uma String, use o LIKE
-					if (map.getValue() instanceof java.lang.String)
-						builder.append(map.getKey() + " LIKE ? ");
+					if (listValoresCamposDaClasse.get(k) instanceof java.lang.String)
+						builder.append(listNomeCampoDaTabela.get(k) + " LIKE ? ");
 					else
-						builder.append(map.getKey() + " = ? ");
+						builder.append(listNomeCampoDaTabela.get(k) + " = ? ");
 
 				} else {
-					countMapValoresNulos++;
+					countValoresNulos++;
 				}
+
 			}
 
 			/*
 			 * Se o valor dos filtros forem nulos, não há filtros para a
 			 * consulta. Retorne todos os registros.
 			 */
-			if (countMapValoresNulos == campoValor.size())
+			if (countValoresNulos == listValoresCamposDaClasse.size())
 				return listarTodos(classe);
 
 			// Enviando a Query
 			query = sessao.createQuery(builder.toString());
 
 			// Preparando os parâmetros
-			prepareQuery(query, listObj, true);
+			prepareQuery(query, listValoresCamposDaClasseNaoNulos, true);
 
 			list = query.list();
 			transacao.commit();
@@ -294,6 +309,115 @@ public abstract class HibernateAbstractDAO<T> {
 		}
 
 		return list;
+	}
+
+	/**
+	 * Transforma o primeiro caractere em maiuscula
+	 * 
+	 * @param palavra
+	 * @return
+	 */
+	private String maiuscula1(String palavra) {
+		return palavra.substring(0, 1).toUpperCase() + palavra.substring(1);
+	}
+
+	/**
+	 * Obtém os valores Nao nulos do objeto de entrada através de Reflexão.
+	 * 
+	 * @param pojo
+	 * @return
+	 */
+	private List<Object> obterValoresDosCamposDaClasse(Object pojo) {
+		carregarNomeDosCamposDaClasseETabela(pojo);
+
+		List<Object> listValores = new ArrayList<Object>();
+
+		try {
+			Class<? extends Object> pojoClass = pojo.getClass();
+			Method[] methods = pojoClass.getMethods();
+
+			for (Method method : methods) {
+				for (String campo : camposDaClasse) {
+
+					// modificando a string campo para se parecer com um metodo 'get'
+					campo = ("get" + maiuscula1(campo)).trim();
+
+					if (method.getName().equals(campo)) {
+						listValores.add(method.invoke(pojo));
+						break;
+					}
+				}
+			}
+
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+			System.exit(-1);
+
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+			System.exit(-1);
+
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+			System.exit(-1);
+		}
+
+		return listValores;
+	}
+
+	/**
+	 * Obtem o nome dos campos da classe através da Reflexão e da tabela atraves
+	 * das Anotações (quando
+	 * existirem).
+	 * Este método muda o estado do atributo 'camposDaClasse' e
+	 * 'camposDaTabela'.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private void carregarNomeDosCamposDaClasseETabela(Object pojo) {
+		if (camposDaTabela == null && camposDaClasse == null) {
+
+			try {
+
+				// Verificando se o Pojo é uma Entity
+				if (pojo.getClass().getAnnotation(Entity.class) == null)
+					throw new Exception("O objeto Pojo de entrada não é uma Entity.");
+
+				camposDaTabela = new ArrayList<String>();
+				camposDaClasse = new ArrayList<String>();
+
+				// Pegando os Fields
+				Field[] pojoFields = pojo.getClass().getDeclaredFields();
+				for (Field pojoField : pojoFields) {
+
+					// Verificando se o field possui a anotação Column
+					Column annotationColumn = pojoField.getAnnotation(Column.class);
+					if (annotationColumn != null) {
+						camposDaTabela.add(annotationColumn.name());
+						camposDaClasse.add(pojoField.getName());
+
+					} else {
+						// Verificando se o field possui a anotação ID
+						if (pojoField.getAnnotation(Id.class) != null) {
+							camposDaTabela.add(pojoField.getName());
+							camposDaClasse.add(pojoField.getName());
+						}
+
+						// Verificando se o field possui a anotação JoinColumn
+						JoinColumn annotationJoinColumn = pojoField.getAnnotation(JoinColumn.class);
+						if (annotationJoinColumn != null) {
+							camposDaTabela.add(annotationJoinColumn.name());
+							camposDaClasse.add(pojoField.getName());
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		}
 	}
 
 	/**

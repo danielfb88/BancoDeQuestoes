@@ -2,6 +2,7 @@ package testes;
 
 import java.util.List;
 
+import dominio.usuario.Grupo;
 import dominio.usuario.Usuario;
 
 public class Lacaio {
@@ -22,12 +23,14 @@ public class Lacaio {
 	}
 
 	private static void listar() {
+		Grupo grupo = new Grupo();
+		grupo.setId_grupo(84);
+		Grupo g = grupo.listar().get(0);
+				
 		Usuario usuario = new Usuario();
-		//		usuario.setId_usuario(116);
-		usuario.setNome("Daniel");
-		//		usuario.setDescricao("Hibernate");
+		usuario.setGrupo(g);
 		List<Usuario> list = usuario.listar();
-
+		
 		for (Usuario u : list) {
 			System.out.println("ID: " + u.getId_usuario());
 			System.out.println("NOME: " + u.getNome());
