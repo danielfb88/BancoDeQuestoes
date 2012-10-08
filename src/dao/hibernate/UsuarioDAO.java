@@ -1,29 +1,20 @@
 package dao.hibernate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import dominio.usuario.Usuario;
 
 import util.hibernate.HibernateAbstractDAO;
+import dominio.usuario.Usuario;
 
 public class UsuarioDAO extends HibernateAbstractDAO<Usuario> {
 
 	/**
-	 * Listar
+	 * Listar utilizando os valores contidos no objeto como filtro.
 	 * 
+	 * @param grupo
 	 * @return
 	 */
-	public List<Usuario> listar(Integer id_usuario, Integer id_grupo, String nome, String login, String senha) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("id_usuario", id_usuario);
-		map.put("id_grupo", id_grupo);
-		map.put("nome", nome);
-		map.put("login", login);
-		map.put("senha", senha);
-
-		return super.listar(Usuario.class, map);
+	public List<Usuario> listar(Usuario grupo) {
+		return super.listar(Usuario.class, grupo);
 	}
 
 	/**

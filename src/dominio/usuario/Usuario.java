@@ -71,10 +71,7 @@ public class Usuario implements Serializable {
 	}
 
 	public List<Usuario> listar() {
-		if (grupo != null)
-			return DaoFactory.getUsuarioDAO().listar(id_usuario, grupo.getId_grupo(), nome, login, senha);
-		else
-			return DaoFactory.getUsuarioDAO().listar(id_usuario, null, nome, login, senha);
+		return DaoFactory.getUsuarioDAO().listar(this);
 	}
 
 	public List<Usuario> listarTodos() {

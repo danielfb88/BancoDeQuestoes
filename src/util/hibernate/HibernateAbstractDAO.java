@@ -328,7 +328,7 @@ public abstract class HibernateAbstractDAO<T> {
 	 * @return
 	 */
 	private List<Object> obterValoresDosCamposDaClasse(Object pojo) {
-		carregarNomeDosCamposDaClasseETabela(pojo);
+		obterNomeDosCamposDaClasseETabela(pojo);
 
 		List<Object> listValores = new ArrayList<Object>();
 
@@ -375,9 +375,8 @@ public abstract class HibernateAbstractDAO<T> {
 	 * @return
 	 * @throws Exception
 	 */
-	private void carregarNomeDosCamposDaClasseETabela(Object pojo) {
+	private void obterNomeDosCamposDaClasseETabela(Object pojo) {
 		if (camposDaTabela == null && camposDaClasse == null) {
-
 			try {
 
 				// Verificando se o Pojo é uma Entity
@@ -455,7 +454,37 @@ public abstract class HibernateAbstractDAO<T> {
 						query.setDate(i, (Date) parametros.get(i));
 						break;
 					default:
-						throw new Exception("Tipo do parâmetro não reconhecido.");
+						/*
+						 * Pegando o Id caso o objeto seja uma Entity
+						 */
+						Class<? extends Object> classObj = parametros.get(i).getClass();
+						Entity entity = classObj.getAnnotation(Entity.class);
+
+						// Verificando se é uma Entity
+						if (entity != null) {
+							this.obterNomeDosCamposDaClasseETabela(parametros.get(i));
+							Method[] methods = classObj.getMethods();
+
+							for (Method method : methods) {
+								for (String campo : camposDaClasse) {
+
+									// Verificando se o campo possui Annotation @Id
+									if (classObj.getField(campo).getAnnotation(Id.class) != null) {
+
+										// modificando a string campo para se parecer com um metodo 'get'
+										campo = ("get" + maiuscula1(campo)).trim();
+
+										if (method.getName().equals(campo)) {
+											query.setInteger(i, (Integer) method.invoke(parametros.get(i)));
+											break;
+										}
+									}
+								}
+							}
+
+						} else {
+							throw new Exception("Tipo do parâmetro não reconhecido.");
+						}
 				}
 			}
 		} catch (Exception e2) {

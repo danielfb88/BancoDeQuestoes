@@ -17,7 +17,8 @@ public class TesteAnnotations {
 	public static void main(String[] args) {
 		//		testeAbst();
 		//		testeObterValoresNaoNulos();
-		listar();
+		//		listar();
+		listarUsuario();
 		System.exit(0);
 
 		Usuario usuario = new Usuario();
@@ -88,7 +89,7 @@ public class TesteAnnotations {
 
 	}
 
-	private static void listar() {
+	private static void listarGrupo() {
 		Grupo grupo = new Grupo();
 		//grupo.setId_grupo(1);
 		grupo.setDescricao("teste");
@@ -101,6 +102,27 @@ public class TesteAnnotations {
 			System.out.println("ID: " + g.getId_grupo());
 			System.out.println("DESCRICAO: " + g.getDescricao());
 			System.out.println("TIPO: " + g.getTipo());
+			System.out.println();
+		}
+	}
+
+	private static void listarUsuario() {
+		Grupo grupo = new Grupo();
+		grupo.setId_grupo(84);
+
+		Usuario usuario = new Usuario();
+		usuario.setSenha("123");
+		usuario.setGrupo(grupo);
+
+		UsuarioDAO uDAO = new UsuarioDAO();
+		List<Usuario> list = uDAO.listar(usuario);
+
+		for (Usuario u : list) {
+			System.out.println("ID: " + u.getId_usuario());
+			System.out.println("NOME: " + u.getNome());
+			System.out.println("GRUPO: " + u.getGrupo().getDescricao());
+			System.out.println("LOGIN: " + u.getLogin());
+			System.out.println("SENHA: " + u.getSenha());
 			System.out.println();
 		}
 	}
