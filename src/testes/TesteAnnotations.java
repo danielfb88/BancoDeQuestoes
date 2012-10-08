@@ -17,7 +17,7 @@ public class TesteAnnotations {
 	public static void main(String[] args) {
 		//		testeAbst();
 		//		testeObterValoresNaoNulos();
-		//		listar();
+		//				listarGrupo();
 		listarUsuario();
 		System.exit(0);
 
@@ -111,7 +111,7 @@ public class TesteAnnotations {
 		grupo.setId_grupo(84);
 
 		Usuario usuario = new Usuario();
-		usuario.setSenha("123");
+//		usuario.setSenha("123");
 		usuario.setGrupo(grupo);
 
 		UsuarioDAO uDAO = new UsuarioDAO();

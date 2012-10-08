@@ -18,7 +18,8 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 /**
- * Abstração das operações de Adicionar, Editar e Excluir para Hibernate.
+ * Abstração das operações de Adicionar, Editar, Excluir, Listar e ListarTodos
+ * para Hibernate.
  * 
  * @author Daniel Bonfim (daniel.fb88@gmail.com)
  * @since 06-10-2012
@@ -26,15 +27,6 @@ import org.hibernate.Transaction;
  * 
  */
 public abstract class HibernateAbstractDAO<T> {
-	/**
-	 * Campos da tabela.
-	 */
-	private List<String> camposDaTabela;
-	/**
-	 * Campos da classe que possuem as anotações referentes a uma coluna de um
-	 * objeto Entity.
-	 */
-	private List<String> camposDaClasse;
 
 	/**
 	 * Adicionar
@@ -208,8 +200,8 @@ public abstract class HibernateAbstractDAO<T> {
 	}
 
 	/**
-	 * Lista registros utilizando as informações contidas no Map como
-	 * filtro.
+	 * Lista registros utilizando os valores dos atributos contidas no Objeto
+	 * Entity como filtro.
 	 * 
 	 * Para valores que sejam String é utilizado o comando LIKE % valor % ao
 	 * montar a SQL.
@@ -217,12 +209,12 @@ public abstract class HibernateAbstractDAO<T> {
 	 * @param classe
 	 *            Classe do Objeto Entity que será retornado. É Necessário fazer
 	 *            um Cast na sub-classe.
-	 * @param campoValor
-	 *            Map Contendo os filtros para a busca.
+	 * @param entityObject
+	 *            Objeto Entity
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	protected List<T> listar(Class<T> classe, Object pojo) {
+	protected List<T> listar(Class<T> classe, Object entityObject) {
 		List<T> list = null;
 		Session sessao = null;
 		Transaction transacao = null;
@@ -234,7 +226,7 @@ public abstract class HibernateAbstractDAO<T> {
 				throw new Exception("A Classe do Objeto Entity deve ser informada.");
 
 			// O Objeto Entity (Pojo) não pode ser nulo 
-			if (pojo == null)
+			if (entityObject == null)
 				throw new Exception("Objeto Entity nulo.");
 
 			sessao = HibernateUtil.getSessionFactory().openSession();
@@ -243,8 +235,11 @@ public abstract class HibernateAbstractDAO<T> {
 			builder = new StringBuilder();
 			builder.append("FROM " + classe.getSimpleName() + " WHERE ");
 
-			List<Object> listValoresCamposDaClasse = obterValoresDosCamposDaClasse(pojo);
-			List<String> listNomeCampoDaTabela = this.camposDaTabela;
+			List<List<String>> listCampos_Tabela0_Classe1 = obterNomeDosCampos_Tabela0_Classe1(entityObject);
+			List<String> listNomeCamposDaTabela = listCampos_Tabela0_Classe1.get(0);
+			List<String> listNomeCamposDaClasse = listCampos_Tabela0_Classe1.get(1);
+
+			List<Object> listValoresCamposDaClasse = obterValores(listNomeCamposDaClasse, entityObject);
 			List<Object> listValoresCamposDaClasseNaoNulos = new ArrayList<Object>();
 
 			/*
@@ -265,9 +260,9 @@ public abstract class HibernateAbstractDAO<T> {
 
 					// Se for uma String, use o LIKE
 					if (listValoresCamposDaClasse.get(k) instanceof java.lang.String)
-						builder.append(listNomeCampoDaTabela.get(k) + " LIKE ? ");
+						builder.append(listNomeCamposDaTabela.get(k) + " LIKE ? ");
 					else
-						builder.append(listNomeCampoDaTabela.get(k) + " = ? ");
+						builder.append(listNomeCamposDaTabela.get(k) + " = ? ");
 
 				} else {
 					countValoresNulos++;
@@ -276,7 +271,7 @@ public abstract class HibernateAbstractDAO<T> {
 			}
 
 			/*
-			 * Se o valor dos filtros forem nulos, não há filtros para a
+			 * Se os valores dos filtros forem nulos, não há filtros para a
 			 * consulta. Retorne todos os registros.
 			 */
 			if (countValoresNulos == listValoresCamposDaClasse.size())
@@ -322,27 +317,32 @@ public abstract class HibernateAbstractDAO<T> {
 	}
 
 	/**
-	 * Obtém os valores Nao nulos do objeto de entrada através de Reflexão.
+	 * Obtém os valores do Objeto do parametro #2, baseado no nome dos campos
+	 * recebidos do parametro #1.
 	 * 
+	 * @param nomeDosCamposDaClasse
+	 *            Lista de String com o nome dos atributos que devem existir no
+	 *            objeto do parametro #2
 	 * @param pojo
+	 *            Objeto que será refletido e copiado os valores contidos nos
+	 *            atributos descritos no parametro #1
 	 * @return
 	 */
-	private List<Object> obterValoresDosCamposDaClasse(Object pojo) {
-		obterNomeDosCamposDaClasseETabela(pojo);
-
+	private List<Object> obterValores(List<String> nomeDosCamposDaClasse, Object pojo) {
 		List<Object> listValores = new ArrayList<Object>();
 
 		try {
 			Class<? extends Object> pojoClass = pojo.getClass();
 			Method[] methods = pojoClass.getMethods();
 
-			for (Method method : methods) {
-				for (String campo : camposDaClasse) {
+			for (String campo : nomeDosCamposDaClasse) {
+				// modificando a string campo para se parecer com um metodo 'get'
+				String nomeDoMetodo = ("get" + maiuscula1(campo)).trim();
 
-					// modificando a string campo para se parecer com um metodo 'get'
-					campo = ("get" + maiuscula1(campo)).trim();
-
-					if (method.getName().equals(campo)) {
+				// procurando pelo método definido acima
+				for (Method method : methods) {
+					if (method.getName().equals(nomeDoMetodo)) {
+						// invocando-o e obtendo o seu valor
 						listValores.add(method.invoke(pojo));
 						break;
 					}
@@ -366,61 +366,69 @@ public abstract class HibernateAbstractDAO<T> {
 	}
 
 	/**
-	 * Obtem o nome dos campos da classe através da Reflexão e da tabela atraves
-	 * das Anotações (quando
-	 * existirem).
-	 * Este método muda o estado do atributo 'camposDaClasse' e
-	 * 'camposDaTabela'.
+	 * Obtem o nome dos campos da classe através da Reflexão, e da tabela
+	 * atraves
+	 * das Anotações (quando existirem).
 	 * 
-	 * @return
+	 * @return Lista de Lista de String.
+	 *         A Lista 0 refere-se a tabela.
+	 *         A Lista 1 refere-se a classe.
 	 * @throws Exception
+	 * 
 	 */
-	private void obterNomeDosCamposDaClasseETabela(Object pojo) {
-		if (camposDaTabela == null && camposDaClasse == null) {
-			try {
+	private List<List<String>> obterNomeDosCampos_Tabela0_Classe1(Object pojo) {
+		List<List<String>> listCampos_Tabela0_Classe1 = new ArrayList<List<String>>();
 
-				// Verificando se o Pojo é uma Entity
-				if (pojo.getClass().getAnnotation(Entity.class) == null)
-					throw new Exception("O objeto Pojo de entrada não é uma Entity.");
+		try {
 
-				camposDaTabela = new ArrayList<String>();
-				camposDaClasse = new ArrayList<String>();
+			// Verificando se o Pojo é uma Entity
+			if (pojo.getClass().getAnnotation(Entity.class) == null)
+				throw new Exception("O objeto Pojo de entrada não é uma Entity.");
 
-				// Pegando os Fields
-				Field[] pojoFields = pojo.getClass().getDeclaredFields();
-				for (Field pojoField : pojoFields) {
+			List<String> camposDaTabela = new ArrayList<String>();
+			List<String> camposDaClasse = new ArrayList<String>();
 
-					// Verificando se o field possui a anotação Column
-					Column annotationColumn = pojoField.getAnnotation(Column.class);
-					if (annotationColumn != null) {
-						camposDaTabela.add(annotationColumn.name());
+			// Pegando os Fields
+			Field[] pojoFields = pojo.getClass().getDeclaredFields();
+			for (Field pojoField : pojoFields) {
+
+				// Verificando se o field possui a anotação Column
+				Column annotationColumn = pojoField.getAnnotation(Column.class);
+				if (annotationColumn != null) {
+					camposDaTabela.add(annotationColumn.name());
+					camposDaClasse.add(pojoField.getName());
+
+				} else {
+					// Verificando se o field possui a anotação ID
+					if (pojoField.getAnnotation(Id.class) != null) {
+						camposDaTabela.add(pojoField.getName());
 						camposDaClasse.add(pojoField.getName());
+					}
 
-					} else {
-						// Verificando se o field possui a anotação ID
-						if (pojoField.getAnnotation(Id.class) != null) {
-							camposDaTabela.add(pojoField.getName());
-							camposDaClasse.add(pojoField.getName());
-						}
-
-						// Verificando se o field possui a anotação JoinColumn
-						JoinColumn annotationJoinColumn = pojoField.getAnnotation(JoinColumn.class);
-						if (annotationJoinColumn != null) {
-							camposDaTabela.add(annotationJoinColumn.name());
-							camposDaClasse.add(pojoField.getName());
-						}
+					// Verificando se o field possui a anotação JoinColumn
+					JoinColumn annotationJoinColumn = pojoField.getAnnotation(JoinColumn.class);
+					if (annotationJoinColumn != null) {
+						camposDaTabela.add(annotationJoinColumn.name());
+						camposDaClasse.add(pojoField.getName());
 					}
 				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.exit(-1);
 			}
+
+			listCampos_Tabela0_Classe1.add(camposDaTabela);
+			listCampos_Tabela0_Classe1.add(camposDaClasse);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(-1);
 		}
+
+		return listCampos_Tabela0_Classe1;
 	}
 
 	/**
-	 * Prepara os dados contra SQL Injection.
+	 * Prepara os dados contra SQL Injection. Caso o objeto a ser inserido ao
+	 * bind seja um POJO, é verificado se ele é uma Entity. Caso positivo, o
+	 * campo que possuir a Annotation '@ID' desta Entity é inserido a Query.
 	 * 
 	 * @param query
 	 *            Objeto Query do Hibernate.
@@ -462,21 +470,31 @@ public abstract class HibernateAbstractDAO<T> {
 
 						// Verificando se é uma Entity
 						if (entity != null) {
-							this.obterNomeDosCamposDaClasseETabela(parametros.get(i));
+							List<String> listNomeCamposDaClasse = obterNomeDosCampos_Tabela0_Classe1(parametros.get(i)).get(1);
 							Method[] methods = classObj.getMethods();
 
 							for (Method method : methods) {
-								for (String campo : camposDaClasse) {
+								for (String campo : listNomeCamposDaClasse) {
 
 									// Verificando se o campo possui Annotation @Id
-									if (classObj.getField(campo).getAnnotation(Id.class) != null) {
+									if (classObj.getDeclaredField(campo).getAnnotation(Id.class) != null) {
 
 										// modificando a string campo para se parecer com um metodo 'get'
-										campo = ("get" + maiuscula1(campo)).trim();
+										String nomeDoMetodo = ("get" + maiuscula1(campo)).trim();
 
-										if (method.getName().equals(campo)) {
-											query.setInteger(i, (Integer) method.invoke(parametros.get(i)));
-											break;
+										// Procurando pelo nome do método definido acima
+										if (method.getName().equals(nomeDoMetodo)) {
+											// invocando-o e obtendo o seu valor
+											Integer id = (Integer) method.invoke(parametros.get(i));
+
+											if (id != null) {
+												query.setInteger(i, id);
+												break;
+
+											} else {
+												throw new Exception("O valor obtido atraves do método "
+														+ nomeDoMetodo + " não pode ser nulo.");
+											}
 										}
 									}
 								}

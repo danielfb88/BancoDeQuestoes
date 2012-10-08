@@ -10,11 +10,11 @@ public class UsuarioDAO extends HibernateAbstractDAO<Usuario> {
 	/**
 	 * Listar utilizando os valores contidos no objeto como filtro.
 	 * 
-	 * @param grupo
+	 * @param usuario
 	 * @return
 	 */
-	public List<Usuario> listar(Usuario grupo) {
-		return super.listar(Usuario.class, grupo);
+	public List<Usuario> listar(Usuario usuario) {
+		return super.listar(Usuario.class, usuario);
 	}
 
 	/**
