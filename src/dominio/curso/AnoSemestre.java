@@ -1,9 +1,16 @@
 package dominio.curso;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-import dao.jdbc.AnoSemestreDAO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import dao.DaoFactory;
 
 /**
  * AnoSemestre
@@ -12,12 +19,22 @@ import dao.jdbc.AnoSemestreDAO;
  * @since 30-08-2012
  * 
  */
-public class AnoSemestre {
-	private Integer id_anoSemestre;
-	private Integer ano;
-	private Integer semestre;
 
-	private AnoSemestreDAO anoSemestreDAO = new AnoSemestreDAO();
+@Entity
+@Table(name = "anosemestre")
+public class AnoSemestre implements Serializable {
+	private static final long serialVersionUID = 2164827965855120352L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_anosemestre")
+	private Integer id_anoSemestre;
+
+	@Column(name = "ano", nullable = false)
+	private Integer ano;
+
+	@Column(name = "semestre", nullable = false)
+	private Integer semestre;
 
 	public AnoSemestre() {
 
@@ -37,97 +54,24 @@ public class AnoSemestre {
 		this.semestre = semestre;
 	}
 
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		anoSemestreDAO.id_anosemestre = this.id_anoSemestre;
-		anoSemestreDAO.ano = this.ano;
-		anoSemestreDAO.semestre = this.semestre;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_anoSemestre = anoSemestreDAO.id_anosemestre;
-		this.ano = anoSemestreDAO.ano;
-		this.semestre = anoSemestreDAO.semestre;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
 	public boolean adicionar() {
-		anoSemestreDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return anoSemestreDAO.adicionar() > 0;
+		return DaoFactory.getAnoSemestreDAO().adicionar(this);
 	}
 
-	/**
-	 * Carregar
-	 * 
-	 * @return
-	 */
-	public boolean carregar() {
-		anoSemestreDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (anoSemestreDAO.carregar()) {
-			validarDadosParaSaida();
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
 	public boolean editar() {
-		anoSemestreDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return anoSemestreDAO.editar() > 0;
+		return DaoFactory.getAnoSemestreDAO().editar(this);
 	}
 
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
 	public boolean excluir() {
-		anoSemestreDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return anoSemestreDAO.excluir() > 0;
+		return DaoFactory.getAnoSemestreDAO().excluir(this);
 	}
 
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
 	public List<AnoSemestre> listar() {
-		anoSemestreDAO.limparAtributos();
-		validarDadosParaEntrada();
+		return DaoFactory.getAnoSemestreDAO().listar(this);
+	}
 
-		List<AnoSemestre> listAnoSemestre = new ArrayList<AnoSemestre>();
-		List<AnoSemestreDAO> listAnoSemestreDAO = (List<AnoSemestreDAO>) anoSemestreDAO.listar();
-
-		for (AnoSemestreDAO asDAO : listAnoSemestreDAO) {
-			listAnoSemestre.add(new AnoSemestre(asDAO.id_anosemestre, asDAO.ano, asDAO.semestre));
-		}
-
-		return listAnoSemestre;
+	public List<AnoSemestre> listarTodos() {
+		return DaoFactory.getAnoSemestreDAO().listarTodos();
 	}
 
 	/**

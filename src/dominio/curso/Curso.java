@@ -1,9 +1,16 @@
 package dominio.curso;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-import dao.jdbc.CursoDAO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import dao.DaoFactory;
 
 /**
  * Curso
@@ -12,13 +19,25 @@ import dao.jdbc.CursoDAO;
  * @since 02-09-2012
  * 
  */
-public class Curso {
-	private Integer id_curso;
-	private String descricao;
-	private String sigla;
-	private String tipo_graduacao;
 
-	private CursoDAO cursoDAO = new CursoDAO();
+@Entity
+@Table(name = "curso")
+public class Curso implements Serializable {
+	private static final long serialVersionUID = 5248503231307083896L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_curso")
+	private Integer id_curso;
+
+	@Column(name = "descricao", length = 50, nullable = false)
+	private String descricao;
+
+	@Column(name = "sigla", length = 5, nullable = false)
+	private String sigla;
+
+	@Column(name = "tipo_graduacao", length = 3, nullable = false)
+	private String tipo_graduacao;
 
 	public Curso() {
 
@@ -40,100 +59,24 @@ public class Curso {
 		this.tipo_graduacao = tipo_graduacao;
 	}
 
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		cursoDAO.id_curso = this.id_curso;
-		cursoDAO.descricao = this.descricao;
-		cursoDAO.sigla = this.sigla;
-		cursoDAO.tipo_graduacao = this.tipo_graduacao;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_curso = cursoDAO.id_curso;
-		this.descricao = cursoDAO.descricao;
-		this.sigla = cursoDAO.sigla;
-		this.tipo_graduacao = cursoDAO.tipo_graduacao;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
 	public boolean adicionar() {
-		cursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return cursoDAO.adicionar() > 0;
+		return DaoFactory.getCursoDAO().adicionar(this);
 	}
 
-	/**
-	 * Carregar
-	 * 
-	 * @return
-	 */
-	public boolean carregar() {
-		cursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (cursoDAO.carregar()) {
-			validarDadosParaSaida();
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
 	public boolean editar() {
-		cursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return cursoDAO.editar() > 0;
-
+		return DaoFactory.getCursoDAO().editar(this);
 	}
 
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
 	public boolean excluir() {
-		cursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return cursoDAO.excluir() > 0;
+		return DaoFactory.getCursoDAO().excluir(this);
 	}
 
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
 	public List<Curso> listar() {
-		cursoDAO.limparAtributos();
-		validarDadosParaEntrada();
+		return DaoFactory.getCursoDAO().listar(this);
+	}
 
-		List<Curso> listCurso = new ArrayList<Curso>();
-		List<CursoDAO> listCursoDAO = (List<CursoDAO>) cursoDAO.listar();
-
-		for (CursoDAO cDAO : listCursoDAO) {
-			listCurso.add(new Curso(cDAO.id_curso, cDAO.descricao, cDAO.sigla, cDAO.tipo_graduacao));
-		}
-
-		return listCurso;
+	public List<Curso> listarTodos() {
+		return DaoFactory.getCursoDAO().listarTodos();
 	}
 
 	/**

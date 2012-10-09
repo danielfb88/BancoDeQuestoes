@@ -1,9 +1,16 @@
 package dominio.curso;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-import dao.jdbc.PeriodoDAO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import dao.DaoFactory;
 
 /**
  * Periodo
@@ -12,12 +19,22 @@ import dao.jdbc.PeriodoDAO;
  * @since 02-09-2012
  * 
  */
-public class Periodo {
-	private Integer id_periodo;
-	private String descricao;
-	private Integer numero;
 
-	private PeriodoDAO periodoDAO = new PeriodoDAO();
+@Entity
+@Table(name = "curso")
+public class Periodo implements Serializable {
+	private static final long serialVersionUID = -4687682981054029782L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_periodo")
+	private Integer id_periodo;
+
+	@Column(name = "descricao", length = 50, nullable = false)
+	private String descricao;
+
+	@Column(name = "numero", nullable = false)
+	private Integer numero;
 
 	public Periodo() {
 
@@ -37,98 +54,24 @@ public class Periodo {
 		this.numero = numero;
 	}
 
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		periodoDAO.id_periodo = this.id_periodo;
-		periodoDAO.descricao = this.descricao;
-		periodoDAO.numero = this.numero;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_periodo = periodoDAO.id_periodo;
-		this.descricao = periodoDAO.descricao;
-		this.numero = periodoDAO.numero;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
 	public boolean adicionar() {
-		periodoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return periodoDAO.adicionar() > 0;
+		return DaoFactory.getPeriodoDAO().adicionar(this);
 	}
 
-	/**
-	 * Carregar
-	 * 
-	 * @return
-	 */
-	public boolean carregar() {
-		periodoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (periodoDAO.carregar()) {
-			validarDadosParaSaida();
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
 	public boolean editar() {
-		periodoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return periodoDAO.editar() > 0;
-
+		return DaoFactory.getPeriodoDAO().editar(this);
 	}
 
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
 	public boolean excluir() {
-		periodoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return periodoDAO.excluir() > 0;
+		return DaoFactory.getPeriodoDAO().excluir(this);
 	}
 
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
 	public List<Periodo> listar() {
-		periodoDAO.limparAtributos();
-		validarDadosParaEntrada();
+		return DaoFactory.getPeriodoDAO().listar(this);
+	}
 
-		List<Periodo> listPeriodo = new ArrayList<Periodo>();
-		List<PeriodoDAO> listPeriodoDAO = (List<PeriodoDAO>) periodoDAO.listar();
-
-		for (PeriodoDAO pDAO : listPeriodoDAO) {
-			listPeriodo.add(new Periodo(pDAO.id_periodo, pDAO.descricao, pDAO.numero));
-		}
-
-		return listPeriodo;
+	public List<Periodo> listarTodos() {
+		return DaoFactory.getPeriodoDAO().listarTodos();
 	}
 
 	/**
