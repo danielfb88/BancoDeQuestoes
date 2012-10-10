@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import dao.DaoFactory;
@@ -27,6 +29,9 @@ public class Grupo implements Serializable {
 
 	@Column(name = "tipo", nullable = false)
 	private Character tipo;
+
+	@OneToMany(mappedBy = "grupo", fetch = FetchType.EAGER)
+	private List<Usuario> usuarios;
 
 	public Grupo() {
 
@@ -110,28 +115,25 @@ public class Grupo implements Serializable {
 		this.tipo = tipo;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.usuarios = usuarios;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result
-				+ ((id_grupo == null) ? 0 : id_grupo.hashCode());
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((id_grupo == null) ? 0 : id_grupo.hashCode());
 		result = prime * result + ((tipo == null) ? 0 : tipo.hashCode());
+		result = prime * result + ((usuarios == null) ? 0 : usuarios.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -155,6 +157,11 @@ public class Grupo implements Serializable {
 			if (other.tipo != null)
 				return false;
 		} else if (!tipo.equals(other.tipo))
+			return false;
+		if (usuarios == null) {
+			if (other.usuarios != null)
+				return false;
+		} else if (!usuarios.equals(other.usuarios))
 			return false;
 		return true;
 	}

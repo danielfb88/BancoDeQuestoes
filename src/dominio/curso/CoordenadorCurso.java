@@ -1,10 +1,18 @@
 package dominio.curso;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.List;
 
-import dao.jdbc.CoordenadorCursoDAO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import dao.DaoFactory;
 import dominio.usuario.Usuario;
 
 /**
@@ -14,14 +22,28 @@ import dominio.usuario.Usuario;
  * @since 02-09-2012
  * 
  */
-public class CoordenadorCurso {
-	private Integer id_coordenadorCurso;
-	private Usuario coordenador = new Usuario();
-	private Curso curso = new Curso();
-	private Date dataEntrada;
-	private Date dataSaida;
 
-	private CoordenadorCursoDAO coordCursoDAO = new CoordenadorCursoDAO();
+@Entity
+@Table(name = "coordenador_curso")
+public class CoordenadorCurso {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_coordenador_curso")
+	private Integer id_coordenadorCurso;
+
+	@ManyToOne
+	@JoinColumn(name = "id_usuario")
+	private Usuario coordenador;
+
+	@ManyToOne
+	@JoinColumn(name = "id_curso")
+	private Curso curso;
+
+	@Column(name = "data_entrada", nullable = false)
+	private Date dataEntrada;
+
+	@Column(name = "data_saida", nullable = false)
+	private Date dataSaida;
 
 	public CoordenadorCurso() {
 
@@ -36,8 +58,8 @@ public class CoordenadorCurso {
 	 * @param dataEntrada
 	 * @param dataSaida
 	 */
-	public CoordenadorCurso(Integer id_coordenadorCurso, Usuario coordenador,
-			Curso curso, Date dataEntrada, Date dataSaida) {
+	public CoordenadorCurso(Integer id_coordenadorCurso, Usuario coordenador, Curso curso,
+			Date dataEntrada, Date dataSaida) {
 		super();
 		this.id_coordenadorCurso = id_coordenadorCurso;
 		this.coordenador = coordenador;
@@ -46,121 +68,24 @@ public class CoordenadorCurso {
 		this.dataSaida = dataSaida;
 	}
 
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		coordCursoDAO.id_coordenador_curso = this.id_coordenadorCurso;
-		coordCursoDAO.id_usuario = this.coordenador.getId_usuario();
-		coordCursoDAO.id_curso = this.curso.getId_curso();
-		coordCursoDAO.data_entrada = this.dataEntrada;
-		coordCursoDAO.data_saida = this.dataSaida;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_coordenadorCurso = coordCursoDAO.id_coordenador_curso;
-		this.coordenador.setId_usuario(coordCursoDAO.id_usuario);
-		this.curso.setId_curso(coordCursoDAO.id_curso);
-		this.dataEntrada = coordCursoDAO.data_entrada;
-		this.dataSaida = coordCursoDAO.data_saida;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
 	public boolean adicionar() {
-		coordCursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return coordCursoDAO.adicionar() > 0;
+		return DaoFactory.getCoordenadorCursoDAO().adicionar(this);
 	}
 
-	/**
-	 * Carregar
-	 * 
-	 * @return
-	 */
-	public boolean carregar(boolean carregarRelacionamentos) {
-		coordCursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (coordCursoDAO.carregar()) {
-			validarDadosParaSaida();
-
-			if (carregarRelacionamentos) {
-				this.coordenador.carregar(carregarRelacionamentos);
-				this.curso.carregar();
-			}
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
 	public boolean editar() {
-		coordCursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return coordCursoDAO.editar() > 0;
-
+		return DaoFactory.getCoordenadorCursoDAO().editar(this);
 	}
 
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
 	public boolean excluir() {
-		coordCursoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return coordCursoDAO.excluir() > 0;
+		return DaoFactory.getCoordenadorCursoDAO().excluir(this);
 	}
 
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<CoordenadorCurso> listar(boolean carregarRelacionamentos) {
-		coordCursoDAO.limparAtributos();
-		validarDadosParaEntrada();
+	public List<CoordenadorCurso> listar() {
+		return DaoFactory.getCoordenadorCursoDAO().listar(this);
+	}
 
-		List<CoordenadorCurso> listCoordCurso = new ArrayList<CoordenadorCurso>();
-		List<CoordenadorCursoDAO> listCoordCursoDAO = (List<CoordenadorCursoDAO>) coordCursoDAO.listar();
-
-		for (CoordenadorCursoDAO coordCursoDAO : listCoordCursoDAO) {
-			Usuario coordenador = new Usuario();
-			coordenador.setId_usuario(coordCursoDAO.id_usuario);
-
-			Curso curso = new Curso();
-			curso.setId_curso(coordCursoDAO.id_curso);
-
-			if (carregarRelacionamentos) {
-				coordenador.carregar(carregarRelacionamentos);
-				curso.carregar();
-			}
-
-			listCoordCurso.add(
-					new CoordenadorCurso(
-							coordCursoDAO.id_coordenador_curso, coordenador, curso,
-							coordCursoDAO.data_entrada, coordCursoDAO.data_saida));
-		}
-
-		return listCoordCurso;
+	public List<CoordenadorCurso> listarTodos() {
+		return DaoFactory.getCoordenadorCursoDAO().listarTodos();
 	}
 
 	/**

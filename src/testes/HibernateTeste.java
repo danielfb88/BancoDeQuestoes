@@ -15,6 +15,8 @@ public class HibernateTeste {
 		Grupo grupo = new Grupo();
 		grupo.setDescricao("Coord");
 		Grupo g = grupo.listar().get(0);
+		
+		List<Usuario> usuarios = g.getUsuarios();
 
 		Usuario usuario = new Usuario();
 		List<Usuario> listUsuario = usuario.listarTodos();
@@ -22,7 +24,7 @@ public class HibernateTeste {
 		//		usuario.setGrupo(g);
 		//		List<Usuario> listUsuario = usuario.listar();
 
-		for (Usuario u : listUsuario) {
+		for (Usuario u : usuarios) {
 			System.out.println("ID: " + u.getId_usuario());
 			System.out.println("NOME: " + u.getNome());
 			System.out.println("GRUPO: " + u.getGrupo().getDescricao());

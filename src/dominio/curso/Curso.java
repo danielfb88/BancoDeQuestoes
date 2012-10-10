@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import dao.DaoFactory;
@@ -38,6 +40,9 @@ public class Curso implements Serializable {
 
 	@Column(name = "tipo_graduacao", length = 3, nullable = false)
 	private String tipo_graduacao;
+
+	@OneToMany(mappedBy = "curso", fetch = FetchType.EAGER)
+	private List<Grade> grades;
 
 	public Curso() {
 
@@ -139,17 +144,23 @@ public class Curso implements Serializable {
 		this.tipo_graduacao = tipo_graduacao;
 	}
 
+	public List<Grade> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(List<Grade> grades) {
+		this.grades = grades;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result
-				+ ((id_curso == null) ? 0 : id_curso.hashCode());
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((grades == null) ? 0 : grades.hashCode());
+		result = prime * result + ((id_curso == null) ? 0 : id_curso.hashCode());
 		result = prime * result + ((sigla == null) ? 0 : sigla.hashCode());
-		result = prime * result
-				+ ((tipo_graduacao == null) ? 0 : tipo_graduacao.hashCode());
+		result = prime * result + ((tipo_graduacao == null) ? 0 : tipo_graduacao.hashCode());
 		return result;
 	}
 
@@ -166,6 +177,11 @@ public class Curso implements Serializable {
 			if (other.descricao != null)
 				return false;
 		} else if (!descricao.equals(other.descricao))
+			return false;
+		if (grades == null) {
+			if (other.grades != null)
+				return false;
+		} else if (!grades.equals(other.grades))
 			return false;
 		if (id_curso == null) {
 			if (other.id_curso != null)

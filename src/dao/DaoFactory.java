@@ -6,6 +6,7 @@ import dao.hibernate.CoordenadorCursoDAO;
 import dao.hibernate.CursoDAO;
 import dao.hibernate.DisciplinaDAO;
 import dao.hibernate.GradeDAO;
+import dao.hibernate.GradePeriodoDAO;
 import dao.hibernate.GrupoDAO;
 import dao.hibernate.PerguntaDAO;
 import dao.hibernate.PeriodoDAO;
@@ -28,8 +29,9 @@ public class DaoFactory {
 	private static CursoDAO cursoDAO;
 	private static DisciplinaDAO disciplinaDAO;
 	private static GradeDAO gradeDAO;
-	private static PerguntaDAO perguntaDAO;
 	private static PeriodoDAO periodoDAO;
+	private static GradePeriodoDAO gradePeriodoDAO;
+	private static PerguntaDAO perguntaDAO;
 	private static ProvaDAO provaDAO;
 	private static RespostaDAO respostaDAO;
 
@@ -88,18 +90,25 @@ public class DaoFactory {
 		return gradeDAO;
 	}
 
-	public static PerguntaDAO getPerguntaDAO() {
-		if (perguntaDAO == null)
-			perguntaDAO = new PerguntaDAO();
-
-		return perguntaDAO;
-	}
-
 	public static PeriodoDAO getPeriodoDAO() {
 		if (periodoDAO == null)
 			periodoDAO = new PeriodoDAO();
 
 		return periodoDAO;
+	}
+
+	public static GradePeriodoDAO getGradePeriodoDAO() {
+		if (gradePeriodoDAO == null)
+			gradePeriodoDAO = new GradePeriodoDAO();
+
+		return gradePeriodoDAO;
+	}
+
+	public static PerguntaDAO getPerguntaDAO() {
+		if (perguntaDAO == null)
+			perguntaDAO = new PerguntaDAO();
+
+		return perguntaDAO;
 	}
 
 	public static ProvaDAO getProvaDAO() {
