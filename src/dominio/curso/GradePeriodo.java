@@ -1,9 +1,7 @@
 package dominio.curso;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,9 +41,9 @@ public class GradePeriodo implements Serializable {
 			name = "grade_periodo__disciplina",
 			joinColumns = { @JoinColumn(name = "id_grade_periodo") },
 			inverseJoinColumns = { @JoinColumn(name = "id_disciplina") })
-	private Set<Disciplina> disciplinas = new HashSet<Disciplina>();
+	private List<Disciplina> disciplinas;
 
-	public GradePeriodo(Integer id_grade_periodo, Grade grade, Periodo periodo, Set<Disciplina> disciplinas) {
+	public GradePeriodo(Integer id_grade_periodo, Grade grade, Periodo periodo, List<Disciplina> disciplinas) {
 		super();
 		this.id_grade_periodo = id_grade_periodo;
 		this.grade = grade;
@@ -97,11 +95,11 @@ public class GradePeriodo implements Serializable {
 		this.periodo = periodo;
 	}
 
-	public Set<Disciplina> getDisciplinas() {
+	public List<Disciplina> getDisciplinas() {
 		return disciplinas;
 	}
 
-	public void setDisciplinas(Set<Disciplina> disciplinas) {
+	public void setDisciplinas(List<Disciplina> disciplinas) {
 		this.disciplinas = disciplinas;
 	}
 

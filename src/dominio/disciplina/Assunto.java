@@ -1,12 +1,20 @@
 package dominio.disciplina;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 
-import dao.jdbc.AssuntoDAO;
-import dao.jdbc.PerguntaDAO;
-import dao.jdbc.Rel_AssuntoPerguntaDAO;
-import dominio.prova.Pergunta;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import dao.DaoFactory;
 
 /**
  * Assunto
@@ -15,175 +23,49 @@ import dominio.prova.Pergunta;
  * @since 30-08-2012
  * 
  */
-public class Assunto {
+
+@Entity
+@Table(name = "assunto")
+public class Assunto implements Serializable {
+	private static final long serialVersionUID = -5493946407130259208L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_assunto")
 	private Integer id_assunto;
+
+	@Column(name = "descricao", length = 50, nullable = false)
 	private String descricao;
 
-	private AssuntoDAO assuntoDAO = new AssuntoDAO();
-	private PerguntaDAO perguntaDAO = new PerguntaDAO();
-	private Rel_AssuntoPerguntaDAO rel_assuntoPerguntaDAO = new Rel_AssuntoPerguntaDAO();
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "disciplina_assunto",
+			joinColumns = { @JoinColumn(name = "id_assunto") },
+			inverseJoinColumns = { @JoinColumn(name = "id_disciplina") })
+	private List<DisciplinaAssunto> disciplinasAssuntos;
 
 	public Assunto() {
 
 	}
 
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		assuntoDAO.id_assunto = this.id_assunto;
-		assuntoDAO.descricao = this.descricao;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_assunto = assuntoDAO.id_assunto;
-		this.descricao = assuntoDAO.descricao;
-	}
-
-	/**
-	 * Assunto
-	 * 
-	 * @param id_assunto
-	 * @param descricao
-	 */
-	public Assunto(Integer id_assunto, String descricao) {
-		super();
-		this.id_assunto = id_assunto;
-		this.descricao = descricao;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
 	public boolean adicionar() {
-		assuntoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return assuntoDAO.adicionar() > 0;
+		return DaoFactory.getAssuntoDAO().adicionar(this);
 	}
 
-	/**
-	 * Carregar
-	 * 
-	 * @return
-	 */
-	public boolean carregar() {
-		assuntoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (assuntoDAO.carregar()) {
-			validarDadosParaSaida();
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
 	public boolean editar() {
-		assuntoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return assuntoDAO.editar() > 0;
+		return DaoFactory.getAssuntoDAO().editar(this);
 	}
 
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
 	public boolean excluir() {
-		assuntoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return assuntoDAO.excluir() > 0;
+		return DaoFactory.getAssuntoDAO().excluir(this);
 	}
 
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
 	public List<Assunto> listar() {
-		assuntoDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		List<Assunto> listAssunto = new ArrayList<Assunto>();
-		List<AssuntoDAO> listAssuntoDAO = (List<AssuntoDAO>) assuntoDAO.listar();
-
-		for (AssuntoDAO aDAO : listAssuntoDAO) {
-			listAssunto.add(new Assunto(aDAO.id_assunto, aDAO.descricao));
-		}
-
-		return listAssunto;
+		return DaoFactory.getAssuntoDAO().listar(this);
 	}
 
-	/**
-	 * Inserir Pergunta
-	 * 
-	 * @param pergunta
-	 * @return
-	 */
-	public boolean inserirPergunta(Pergunta pergunta) {
-		rel_assuntoPerguntaDAO.limparAtributos();
-
-		rel_assuntoPerguntaDAO.id_assunto = this.id_assunto;
-		rel_assuntoPerguntaDAO.id_pergunta = pergunta.getId_pergunta();
-
-		return rel_assuntoPerguntaDAO.adicionar() > 0;
-	}
-
-	/**
-	 * Remover Pergunta
-	 * 
-	 * @param pergunta
-	 * @return
-	 */
-	public boolean removerPergunta(Pergunta pergunta) {
-		rel_assuntoPerguntaDAO.limparAtributos();
-
-		rel_assuntoPerguntaDAO.id_assunto = this.id_assunto;
-		rel_assuntoPerguntaDAO.id_pergunta = pergunta.getId_pergunta();
-		rel_assuntoPerguntaDAO.carregar();
-
-		return rel_assuntoPerguntaDAO.excluir() > 0;
-	}
-
-	/**
-	 * Listar Perguntas
-	 * 
-	 * @return
-	 */
-	public List<Pergunta> listarPerguntas(boolean carregarRelacionamentos) {
-		perguntaDAO.limparAtributos();
-
-		List<PerguntaDAO> listPerguntaDAO = perguntaDAO.listarPerguntasPorAssunto(this.id_assunto);
-		List<Pergunta> listPergunta = new ArrayList<Pergunta>();
-
-		for (PerguntaDAO pDAO : listPerguntaDAO) {
-			Pergunta pergunta = new Pergunta();
-			pergunta.setId_pergunta(pDAO.id_pergunta);
-
-			if (carregarRelacionamentos) {
-				pergunta.carregar(carregarRelacionamentos);
-			}
-
-			listPergunta.add(pergunta);
-		}
-
-		return listPergunta;
+	public List<Assunto> listarTodos() {
+		return DaoFactory.getAssuntoDAO().listarTodos();
 	}
 
 	/**
