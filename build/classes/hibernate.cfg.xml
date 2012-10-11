@@ -25,5 +25,20 @@
 		<!-- Entities -->
 		<mapping class="dominio.usuario.Grupo" />
 		<mapping class="dominio.usuario.Usuario" />
+		
+		<mapping class="dominio.curso.AnoSemestre" />
+		<mapping class="dominio.curso.CoordenadorCurso" />
+		<mapping class="dominio.curso.Curso" />
+		<mapping class="dominio.curso.Grade" />
+		<mapping class="dominio.curso.Periodo" />
+		
+		<mapping class="dominio.disciplina.Assunto" />
+		<mapping class="dominio.disciplina.Disciplina" />
+		<mapping class="dominio.disciplina.DisciplinaAssunto" />
+		
+		<mapping class="dominio.prova.Pergunta" />
+		<mapping class="dominio.prova.Prova" />
+		<mapping class="dominio.prova.Disciplina" />
+		
 	</session-factory>
 </hibernate-configuration>

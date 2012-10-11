@@ -1,9 +1,15 @@
 package dominio.prova;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.Serializable;
 
-import dao.jdbc.RespostaDAO;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Resposta
@@ -12,30 +18,35 @@ import dao.jdbc.RespostaDAO;
  * @since 01-09-2012
  * 
  */
-public class Resposta {
-	private Integer id_resposta;
-	private Pergunta pergunta = new Pergunta();
-	private String descricao;
-	private Boolean correta;
-	private String observacao;
 
-	private RespostaDAO respostaDAO = new RespostaDAO();
+@Entity
+@Table(name = "resposta")
+public class Resposta implements Serializable {
+	private static final long serialVersionUID = 5478724949801220287L;
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_resposta")
+	private Integer id_resposta;
+
+	@ManyToOne
+	@JoinColumn(name = "id_pergunta", nullable = false)
+	private Pergunta pergunta;
+
+	@Column(name = "descricao")
+	private String descricao;
+
+	@Column(name = "correta")
+	private Integer correta;
+
+	@Column(name = "observacao")
+	private String observacao;
 
 	public Resposta() {
 
 	}
 
-	/**
-	 * Resposta
-	 * 
-	 * @param id_resposta
-	 * @param pergunta
-	 * @param descricao
-	 * @param correta
-	 * @param observacao
-	 */
-	public Resposta(Integer id_resposta, Pergunta pergunta, String descricao,
-			Boolean correta, String observacao) {
+	public Resposta(Integer id_resposta, Pergunta pergunta, String descricao, Integer correta, String observacao) {
 		super();
 		this.id_resposta = id_resposta;
 		this.pergunta = pergunta;
@@ -44,190 +55,42 @@ public class Resposta {
 		this.observacao = observacao;
 	}
 
-	/**
-	 * Os atributos da propriedade DAO receberão os valores contidos nos
-	 * atributos do objeto (this)
-	 */
-	private void validarDadosParaEntrada() {
-		respostaDAO.id_resposta = this.id_resposta;
-		respostaDAO.id_pergunta = this.getPergunta().getId_pergunta();
-		respostaDAO.descricao = this.descricao;
-
-		if (this.correta != null)
-			respostaDAO.correta = (this.correta) ? 1 : 0;
-
-		respostaDAO.observacao = this.observacao;
-	}
-
-	/**
-	 * Os atributos do objeto (this) receberão os valores das propriedades da
-	 * classe DAO
-	 */
-	private void validarDadosParaSaida() {
-		this.id_resposta = respostaDAO.id_resposta;
-		this.getPergunta().setId_pergunta(respostaDAO.id_pergunta);
-		this.descricao = respostaDAO.descricao;
-		this.correta = (respostaDAO.correta == 1) ? true : false;
-		this.observacao = respostaDAO.observacao;
-	}
-
-	/**
-	 * Adicionar
-	 * 
-	 * @return
-	 */
-	public boolean adicionar() {
-		respostaDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return respostaDAO.adicionar() > 0;
-	}
-
-	/**
-	 * Carregar
-	 * 
-	 * @return
-	 */
-	public boolean carregar(boolean carregarRelacionamentos) {
-		respostaDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		if (respostaDAO.carregar()) {
-			validarDadosParaSaida();
-
-			if (carregarRelacionamentos) {
-				this.pergunta.carregar(carregarRelacionamentos);
-			}
-
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Editar
-	 * 
-	 * @return
-	 */
-	public boolean editar() {
-		respostaDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return respostaDAO.editar() > 0;
-
-	}
-
-	/**
-	 * Excluir
-	 * 
-	 * @return
-	 */
-	public boolean excluir() {
-		respostaDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		return respostaDAO.excluir() > 0;
-	}
-
-	/**
-	 * Listar
-	 * 
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public List<Resposta> listar(boolean carregarRelacionamentos) {
-		respostaDAO.limparAtributos();
-		validarDadosParaEntrada();
-
-		List<Resposta> listResposta = new ArrayList<Resposta>();
-		List<RespostaDAO> listRespostaDAO = (List<RespostaDAO>) respostaDAO.listar();
-
-		for (RespostaDAO rDAO : listRespostaDAO) {
-			Pergunta pergunta = new Pergunta();
-			pergunta.setId_pergunta(rDAO.id_pergunta);
-
-			if (carregarRelacionamentos) {
-				pergunta.carregar(carregarRelacionamentos);
-			}
-
-			listResposta.add(new Resposta(rDAO.id_resposta, pergunta, rDAO.descricao,
-					((rDAO.correta == 1) ? true : false), rDAO.observacao));
-		}
-
-		return listResposta;
-	}
-
-	/**
-	 * @return the id_resposta
-	 */
 	public Integer getId_resposta() {
 		return id_resposta;
 	}
 
-	/**
-	 * @param id_resposta
-	 *            the id_resposta to set
-	 */
 	public void setId_resposta(Integer id_resposta) {
 		this.id_resposta = id_resposta;
 	}
 
-	/**
-	 * @return the pergunta
-	 */
 	public Pergunta getPergunta() {
 		return pergunta;
 	}
 
-	/**
-	 * @param pergunta
-	 *            the pergunta to set
-	 */
 	public void setPergunta(Pergunta pergunta) {
 		this.pergunta = pergunta;
 	}
 
-	/**
-	 * @return the descricao
-	 */
 	public String getDescricao() {
 		return descricao;
 	}
 
-	/**
-	 * @param descricao
-	 *            the descricao to set
-	 */
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
-	/**
-	 * @return the correta
-	 */
-	public Boolean getCorreta() {
+	public Integer getCorreta() {
 		return correta;
 	}
 
-	/**
-	 * @param correta
-	 *            the correta to set
-	 */
-	public void setCorreta(Boolean correta) {
+	public void setCorreta(Integer correta) {
 		this.correta = correta;
 	}
 
-	/**
-	 * @return the observacao
-	 */
 	public String getObservacao() {
 		return observacao;
 	}
 
-	/**
-	 * @param observacao
-	 *            the observacao to set
-	 */
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
 	}
@@ -237,14 +100,10 @@ public class Resposta {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((correta == null) ? 0 : correta.hashCode());
-		result = prime * result
-				+ ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result
-				+ ((id_resposta == null) ? 0 : id_resposta.hashCode());
-		result = prime * result
-				+ ((observacao == null) ? 0 : observacao.hashCode());
-		result = prime * result
-				+ ((pergunta == null) ? 0 : pergunta.hashCode());
+		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result + ((id_resposta == null) ? 0 : id_resposta.hashCode());
+		result = prime * result + ((observacao == null) ? 0 : observacao.hashCode());
+		result = prime * result + ((pergunta == null) ? 0 : pergunta.hashCode());
 		return result;
 	}
 
@@ -284,5 +143,4 @@ public class Resposta {
 			return false;
 		return true;
 	}
-
 }
