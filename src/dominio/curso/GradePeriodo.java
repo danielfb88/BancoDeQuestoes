@@ -45,7 +45,7 @@ public class GradePeriodo implements Serializable {
 			inverseJoinColumns = { @JoinColumn(name = "id_disciplina") })
 	private List<Disciplina> disciplinas;
 
-	@OneToMany(mappedBy = "grade_periodo", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "id_pergunta", fetch = FetchType.EAGER)
 	private List<Pergunta> perguntas;
 
 	public GradePeriodo(Integer id_grade_periodo, Grade grade, Periodo periodo, List<Disciplina> disciplinas, List<Pergunta> perguntas) {

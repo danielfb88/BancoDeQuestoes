@@ -40,11 +40,11 @@ public class Grade implements Serializable {
 	private Curso curso;
 
 	@ManyToOne
-	@JoinColumn(name = "id_anosemestre")
+	@JoinColumn(name = "id_anosemestre_inicial")
 	private AnoSemestre anoSemestre_inicial = new AnoSemestre();
 
 	@ManyToOne
-	@JoinColumn(name = "id_anosemestre")
+	@JoinColumn(name = "id_anosemestre_final")
 	private AnoSemestre anoSemestre_final = new AnoSemestre();
 
 	@Column(name = "descricao", nullable = false)
