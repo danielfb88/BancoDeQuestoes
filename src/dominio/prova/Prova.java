@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import dao.DaoFactory;
+import dominio.curso.AnoSemestre;
 import dominio.curso.GradePeriodo;
 
 /*
@@ -42,6 +43,10 @@ public class Prova implements Serializable {
 	@JoinColumn(name = "id_grade_periodo")
 	private GradePeriodo gradePeriodo;
 
+	@ManyToOne
+	@JoinColumn(name = "id_anosemestre")
+	private AnoSemestre anoSemestre;
+
 	@Column(name = "descricao", nullable = false)
 	private String descricao;
 
@@ -52,12 +57,33 @@ public class Prova implements Serializable {
 
 	}
 
-	public Prova(Integer id_prova, GradePeriodo gradePeriodo, String descricao, Date data_prova) {
+	public Prova(Integer id_prova, GradePeriodo gradePeriodo, AnoSemestre anoSemestre, String descricao, Date data_prova) {
 		super();
 		this.id_prova = id_prova;
 		this.gradePeriodo = gradePeriodo;
+		this.anoSemestre = anoSemestre;
 		this.descricao = descricao;
 		this.data_prova = data_prova;
+	}
+
+	public boolean adicionar() {
+		return DaoFactory.getProvaDAO().adicionar(this);
+	}
+
+	public boolean editar() {
+		return DaoFactory.getProvaDAO().editar(this);
+	}
+
+	public boolean excluir() {
+		return DaoFactory.getProvaDAO().excluir(this);
+	}
+
+	public List<Prova> listar() {
+		return DaoFactory.getProvaDAO().listar(this);
+	}
+
+	public List<Prova> listarTodos() {
+		return DaoFactory.getProvaDAO().listarTodos();
 	}
 
 	public Integer getId_prova() {
@@ -92,30 +118,19 @@ public class Prova implements Serializable {
 		this.data_prova = data_prova;
 	}
 
-	public boolean adicionar() {
-		return DaoFactory.getProvaDAO().adicionar(this);
+	public AnoSemestre getAnoSemestre() {
+		return anoSemestre;
 	}
 
-	public boolean editar() {
-		return DaoFactory.getProvaDAO().editar(this);
-	}
-
-	public boolean excluir() {
-		return DaoFactory.getProvaDAO().excluir(this);
-	}
-
-	public List<Prova> listar() {
-		return DaoFactory.getProvaDAO().listar(this);
-	}
-
-	public List<Prova> listarTodos() {
-		return DaoFactory.getProvaDAO().listarTodos();
+	public void setAnoSemestre(AnoSemestre anoSemestre) {
+		this.anoSemestre = anoSemestre;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((anoSemestre == null) ? 0 : anoSemestre.hashCode());
 		result = prime * result + ((data_prova == null) ? 0 : data_prova.hashCode());
 		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
 		result = prime * result + ((gradePeriodo == null) ? 0 : gradePeriodo.hashCode());
@@ -132,6 +147,11 @@ public class Prova implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Prova other = (Prova) obj;
+		if (anoSemestre == null) {
+			if (other.anoSemestre != null)
+				return false;
+		} else if (!anoSemestre.equals(other.anoSemestre))
+			return false;
 		if (data_prova == null) {
 			if (other.data_prova != null)
 				return false;

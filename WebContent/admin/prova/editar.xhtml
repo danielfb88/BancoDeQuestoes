@@ -9,6 +9,9 @@
 </h:head>
 <h:body>
 	<h1>Editar Prova</h1>
+	<!-- QUEBRADO -->
+	<!-- VAI TER QUE USAR AJAX AQUI! -->
+	<!-- Listar a grade -> Listar Periodos dessa grade -> Pegar o Id do gradePeriodo -->
 	<h:form id="frm_editar">
 		<h:messages />
 		<h:inputHidden value="#{provaBean.prova.id_prova}" />
@@ -16,14 +19,14 @@
 		<h:panelGrid columns="2">
 			<h:outputLabel value="Grade" for="slct_grade" />
 			<h:selectOneMenu id="slct_grade"
-				value="#{provaBean.prova.grade.id_grade}">
+				value="#{provaBean.prova.gradePeriodo.grade.id_grade}">
 				<f:selectItems value="#{gradeBean.lista}" var="item"
 					itemValue="#{item.id_grade}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>
 
 			<h:outputLabel value="Periodo" for="slct_periodo" />
 			<h:selectOneMenu id="slct_periodo"
-				value="#{provaBean.prova.periodo.id_periodo}">
+				value="#{provaBean.prova.gradePeriodo.periodo.id_periodo}">
 				<f:selectItems value="#{periodoBean.lista}" var="item"
 					itemValue="#{item.id_periodo}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>
@@ -43,7 +46,7 @@
 
 			<h:outputText value="Data da Prova" for="tx_data" />
 			<h:inputText id="tx_data" label="Data da Prova"
-				value="#{provaBean.prova.dataProva}" size="30" maxlength="10"
+				value="#{provaBean.prova.data_prova}" size="30" maxlength="10"
 				required="true" requiredMessage="Informe a dataProva">
 				<f:convertDateTime type="date" pattern="dd/mm/yyyy" />
 			</h:inputText>

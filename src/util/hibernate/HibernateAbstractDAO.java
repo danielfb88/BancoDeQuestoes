@@ -180,7 +180,7 @@ public abstract class HibernateAbstractDAO<T> {
 			transacao.commit();
 
 		} catch (HibernateException e) {
-			System.out.println("Não foi possível listar. Erro: " + e.getMessage());
+			System.out.println("Não foi possível listar todos os registros. Erro: " + e.getMessage());
 			e.printStackTrace();
 
 		} catch (Exception e) {

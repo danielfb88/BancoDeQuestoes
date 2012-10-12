@@ -42,6 +42,10 @@ public class GradePeriodo implements Serializable {
 			inverseJoinColumns = { @JoinColumn(name = "id_disciplina") })
 	private List<Disciplina> disciplinas;
 
+	public GradePeriodo() {
+
+	}
+
 	public GradePeriodo(Integer id_grade_periodo, Grade grade, Periodo periodo,
 			List<Disciplina> disciplinas) {
 		super();

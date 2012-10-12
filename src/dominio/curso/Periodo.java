@@ -21,7 +21,7 @@ import dao.DaoFactory;
  */
 
 @Entity
-@Table(name = "curso")
+@Table(name = "periodo")
 public class Periodo implements Serializable {
 	private static final long serialVersionUID = -4687682981054029782L;
 
