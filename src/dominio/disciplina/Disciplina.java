@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import dao.DaoFactory;
 import dominio.curso.Curso;
 
 /**
@@ -36,7 +37,7 @@ public class Disciplina implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "id_curso")
-	private Curso curso = new Curso();
+	private Curso curso;
 
 	@Column(name = "descricao")
 	private String descricao;
@@ -63,6 +64,26 @@ public class Disciplina implements Serializable {
 		this.descricao = descricao;
 		this.sigla = sigla;
 		this.disciplinasAssuntos = disciplinasAssuntos;
+	}
+
+	public boolean adicionar() {
+		return DaoFactory.getDisciplinaDAO().adicionar(this);
+	}
+
+	public boolean editar() {
+		return DaoFactory.getDisciplinaDAO().editar(this);
+	}
+
+	public boolean excluir() {
+		return DaoFactory.getDisciplinaDAO().excluir(this);
+	}
+
+	public List<Disciplina> listar() {
+		return DaoFactory.getDisciplinaDAO().listar(this);
+	}
+
+	public List<Disciplina> listarTodos() {
+		return DaoFactory.getDisciplinaDAO().listarTodos();
 	}
 
 	public Integer getId_disciplina() {

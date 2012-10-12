@@ -40,11 +40,11 @@ public class Grade implements Serializable {
 
 	@ManyToOne
 	@JoinColumn(name = "id_anosemestre_inicial")
-	private AnoSemestre anoSemestre_inicial = new AnoSemestre();
+	private AnoSemestre anoSemestre_inicial;
 
 	@ManyToOne
 	@JoinColumn(name = "id_anosemestre_final")
-	private AnoSemestre anoSemestre_final = new AnoSemestre();
+	private AnoSemestre anoSemestre_final;
 
 	@Column(name = "descricao", nullable = false)
 	private String descricao;
@@ -55,6 +55,10 @@ public class Grade implements Serializable {
 			joinColumns = { @JoinColumn(name = "id_grade") },
 			inverseJoinColumns = { @JoinColumn(name = "id_periodo") })
 	private List<GradePeriodo> gradesPeriodos;
+
+	public Grade() {
+
+	}
 
 	public Grade(Integer id_grade, Curso curso, AnoSemestre anoSemestre_inicial,
 			AnoSemestre anoSemestre_final, String descricao, List<GradePeriodo> gradesPeriodos) {

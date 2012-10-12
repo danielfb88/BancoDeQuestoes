@@ -7,7 +7,6 @@ import javax.faces.context.FacesContext;
 
 import dominio.prova.Pergunta;
 
-
 /**
  * Bean Gerenciável de Pergunta.
  * 
@@ -130,7 +129,7 @@ public class PerguntaMB {
 	 */
 	public List<Pergunta> getLista() {
 		if (this.lista == null)
-			this.lista = this.pergunta.listar(false);
+			this.lista = this.pergunta.listar();
 
 		return this.lista;
 	}

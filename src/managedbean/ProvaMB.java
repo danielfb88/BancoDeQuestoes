@@ -130,7 +130,7 @@ public class ProvaMB {
 	 */
 	public List<Prova> getLista() {
 		if (this.lista == null)
-			this.lista = this.Prova.listar(true);
+			this.lista = this.Prova.listar();
 
 		return this.lista;
 	}

@@ -1,6 +1,7 @@
 package dominio.prova;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import dao.DaoFactory;
 
 /**
  * Resposta
@@ -93,6 +96,26 @@ public class Resposta implements Serializable {
 
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+
+	public boolean adicionar() {
+		return DaoFactory.getRespostaDAO().adicionar(this);
+	}
+
+	public boolean editar() {
+		return DaoFactory.getRespostaDAO().editar(this);
+	}
+
+	public boolean excluir() {
+		return DaoFactory.getRespostaDAO().excluir(this);
+	}
+
+	public List<Resposta> listar() {
+		return DaoFactory.getRespostaDAO().listar(this);
+	}
+
+	public List<Resposta> listarTodos() {
+		return DaoFactory.getRespostaDAO().listarTodos();
 	}
 
 	@Override

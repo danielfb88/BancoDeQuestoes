@@ -130,7 +130,7 @@ public class RespostaMB {
 	 */
 	public List<Resposta> getLista() {
 		if (this.lista == null)
-			this.lista = this.resposta.listar(false);
+			this.lista = this.resposta.listar();
 
 		return this.lista;
 	}

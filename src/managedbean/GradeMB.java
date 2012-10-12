@@ -7,7 +7,6 @@ import javax.faces.context.FacesContext;
 
 import dominio.curso.Grade;
 
-
 /**
  * Bean Gerenciável de Grade.
  * 
@@ -130,7 +129,7 @@ public class GradeMB {
 	 */
 	public List<Grade> getLista() {
 		if (this.lista == null)
-			this.lista = this.Grade.listar(true);
+			this.lista = this.Grade.listar();
 
 		return this.lista;
 	}

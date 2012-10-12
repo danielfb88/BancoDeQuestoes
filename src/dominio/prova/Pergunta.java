@@ -13,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import dao.DaoFactory;
 import dominio.usuario.Usuario;
 
 /**
@@ -68,6 +69,22 @@ public class Pergunta implements Serializable {
 		this.enunciado = enunciado;
 		this.comentario = comentario;
 		this.respostas = respostas;
+	}
+	
+	public boolean adicionar() {
+		return DaoFactory.getPerguntaDAO().adicionar(this);
+	}
+
+	public boolean editar() {
+		return DaoFactory.getPerguntaDAO().editar(this);
+	}
+
+	public boolean excluir() {
+		return DaoFactory.getPerguntaDAO().excluir(this);
+	}
+
+	public List<Pergunta> listar() {
+		return DaoFactory.getPerguntaDAO().listar(this);
 	}
 
 	public Integer getId_pergunta() {

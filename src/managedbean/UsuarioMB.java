@@ -167,7 +167,7 @@ public class UsuarioMB {
 	 */
 	public List<Usuario> getLista() {
 		if (this.lista == null)
-			this.lista = this.usuario.listar(true);
+			this.lista = this.usuario.listar();
 
 		return this.lista;
 	}
