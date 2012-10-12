@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,7 +40,7 @@ public class Curso implements Serializable {
 	@Column(name = "tipo_graduacao", length = 3, nullable = false)
 	private String tipo_graduacao;
 
-	@OneToMany(mappedBy = "curso", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "curso")
 	private List<Grade> grades;
 
 	public Curso() {

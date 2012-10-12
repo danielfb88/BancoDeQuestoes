@@ -23,24 +23,19 @@
 		<property name="generate_statistics">true</property>
 		<property name="use_sql_comments">true</property>
 		<!-- Entities -->
-		
+		<mapping class="dominio.disciplina.Assunto" />
 		<mapping class="dominio.curso.AnoSemestre" />
 		<mapping class="dominio.curso.CoordenadorCurso" />
 		<mapping class="dominio.curso.Curso" />
 		<mapping class="dominio.curso.Grade" />
 		<mapping class="dominio.curso.GradePeriodo" />
 		<mapping class="dominio.curso.Periodo" />
-		
-		<mapping class="dominio.disciplina.Assunto" />
 		<mapping class="dominio.disciplina.Disciplina" />
 		<mapping class="dominio.disciplina.DisciplinaAssunto" />
-		
 		<mapping class="dominio.prova.Pergunta" />
 		<mapping class="dominio.prova.Prova" />
 		<mapping class="dominio.prova.Resposta" />
-		
 		<mapping class="dominio.usuario.Grupo" />
 		<mapping class="dominio.usuario.Usuario" />
-		
 	</session-factory>
 </hibernate-configuration>
