@@ -16,7 +16,7 @@ import dominio.curso.Curso;
  * 
  */
 public class CursoMB {
-	private Curso Curso = new Curso();
+	private Curso curso = new Curso();
 	private List<Curso> lista;
 
 	/**
@@ -25,7 +25,7 @@ public class CursoMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.Curso = new Curso();
+		this.curso = new Curso();
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +53,8 @@ public class CursoMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (Curso.adicionar()) {
-			this.Curso = new Curso();
+		if (curso.adicionar()) {
+			this.curso = new Curso();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -76,8 +76,8 @@ public class CursoMB {
 	 * @return
 	 */
 	public String editar() {
-		if (Curso.editar()) {
-			this.Curso = new Curso();
+		if (curso.editar()) {
+			this.curso = new Curso();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -98,14 +98,14 @@ public class CursoMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (Curso.excluir()) {
-			this.Curso = new Curso();
+		if (curso.excluir()) {
+			this.curso = new Curso();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.Curso = new Curso();
+			this.curso = new Curso();
 			FacesMessage facesMessage = new FacesMessage(
 					"Não é possível excluir o Curso");
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -120,7 +120,7 @@ public class CursoMB {
 	 * @return
 	 */
 	public Curso getCurso() {
-		return Curso;
+		return curso;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class CursoMB {
 	 */
 	public List<Curso> getLista() {
 		if (this.lista == null)
-			this.lista = this.Curso.listar();
+			this.lista = this.curso.listar();
 
 		return this.lista;
 	}
@@ -140,7 +140,7 @@ public class CursoMB {
 	 *            the Curso to set
 	 */
 	public void setCurso(Curso Curso) {
-		this.Curso = Curso;
+		this.curso = Curso;
 	}
 
 }

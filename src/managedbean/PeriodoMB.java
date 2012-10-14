@@ -16,7 +16,7 @@ import dominio.curso.Periodo;
  * 
  */
 public class PeriodoMB {
-	private Periodo Periodo = new Periodo();
+	private Periodo periodo = new Periodo();
 	private List<Periodo> lista;
 
 	/**
@@ -25,7 +25,7 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.Periodo = new Periodo();
+		this.periodo = new Periodo();
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +53,8 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (Periodo.adicionar()) {
-			this.Periodo = new Periodo();
+		if (periodo.adicionar()) {
+			this.periodo = new Periodo();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -76,8 +76,8 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String editar() {
-		if (Periodo.editar()) {
-			this.Periodo = new Periodo();
+		if (periodo.editar()) {
+			this.periodo = new Periodo();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -98,14 +98,14 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (Periodo.excluir()) {
-			this.Periodo = new Periodo();
+		if (periodo.excluir()) {
+			this.periodo = new Periodo();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.Periodo = new Periodo();
+			this.periodo = new Periodo();
 			FacesMessage facesMessage = new FacesMessage(
 					"Não é possível excluir o Periodo");
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -120,7 +120,7 @@ public class PeriodoMB {
 	 * @return
 	 */
 	public Periodo getPeriodo() {
-		return Periodo;
+		return periodo;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class PeriodoMB {
 	 */
 	public List<Periodo> getLista() {
 		if (this.lista == null)
-			this.lista = this.Periodo.listar();
+			this.lista = this.periodo.listar();
 
 		return this.lista;
 	}
@@ -140,7 +140,7 @@ public class PeriodoMB {
 	 *            the Periodo to set
 	 */
 	public void setPeriodo(Periodo Periodo) {
-		this.Periodo = Periodo;
+		this.periodo = Periodo;
 	}
 
 }

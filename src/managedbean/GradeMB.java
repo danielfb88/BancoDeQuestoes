@@ -5,6 +5,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import dominio.curso.AnoSemestre;
+import dominio.curso.Curso;
 import dominio.curso.Grade;
 
 /**
@@ -15,8 +17,26 @@ import dominio.curso.Grade;
  * 
  */
 public class GradeMB {
-	private Grade Grade = new Grade();
+	private Grade grade = new Grade();
+
+	private Curso curso = new Curso();
+	private AnoSemestre anoSemestre_inicial = new AnoSemestre();
+	private AnoSemestre anoSemestre_final = new AnoSemestre();
+
 	private List<Grade> lista;
+
+	private void novosObjetos() {
+		grade = new Grade();
+		curso = new Curso();
+		anoSemestre_inicial = new AnoSemestre();
+		anoSemestre_final = new AnoSemestre();
+	}
+
+	private void injetarObjetos() {
+		grade.setCurso(curso);
+		grade.setAnoSemestre_inicial(anoSemestre_inicial);
+		grade.setAnoSemestre_final(anoSemestre_final);
+	}
 
 	/**
 	 * Direciona para a Página de Adicionar Novo
@@ -24,7 +44,7 @@ public class GradeMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.Grade = new Grade();
+		novosObjetos();
 		return "formularioAdicionar";
 	}
 
@@ -52,8 +72,10 @@ public class GradeMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (Grade.adicionar()) {
-			this.Grade = new Grade();
+		injetarObjetos();
+
+		if (grade.adicionar()) {
+			novosObjetos();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -75,8 +97,10 @@ public class GradeMB {
 	 * @return
 	 */
 	public String editar() {
-		if (Grade.editar()) {
-			this.Grade = new Grade();
+		injetarObjetos();
+
+		if (grade.editar()) {
+			novosObjetos();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -97,14 +121,14 @@ public class GradeMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (Grade.excluir()) {
-			this.Grade = new Grade();
+		if (grade.excluir()) {
+			novosObjetos();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.Grade = new Grade();
+			this.grade = new Grade();
 			FacesMessage facesMessage = new FacesMessage(
 					"Não é possível excluir o Grade");
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -119,7 +143,7 @@ public class GradeMB {
 	 * @return
 	 */
 	public Grade getGrade() {
-		return Grade;
+		return grade;
 	}
 
 	/**
@@ -129,7 +153,7 @@ public class GradeMB {
 	 */
 	public List<Grade> getLista() {
 		if (this.lista == null)
-			this.lista = this.Grade.listar();
+			this.lista = this.grade.listar();
 
 		return this.lista;
 	}
@@ -139,7 +163,31 @@ public class GradeMB {
 	 *            the Grade to set
 	 */
 	public void setGrade(Grade Grade) {
-		this.Grade = Grade;
+		this.grade = Grade;
+	}
+
+	public Curso getCurso() {
+		return curso;
+	}
+
+	public void setCurso(Curso curso) {
+		this.curso = curso;
+	}
+
+	public AnoSemestre getAnoSemestre_inicial() {
+		return anoSemestre_inicial;
+	}
+
+	public void setAnoSemestre_inicial(AnoSemestre anoSemestre_inicial) {
+		this.anoSemestre_inicial = anoSemestre_inicial;
+	}
+
+	public AnoSemestre getAnoSemestre_final() {
+		return anoSemestre_final;
+	}
+
+	public void setAnoSemestre_final(AnoSemestre anoSemestre_final) {
+		this.anoSemestre_final = anoSemestre_final;
 	}
 
 }

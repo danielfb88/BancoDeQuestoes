@@ -50,17 +50,25 @@ public class RespostaMB {
 		return "paginaListar";
 	}
 
+	private void injetarObjetos() {
+		resposta.setPergunta(pergunta);
+	}
+
+	private void novosObjetos() {
+		resposta = new Resposta();
+		pergunta = new Pergunta();
+	}
+
 	/**
 	 * Grava registro
 	 * 
 	 * @return
 	 */
 	public String adicionar() {
-		resposta.setPergunta(pergunta);
+		injetarObjetos();
 
 		if (resposta.adicionar()) {
-			this.resposta = new Resposta();
-			this.pergunta = new Pergunta();
+			novosObjetos();
 
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
@@ -83,11 +91,10 @@ public class RespostaMB {
 	 * @return
 	 */
 	public String editar() {
-		resposta.setPergunta(pergunta);
+		injetarObjetos();
 
 		if (resposta.editar()) {
-			this.resposta = new Resposta();
-			this.pergunta = new Pergunta();
+			novosObjetos();
 
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
@@ -109,11 +116,8 @@ public class RespostaMB {
 	 * @return
 	 */
 	public String excluir() {
-		resposta.setPergunta(pergunta);
-
 		if (resposta.excluir()) {
-			this.resposta = new Resposta();
-			resposta.setPergunta(pergunta);
+			novosObjetos();
 
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;

@@ -15,8 +15,7 @@
 
 		<h:panelGrid columns="2">
 			<h:outputLabel value="Curso" for="slct_curso" />
-			<h:selectOneMenu id="slct_curso"
-				value="#{gradeBean.grade.curso.id_curso}">
+			<h:selectOneMenu id="slct_curso" value="#{gradeBean.curso.id_curso}">
 				<f:selectItems value="#{cursoBean.lista}" var="item"
 					itemValue="#{item.id_curso}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>
@@ -24,7 +23,7 @@
 			<h:outputLabel value="Ano/Semestre Inicio"
 				for="slct_anoSemestre_inicio" />
 			<h:selectOneMenu id="slct_anoSemestre_inicio"
-				value="#{gradeBean.grade.anoSemestre_inicial.id_anoSemestre}">
+				value="#{gradeBean.anoSemestre_inicial.id_anoSemestre}">
 				<f:selectItems value="#{anoSemestreBean.lista}" var="item"
 					itemValue="#{item.id_anoSemestre}"
 					itemLabel="#{item.ano}.#{item.semestre}" />
@@ -32,7 +31,7 @@
 
 			<h:outputLabel value="Ano/Semestre Fim" for="slct_anoSemestre_fim" />
 			<h:selectOneMenu id="slct_anoSemestre_fim"
-				value="#{gradeBean.grade.anoSemestre_final.id_anoSemestre}">
+				value="#{gradeBean.anoSemestre_final.id_anoSemestre}">
 				<f:selectItems value="#{anoSemestreBean.lista}" var="item"
 					itemValue="#{item.id_anoSemestre}"
 					itemLabel="#{item.ano}.#{item.semestre}" />

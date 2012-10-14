@@ -16,7 +16,7 @@ import dominio.curso.AnoSemestre;
  * 
  */
 public class AnoSemestreMB {
-	private AnoSemestre AnoSemestre = new AnoSemestre();
+	private AnoSemestre anoSemestre = new AnoSemestre();
 	private List<AnoSemestre> lista;
 
 	/**
@@ -25,7 +25,7 @@ public class AnoSemestreMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.AnoSemestre = new AnoSemestre();
+		this.anoSemestre = new AnoSemestre();
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +53,8 @@ public class AnoSemestreMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (AnoSemestre.adicionar()) {
-			this.AnoSemestre = new AnoSemestre();
+		if (anoSemestre.adicionar()) {
+			this.anoSemestre = new AnoSemestre();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -76,8 +76,8 @@ public class AnoSemestreMB {
 	 * @return
 	 */
 	public String editar() {
-		if (AnoSemestre.editar()) {
-			this.AnoSemestre = new AnoSemestre();
+		if (anoSemestre.editar()) {
+			this.anoSemestre = new AnoSemestre();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -98,14 +98,14 @@ public class AnoSemestreMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (AnoSemestre.excluir()) {
-			this.AnoSemestre = new AnoSemestre();
+		if (anoSemestre.excluir()) {
+			this.anoSemestre = new AnoSemestre();
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.AnoSemestre = new AnoSemestre();
+			this.anoSemestre = new AnoSemestre();
 			FacesMessage facesMessage = new FacesMessage(
 					"Não é possível excluir o AnoSemestre");
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -120,7 +120,7 @@ public class AnoSemestreMB {
 	 * @return
 	 */
 	public AnoSemestre getAnoSemestre() {
-		return AnoSemestre;
+		return anoSemestre;
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class AnoSemestreMB {
 	 */
 	public List<AnoSemestre> getLista() {
 		if (this.lista == null)
-			this.lista = this.AnoSemestre.listar();
+			this.lista = this.anoSemestre.listar();
 
 		return this.lista;
 	}
@@ -140,7 +140,7 @@ public class AnoSemestreMB {
 	 *            the AnoSemestre to set
 	 */
 	public void setAnoSemestre(AnoSemestre AnoSemestre) {
-		this.AnoSemestre = AnoSemestre;
+		this.anoSemestre = AnoSemestre;
 	}
 
 }

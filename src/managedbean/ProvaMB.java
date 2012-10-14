@@ -5,8 +5,9 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import dominio.curso.AnoSemestre;
+import dominio.curso.GradePeriodo;
 import dominio.prova.Prova;
-
 
 /**
  * Bean Gerenciável de Prova.
@@ -16,8 +17,22 @@ import dominio.prova.Prova;
  * 
  */
 public class ProvaMB {
-	private Prova Prova = new Prova();
+	private Prova prova = new Prova();
+	private GradePeriodo gradePeriodo = new GradePeriodo();
+	private AnoSemestre anoSemestre = new AnoSemestre();
+
 	private List<Prova> lista;
+
+	private void injetarObjetos() {
+		prova.setGradePeriodo(gradePeriodo);
+		prova.setAnoSemestre(anoSemestre);
+	}
+
+	private void novosObjetos() {
+		prova = new Prova();
+		gradePeriodo = new GradePeriodo();
+		anoSemestre = new AnoSemestre();
+	}
 
 	/**
 	 * Direciona para a Página de Adicionar Novo
@@ -25,7 +40,7 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.Prova = new Prova();
+		novosObjetos();
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +68,11 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String adicionar() {
-		if (Prova.adicionar()) {
-			this.Prova = new Prova();
+		injetarObjetos();
+
+		if (prova.adicionar()) {
+			novosObjetos();
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -76,8 +94,11 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String editar() {
-		if (Prova.editar()) {
-			this.Prova = new Prova();
+		injetarObjetos();
+
+		if (prova.editar()) {
+			novosObjetos();
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -98,14 +119,15 @@ public class ProvaMB {
 	 * @return
 	 */
 	public String excluir() {
-		if (Prova.excluir()) {
-			this.Prova = new Prova();
+		if (prova.excluir()) {
+			novosObjetos();
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
 
 		} else {
-			this.Prova = new Prova();
+			this.prova = new Prova();
 			FacesMessage facesMessage = new FacesMessage(
 					"Não é possível excluir o Prova");
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -120,7 +142,7 @@ public class ProvaMB {
 	 * @return
 	 */
 	public Prova getProva() {
-		return Prova;
+		return prova;
 	}
 
 	/**
@@ -130,7 +152,7 @@ public class ProvaMB {
 	 */
 	public List<Prova> getLista() {
 		if (this.lista == null)
-			this.lista = this.Prova.listar();
+			this.lista = this.prova.listar();
 
 		return this.lista;
 	}
@@ -140,7 +162,7 @@ public class ProvaMB {
 	 *            the Prova to set
 	 */
 	public void setProva(Prova Prova) {
-		this.Prova = Prova;
+		this.prova = Prova;
 	}
 
 }

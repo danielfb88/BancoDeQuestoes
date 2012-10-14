@@ -5,8 +5,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import dominio.usuario.Grupo;
 import dominio.usuario.Usuario;
-
 
 /**
  * Bean Gerenciável de Usuario.
@@ -17,11 +17,22 @@ import dominio.usuario.Usuario;
  */
 public class UsuarioMB {
 	private Usuario usuario = new Usuario();
+	private Grupo grupo = new Grupo();
+
 	private List<Usuario> lista;
 
 	private String senhaAtual;
 	private String senhaNova;
 	private String confirmaSenha;
+
+	private void injetarObjetos() {
+		usuario.setGrupo(grupo);
+	}
+
+	private void novosObjetos() {
+		usuario = new Usuario();
+		grupo = new Grupo();
+	}
 
 	/**
 	 * Direciona para a Página de Adicionar Novo
@@ -29,7 +40,7 @@ public class UsuarioMB {
 	 * @return
 	 */
 	public String formularioAdicionar() {
-		this.usuario = new Usuario();
+		novosObjetos();
 		return "formularioAdicionar";
 	}
 
@@ -66,8 +77,10 @@ public class UsuarioMB {
 			return null;
 		}
 
+		injetarObjetos();
 		if (usuario.adicionar()) {
-			this.usuario = new Usuario();
+			novosObjetos();
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -106,8 +119,10 @@ public class UsuarioMB {
 			}
 
 			// editando
+			injetarObjetos();
 			if (usuario.editar()) {
-				this.usuario = new Usuario();
+				novosObjetos();
+
 				// nulando a lista para obriga-lo a buscar novamente do banco
 				this.lista = null;
 				// sucesso!
@@ -137,7 +152,8 @@ public class UsuarioMB {
 	 */
 	public String excluir() {
 		if (usuario.excluir()) {
-			this.usuario = new Usuario();
+			novosObjetos();
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -158,6 +174,14 @@ public class UsuarioMB {
 	 */
 	public Usuario getUsuario() {
 		return usuario;
+	}
+
+	public Grupo getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
 	}
 
 	/**
