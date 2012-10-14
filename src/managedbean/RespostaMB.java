@@ -5,8 +5,8 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import dominio.prova.Pergunta;
 import dominio.prova.Resposta;
-
 
 /**
  * Bean Gerenciável de Resposta.
@@ -17,6 +17,7 @@ import dominio.prova.Resposta;
  */
 public class RespostaMB {
 	private Resposta resposta = new Resposta();
+	private Pergunta pergunta = new Pergunta();
 	private List<Resposta> lista;
 
 	/**
@@ -26,6 +27,8 @@ public class RespostaMB {
 	 */
 	public String formularioAdicionar() {
 		this.resposta = new Resposta();
+		this.pergunta = new Pergunta();
+
 		return "formularioAdicionar";
 	}
 
@@ -53,8 +56,12 @@ public class RespostaMB {
 	 * @return
 	 */
 	public String adicionar() {
+		resposta.setPergunta(pergunta);
+
 		if (resposta.adicionar()) {
 			this.resposta = new Resposta();
+			this.pergunta = new Pergunta();
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -76,8 +83,12 @@ public class RespostaMB {
 	 * @return
 	 */
 	public String editar() {
+		resposta.setPergunta(pergunta);
+
 		if (resposta.editar()) {
 			this.resposta = new Resposta();
+			this.pergunta = new Pergunta();
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -98,8 +109,12 @@ public class RespostaMB {
 	 * @return
 	 */
 	public String excluir() {
+		resposta.setPergunta(pergunta);
+
 		if (resposta.excluir()) {
 			this.resposta = new Resposta();
+			resposta.setPergunta(pergunta);
+
 			// nulando a lista para obriga-lo a buscar novamente do banco
 			this.lista = null;
 			return this.paginaListar();
@@ -141,6 +156,14 @@ public class RespostaMB {
 	 */
 	public void setResposta(Resposta resposta) {
 		this.resposta = resposta;
+	}
+
+	public Pergunta getPergunta() {
+		return pergunta;
+	}
+
+	public void setPergunta(Pergunta pergunta) {
+		this.pergunta = pergunta;
 	}
 
 }

@@ -17,10 +17,6 @@ import dao.DaoFactory;
 import dominio.curso.AnoSemestre;
 import dominio.curso.GradePeriodo;
 
-/*
- * TODO-FIXME: Após listar a prova, os outros módulos quebram também. Verifique se HibernateAbstractDAO 
- * guarda algum estado.
- */
 /**
  * Prova
  * 
