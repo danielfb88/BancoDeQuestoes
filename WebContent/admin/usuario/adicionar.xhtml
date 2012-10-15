@@ -16,7 +16,7 @@
 		<h:panelGrid columns="2">
 			<h:outputLabel value="Grupo:" for="slct_grupo" />
 			<h:selectOneMenu id="slct_grupo"
-				value="#{usuarioBean.usuario.grupo.id_grupo}">
+				value="#{usuarioBean.grupo.id_grupo}">
 				<f:selectItems value="#{grupoBean.lista}" var="item"
 					itemValue="#{item.id_grupo}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>

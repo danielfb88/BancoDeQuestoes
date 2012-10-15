@@ -18,22 +18,21 @@
 
 		<h:panelGrid columns="2">
 			<h:outputLabel value="Grade" for="slct_grade" />
-			<h:selectOneMenu id="slct_grade"
-				value="#{provaBean.prova.gradePeriodo.grade.id_grade}">
+			<h:selectOneMenu id="slct_grade" value="#{provaBean.grade.id_grade}">
 				<f:selectItems value="#{gradeBean.lista}" var="item"
 					itemValue="#{item.id_grade}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>
 
 			<h:outputLabel value="Periodo" for="slct_periodo" />
 			<h:selectOneMenu id="slct_periodo"
-				value="#{provaBean.prova.gradePeriodo.periodo.id_periodo}">
+				value="#{provaBean.periodo.id_periodo}">
 				<f:selectItems value="#{periodoBean.lista}" var="item"
 					itemValue="#{item.id_periodo}" itemLabel="#{item.descricao}" />
 			</h:selectOneMenu>
 
 			<h:outputLabel value="Ano/Semestre" for="slct_anoSemestre" />
 			<h:selectOneMenu id="slct_anoSemestre"
-				value="#{provaBean.prova.anoSemestre.id_anoSemestre}">
+				value="#{provaBean.anoSemestre.id_anoSemestre}">
 				<f:selectItems value="#{anoSemestreBean.lista}" var="item"
 					itemValue="#{item.id_anoSemestre}"
 					itemLabel="#{item.ano}.#{item.semestre}" />

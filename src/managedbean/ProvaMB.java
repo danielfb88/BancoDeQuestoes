@@ -6,7 +6,9 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import dominio.curso.AnoSemestre;
+import dominio.curso.Grade;
 import dominio.curso.GradePeriodo;
+import dominio.curso.Periodo;
 import dominio.prova.Prova;
 
 /**
@@ -19,11 +21,17 @@ import dominio.prova.Prova;
 public class ProvaMB {
 	private Prova prova = new Prova();
 	private GradePeriodo gradePeriodo = new GradePeriodo();
+	private Grade grade = new Grade();
+	private Periodo periodo = new Periodo();
 	private AnoSemestre anoSemestre = new AnoSemestre();
 
 	private List<Prova> lista;
 
 	private void injetarObjetos() {
+		gradePeriodo.setGrade(grade);
+		gradePeriodo.setPeriodo(periodo);
+		gradePeriodo = gradePeriodo.listar().get(0);
+
 		prova.setGradePeriodo(gradePeriodo);
 		prova.setAnoSemestre(anoSemestre);
 	}
@@ -31,6 +39,8 @@ public class ProvaMB {
 	private void novosObjetos() {
 		prova = new Prova();
 		gradePeriodo = new GradePeriodo();
+		grade = new Grade();
+		periodo = new Periodo();
 		anoSemestre = new AnoSemestre();
 	}
 
@@ -163,6 +173,38 @@ public class ProvaMB {
 	 */
 	public void setProva(Prova Prova) {
 		this.prova = Prova;
+	}
+
+	public GradePeriodo getGradePeriodo() {
+		return gradePeriodo;
+	}
+
+	public void setGradePeriodo(GradePeriodo gradePeriodo) {
+		this.gradePeriodo = gradePeriodo;
+	}
+
+	public Grade getGrade() {
+		return grade;
+	}
+
+	public void setGrade(Grade grade) {
+		this.grade = grade;
+	}
+
+	public Periodo getPeriodo() {
+		return periodo;
+	}
+
+	public void setPeriodo(Periodo periodo) {
+		this.periodo = periodo;
+	}
+
+	public AnoSemestre getAnoSemestre() {
+		return anoSemestre;
+	}
+
+	public void setAnoSemestre(AnoSemestre anoSemestre) {
+		this.anoSemestre = anoSemestre;
 	}
 
 }
